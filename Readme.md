@@ -1,7 +1,7 @@
 # Личный проект «Кексобукинг» [![Build status][travis-image]][travis-url]
 
-* Студент: [Ирина Логвинович](https://up.htmlacademy.ru/javascript/14/user/146479).
-* Наставник: [Филипп Шамсиев](https://up.htmlacademy.ru/javascript/14/user/70260).
+* Студент: [Татьяна Болтрушевич](//https://github.com/Tatsiana-Vaitovich/keksobooking.git).
+* Наставник: [Филипп Шамсиев](https://github.com/toolX).
 
 ---
 
