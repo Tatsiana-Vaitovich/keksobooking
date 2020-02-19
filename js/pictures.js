@@ -95,6 +95,7 @@ let fragment = document.createDocumentFragment();
 // создадим узел для вставки элементов
 let block = document.createElement("div");
 block.className = "users-photo";
+block.classList.add("hidden");
 // добавляю блок на страницу перед footer
 let footer = document.querySelector("footer");
 footer.before(block);
