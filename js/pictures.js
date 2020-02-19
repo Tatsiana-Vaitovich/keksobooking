@@ -1,5 +1,5 @@
 "use strict";
-// Создайте массив, состоящий из 25 сгенерированных JS объектов, 
+// ---1.Создам массив, состоящий из 25 сгенерированных JS объектов, 
 // которые будут описывать фотографии, размещённые другими пользователями
 let usersPhoto = [];
 let allComments = [
@@ -37,9 +37,9 @@ function getRandomElement(arr) {
   const random = getRandomNumber(min, max);
   return arr[random];
 }
+
 // url, строка — адрес картинки вида photos/{{i}}.jpg, где {{i}} это число от 1 до 25. Адреса картинок не должны повторяться
 // сгенерирую url
-
 function getUrls(min, max) {
   let arr = [];
   for (let i = min; i <= max; i++) {
@@ -48,11 +48,11 @@ function getUrls(min, max) {
   }
   return arr;
 }
+
 // comments, массив строк — список комментариев, оставленных другими пользователями к этой фотографии. 
 // Количество комментариев к каждой фотографии произвольное. 
 // Комментарии генерируются случайным образом. 
 // Для формирования комментария необходимо взять одно или два случайных предложений 
-
 function getComments() {
   let comments = [];
   let min = 1;
@@ -67,7 +67,6 @@ function getComments() {
   return comments;
 }
 
-
 // для создания js объектов, описывающих фоторграфии пользователей, можно использовать конструктор объектов
 function UserPhoto(number) {
   this.url = allUrls[number - 1];
@@ -78,7 +77,6 @@ function UserPhoto(number) {
 
 // в соответствии с заданием нужно создать 25 таких объектов -
 // Создайте массив, состоящий из 25 сгенерированных JS объектов, которые будут описывать фотографии, размещённые другими пользователями
-
 function createUsersPhoto(elementsQuantity) {
   let usersPhoto = [];
   for (let i = 1; i <= elementsQuantity; i++) {
@@ -88,4 +86,46 @@ function createUsersPhoto(elementsQuantity) {
 }
 
 usersPhoto = createUsersPhoto(25);
+
+// ---2.Cоздаю DOM-элементы на основе объекта usersPhoto и шаблона <template>
+// получаю шаблон
+let template = document.querySelector("#user-photo").content;
+// создам фрагмент, в который буду "складывать" сгенерированные элементы
+let fragment = document.createDocumentFragment();
+// создадим узел для вставки элементов
+let block = document.createElement("div");
+block.className = "users-photo";
+// добавляю блок на страницу перед footer
+let footer = document.querySelector("footer");
+footer.before(block);
+// напишу функцию для создания каждого элемента userPhoto
+  function getUserPhoto(i) {
+    let newElem = template.cloneNode(true);
+    // получу доступ к  нужным нам элементам
+    newElem.querySelector(".card-photo__img").src = usersPhoto[i].url;
+    newElem.querySelector(".like__counter").textContent = usersPhoto[i].likes;
+    newElem.querySelector(".comments__counter").textContent = usersPhoto[i].comments.length;
+    return newElem;
+  }
+// получу фрагмент, перебирая каждый элемент массива usersPhoto
+for (let i = 0; i < usersPhoto.length; i++) {
+  fragment.appendChild(getUserPhoto(i));
+}
+
+// ---3.Вставляю все полученные элементы за один прием в блок ".users-photo"
+block.appendChild(fragment);
+
+// ---4.Покажу элемент .big-picture, удалив у него класс .hidden 
+// и заполню его данными из первого элемента сгенерированного массива
+
+let bigPicture = document.createElement("div");
+bigPicture.className = "big-picture";
+bigPicture.classList.add("hidden");
+footer.before(bigPicture);
+// вызову функцию для создания элемента по шаблону
+let newElem = getUserPhoto(0);
+// вставлю новый элемент в bigPicture
+bigPicture.appendChild(newElem);
+bigPicture.classList.remove("hidden");
+
 
