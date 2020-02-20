@@ -1,4 +1,6 @@
 "use strict";
+// ---1.создаю массив объявлений пользователей
+let map = document.querySelector(".map");
 let usersNotices = [];
 let autor = {};
 // "title": строка, заголовок предложения, одно из фиксированных значений 
@@ -95,7 +97,8 @@ function getLocation() {
   let y = getRandomNumber(130, 630);
   location.y = y;
   // определим размер родительского блока .map, в котором находится метка
-  let mapWidth = document.querySelector(".map").offsetWidth;
+  // let mapWidth = document.querySelector(".map").offsetWidth;
+  let mapWidth = map.offsetWidth;
   let x = getRandomNumber(0, mapWidth);
   location.x = x;
   return location;
@@ -162,4 +165,6 @@ function createUsersNotices(elementsQuantity) {
 shuffle(titlesArr);
 usersNotices = createUsersNotices(8);
 
-
+// ---2. переключаем карту из неактивного состояния в активное
+// У блока .map уберите класс .map--faded
+map.classList.remove("map--faded");
