@@ -165,6 +165,53 @@ function createUsersNotices(elementsQuantity) {
 shuffle(titlesArr);
 usersNotices = createUsersNotices(8);
 
-// ---2. переключаем карту из неактивного состояния в активное
-// У блока .map уберите класс .map--faded
+// ---2. Переключаем карту из неактивного состояния в активное
 map.classList.remove("map--faded");
+
+// ---3. Cоздаю DOM-элементы на основе объекта usersNotices и шаблона <template>
+// На основе данных, созданных в первом пункте, создайте DOM-элементы, 
+// соответствующие меткам на карте, и заполните их данными из массива. 
+// Итоговую разметку метки .map__pin можно взять из шаблона .map__card.
+// У метки должны быть следующие данные:
+// Координаты:style="left: {{location.x}}px; top: {{location.y}}px;"
+// src="{{author.avatar}}"
+// alt="{{заголовок объявления}}"
+
+// функция для получения координат метки из объекта usersNotice[i]
+function getCoordsFromAdress(i) {
+  console.log(usersNotices[i].address);
+  let index = usersNotices[i].address.indexOf(",");
+  console.log(index);
+  let x = usersNotices[i].address.slice(0, index);
+  console.log(x);
+  let y = usersNotices[i].address.slice(index + 2);
+  console.log(y);
+  let coordsFromAdress = "left:" + x + "px;" + " top:" + y + "px;";
+  console.log(coordsFromAdress);
+  return coordsFromAdress;
+}
+
+// получаю шаблон
+let template = document.querySelector("#users-notice").content;
+// создам фрагмент, в который буду "складывать" сгенерированные элементы
+let fragment = document.createDocumentFragment();
+// напишу функцию для создания каждого элемента userNotice
+  function getUserNotice(i) {
+    let newElem = template.cloneNode(true);
+    // newElem.querySelector.querySelector(".map__card").className = "map__pin";
+    newElem.querySelector(".popup__avatar").src = usersNotices[i].autor;
+    newElem.querySelector(".popup__avatar").alt = usersNotices[i].title;
+    newElem.querySelector(".popup").style = getCoordsFromAdress(i);
+    return newElem;
+  }
+// получу фрагмент, перебирая каждый элемент массива usersPhoto
+for (let i = 0; i < usersNotices.length; i++) {
+fragment.appendChild(getUserNotice(i));
+}
+
+
+// ---3.Вставляю все полученные элементы за один прием в блок ".users-photo"
+  let block = document.querySelector(".map__pins");
+  block.appendChild(fragment);
+
+
