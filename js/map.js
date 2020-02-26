@@ -1,6 +1,6 @@
 "use strict";
 // ---1.создаю массив объявлений пользователей
-let map = document.querySelector(".map");
+const map = document.querySelector(".map");
 let usersNotices = [];
 let autor = {};
 // "title": строка, заголовок предложения, одно из фиксированных значений 
@@ -95,20 +95,20 @@ function getAvatars(min, max) {
 // беру у - случайное число, зависящее от высоты блока.
 // для более корректного отображения также учту отступ - indent
 function getLocation(indent) {
-  let location = {};
+  const location = {};
   // определим размер родительского блока .map, в котором находится метка
-  let mapWidth = map.offsetWidth;
-  let mapHeight = map.offsetHeight;
-  let x = getRandomNumber(indent, mapWidth - indent);
-  let y = getRandomNumber(indent, mapHeight - indent);
+  const mapWidth = map.offsetWidth;
+  const mapHeight = map.offsetHeight;
+  const x = getRandomNumber(indent, mapWidth - indent);
+  const y = getRandomNumber(indent, mapHeight - indent);
   location.x = x;
   location.y = y;
   return location;
 }
 
 function getCoords() {
-  let location = getLocation(120);
-  let coords = location.x + ", " + location.y;
+  const location = getLocation(120);
+  const coords = location.x + ", " + location.y;
   return coords;
 }
 
@@ -126,11 +126,11 @@ function getFeatures() {
     "conditioner",
   ];
   let newArr = [];
-  let arrLength = featuresArr.length;
-  let elementsQuantity = getRandomNumber(1, arrLength);
+  const arrLength = featuresArr.length;
+  const elementsQuantity = getRandomNumber(1, arrLength);
   for (let i = 1; i <= elementsQuantity; i++) {
     let element = getRandomElement(featuresArr);
-    let index = featuresArr.indexOf(element);
+    const index = featuresArr.indexOf(element);
     featuresArr.splice(index, 1);
     newArr[i-1] = element;
   }
@@ -181,36 +181,36 @@ map.classList.remove("map--faded");
 
 // функции для получения координат метки из объекта usersNotice[i]
 function getCoordХFromAdress(i) {
-  let index = usersNotices[i].address.indexOf(",");
-  let coordX = usersNotices[i].address.slice(0, index);
+  const index = usersNotices[i].address.indexOf(",");
+  const coordX = usersNotices[i].address.slice(0, index);
   return +coordX;
 }
 
 function getCoordYFromAdress(i) {
-  let index = usersNotices[i].address.indexOf(",");
-  let coordY = usersNotices[i].address.slice(index + 2);
+  const index = usersNotices[i].address.indexOf(",");
+  const coordY = usersNotices[i].address.slice(index + 2);
   return +coordY;
 }
 
 // получаю шаблон
-let template1 = document.querySelector("#users-notice").content;
+const template1 = document.querySelector("#users-notice").content;
 // создам фрагмент, в который буду "складывать" сгенерированные элементы
 let fragment1 = document.createDocumentFragment();
 // напишу функцию для создания каждого элемента userNotice
 function getUserNotice(i) {
-  let newElem1 = template1.querySelector(".map__pin").cloneNode(true);
+  const newElem1 = template1.querySelector(".map__pin").cloneNode(true);
   newElem1.querySelector("img").src = usersNotices[i].autor;
   newElem1.querySelector("img").alt = usersNotices[i].title;
-  let x = getCoordХFromAdress(i) + 1/2 * newElem1.offsetWidth;
-  let y = getCoordYFromAdress(i) + newElem1.offsetHeight;
+  const x = getCoordХFromAdress(i) + 1/2 * newElem1.offsetWidth;
+  const y = getCoordYFromAdress(i) + newElem1.offsetHeight;
   newElem1.style = "left:" + x + "px;" + " top:" + y + "px;";
   return newElem1;
 }
+
 // получу фрагмент, перебирая каждый элемент массива usersPhoto
 for (let i = 0; i < usersNotices.length; i++) {
 fragment1.append(getUserNotice(i));
 }
-
 
 // ---4.Вставляю все полученные элементы за один прием в блок ".users-photo"
   let block1 = document.querySelector(".map__pins");
@@ -223,17 +223,17 @@ fragment1.append(getUserNotice(i));
 // и вставляю полученный DOM-элемент в блок .map 
 // перед блоком.map__filters-container
 
-let template2 = document.querySelector("#users-notice").content;
+const template2 = document.querySelector("#users-notice").content;
 let fragment2 = document.createDocumentFragment();
 let fragment3 = document.createDocumentFragment();
 
 function getUserBigNotice(number) {
-  let newElem2 = template2.querySelector(".map__card").cloneNode(true);
-  let userNotice = usersNotices[number];
-  let x = getCoordХFromAdress(number) + 1/2 * newElem2.offsetWidth;
-  let y = getCoordYFromAdress(number) + newElem2.offsetHeight;
-  let capacity = userNotice.rooms + " комнаты для " + userNotice.guests + " гостей";
-  let time = "Заезд после " + userNotice.checkin + ", выезд до " + userNotice.checkout;
+  const newElem2 = template2.querySelector(".map__card").cloneNode(true);
+  const userNotice = usersNotices[number];
+  const x = getCoordХFromAdress(number) + 1/2 * newElem2.offsetWidth;
+  const y = getCoordYFromAdress(number) + newElem2.offsetHeight;
+  const capacity = userNotice.rooms + " комнаты для " + userNotice.guests + " гостей";
+  const time = "Заезд после " + userNotice.checkin + ", выезд до " + userNotice.checkout;
   let whereInsertFeatures = newElem2.querySelector(".popup__features");
   let whereInsertPhotos = newElem2.querySelector(".popup__photos");
   newElem2.querySelector(".popup__avatar").src = userNotice.autor
@@ -263,8 +263,8 @@ function clear(where, elem) {
 
 function getElemFeatures(arr, whereInsert) {
   for (let elem = 0; elem < arr.length; elem++) {
-    let newElem = document.createElement("li");
-    let newClass = "popup__feature--" + arr[elem];
+    const newElem = document.createElement("li");
+    const newClass = "popup__feature--" + arr[elem];
     newElem.className = "popup__feature";
     newElem.classList.add(newClass);
     whereInsert.append(newElem);
@@ -273,7 +273,7 @@ function getElemFeatures(arr, whereInsert) {
 
 function getElemPhotos(arr) {
   for (let elem = 0; elem < arr.length; elem++) {
-    let newElem = template2.querySelector(".popup__photo").cloneNode(true);
+    const newElem = template2.querySelector(".popup__photo").cloneNode(true);
     newElem.src = arr[elem];
     fragment3.append(newElem);
   }
