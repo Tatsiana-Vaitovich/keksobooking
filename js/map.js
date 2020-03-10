@@ -1,11 +1,12 @@
 "use strict";
 // ---1.создаю массив объявлений пользователей
 const map = document.querySelector(".map");
+const indent = 120;
 let usersNotices = [];
-let autor = {};
+const author = {};
 // "title": строка, заголовок предложения, одно из фиксированных значений 
 //. Значения не должны повторяться.
-let titlesArr = [
+const titlesArr = [
   "Большая уютная квартира",
   "Маленькая неуютная квартира",
   "Огромный прекрасный дворец",
@@ -16,30 +17,46 @@ let titlesArr = [
   "Неуютное бунгало по колено в воде",
 ];
 // "type": строка с одним из четырёх фиксированных значений: 
-let typesArr = [
+const typesArr = [
   "palace",
   "flat",
   "house",
   "bungalo",
 ];
 // "checkin": строка с одним из трёх фиксированных значений: 
-let checkinsArr = [
+const checkinsArr = [
   "12:00",
   "13:00",
   "14:00",
 ];
 // "checkout": строка с одним из трёх фиксированных значений: 
-let checkoutsArr = [
+const checkoutsArr = [
   "12:00",
   "13:00",
   "14:00",
 ];
 // "photos": массив из строк  расположенных в произвольном порядке
-let photosArr = [
+const photosArr = [
   "http://o0.github.io/assets/images/tokyo/hotel1.jpg", 
   "http://o0.github.io/assets/images/tokyo/hotel2.jpg",
   "http://o0.github.io/assets/images/tokyo/hotel3.jpg",
 ];
+// "features": массив строк случайной длины из ниже предложенных: 
+const featuresArr = [
+  "wifi",
+  "dishwasher",
+  "parking",
+  "washer",
+  "elevator",
+  "conditioner",
+];
+const minPrice = 1000;
+const maxPrice = 1000000;
+const minRooms = 1;
+const maxRooms = 5;
+const minGuests = 1;
+const maxGuests = 15;
+const avatarsArr = getAvatars(1, 8);
 // функция, генерирующая случайное число:
 function getRandomNumber(min, max) {
   const rand = min + Math.random() * (max + 1 - min);
@@ -52,7 +69,7 @@ function getRandomNumber(min, max) {
 function getRandomElement(arr) {
   // мы должны генерировать числа от 0 до arr.lenght - 1
   // случайное число от min до (max+1)
-  let min = 0;
+  const min = 0;
   const max = arr.length - 1
   const random = getRandomNumber(min, max);
   return arr[random];
@@ -72,7 +89,6 @@ function shuffle(arr) {
   }
   return arr;
 }
-
 
 // "avatar": строка, адрес изображения вида img/avatars/user{{xx}}.png, 
 // где {{xx}} это число от 1 до 8 с ведущим нулём. 
@@ -94,20 +110,41 @@ function getAvatars(min, max) {
 // «y»: случайное число, координата y метки на карте от 130 до 630.
 // беру у - случайное число, зависящее от высоты блока.
 // для более корректного отображения также учту отступ - indent
+
 function getLocation(indent) {
   const location = {};
   // определим размер родительского блока .map, в котором находится метка
-  const mapWidth = map.offsetWidth;
-  const mapHeight = map.offsetHeight;
-  const x = getRandomNumber(indent, mapWidth - indent);
-  const y = getRandomNumber(indent, mapHeight - indent);
-  location.x = x;
-  location.y = y;
+  // const mapWidth = map.offsetWidth;
+  // const mapHeight = map.offsetHeight;
+  // const x = getRandomNumber(indent, mapWidth - indent);
+  // const y = getRandomNumber(indent, mapHeight - indent);
+  // location.x = x;
+  // location.y = y;
+  // технически любая функция может быть использована как конструктор. 
+  // То есть, каждая функция может быть вызвана при помощи оператора new
+  // вместо кода выше использую конструктор функции
+  const coordX = new GetCoord(map, "x", indent);
+  const coordY = new GetCoord(map, "y", indent);
+  location.x = coordX.coord;
+  location.y = coordY.coord;
   return location;
 }
 
-function getCoords() {
-  const location = getLocation(120);
+// конструктор функции для получения координат метки
+function GetCoord(elem, coordName, indent) {
+  this.coordName = coordName;
+  this.elem = elem;
+  this.indent = indent;
+  this.getSize = function() {
+    (coordName == "x") ? this.size = elem.offsetWidth : this.size = elem.offsetHeight;
+    return this.size;
+  }
+  this.coord = getRandomNumber(this.indent, this.getSize() - this.indent);
+}
+
+
+// функция для получения координат метки
+function getStrokeCoords(location) {
   const coords = location.x + ", " + location.y;
   return coords;
 }
@@ -116,37 +153,40 @@ function getCoords() {
 // из элементов, перечисленных в массиве featuresArr
 // для получения features использую функцию
 function getFeatures() {
-  // "features": массив строк случайной длины из ниже предложенных: 
-  let featuresArr = [
-    "wifi",
-    "dishwasher",
-    "parking",
-    "washer",
-    "elevator",
-    "conditioner",
-  ];
-  let newArr = [];
-  const arrLength = featuresArr.length;
-  const elementsQuantity = getRandomNumber(1, arrLength);
-  for (let i = 1; i <= elementsQuantity; i++) {
-    let element = getRandomElement(featuresArr);
-    const index = featuresArr.indexOf(element);
-    featuresArr.splice(index, 1);
-    newArr[i-1] = element;
+  let initialArr = [];
+  for (let i = 0; i < featuresArr.length; i++) {
+    initialArr[i] = featuresArr[i];
+  }
+  const newArr = [];
+  const elementsQuantity = getRandomNumber(0, initialArr.length);
+  for (let i = 0; i < elementsQuantity; i++) {
+    let element = getRandomElement(initialArr);
+    let index = initialArr.indexOf(element);
+    initialArr.splice(index, 1);
+    newArr[i] = element;
   }
   return newArr;
 }
 
 // для создания js объектов, описывающих объявления пользователей, 
 // использую конструктор объектов
-function UserNotice(number) {
-  this.autor = getAvatars(1, 8)[number-1];
-  this.title = titlesArr[number-1];
-  this.address = getCoords();
-  this.price = getRandomNumber(1000, 1000000);
+function UserNotice(number, location) {
+  this.author = new UserAuthor(number);
+  this.offer = new UserOffer(number, location);
+  this.location = location;
+}
+
+function UserAuthor(number) {
+  this.avatar = avatarsArr[number];
+}
+
+function UserOffer(number, location){
+  this.title = titlesArr[number];
+  this.address = getStrokeCoords(location);
+  this.price = getRandomNumber(minPrice, maxPrice);
   this.type = getRandomElement(typesArr);
-  this.rooms = getRandomNumber(1, 5);
-  this.guests = getRandomNumber(0, 15); 
+  this.rooms = getRandomNumber(minRooms, maxRooms);
+  this.guests = getRandomNumber(minGuests, maxGuests); 
   this.checkin = getRandomElement(checkinsArr);
   this.checkout = getRandomElement(checkoutsArr);
   this.features = getFeatures();
@@ -154,15 +194,17 @@ function UserNotice(number) {
   this.photos = shuffle(photosArr);
 }
 
-// в соответствии с заданием нужно создать 8 таких объектов -
-// Создаю массив, состоящий из 8 сгенерированных JS объектов, которые будут описывать похожие объявления неподалёку
+// функция для создания массива, содержащего объявления пользователей
 function createUsersNotices(elementsQuantity) {
   let usersNotices = [];
-  for (let i = 1; i <= elementsQuantity; i++) {
-    usersNotices[i-1] = new UserNotice(i);
+  for (let i = 0; i < elementsQuantity; i++) {
+    const location = getLocation(indent);
+    usersNotices[i] = new UserNotice(i, location);
   }
   return usersNotices;
 }
+
+// Создаю массив, состоящий из 8 сгенерированных JS объектов, которые будут описывать похожие объявления неподалёку
 // перед тем как создать массив объектов, перемешаю массив заголовков
 shuffle(titlesArr);
 usersNotices = createUsersNotices(8);
@@ -179,42 +221,84 @@ map.classList.remove("map--faded");
 // src="{{author.avatar}}"
 // alt="{{заголовок объявления}}"
 
-// функции для получения координат метки из объекта usersNotice[i]
-function getCoordХFromAdress(i) {
-  const index = usersNotices[i].address.indexOf(",");
-  const coordX = usersNotices[i].address.slice(0, index);
-  return +coordX;
-}
-
-function getCoordYFromAdress(i) {
-  const index = usersNotices[i].address.indexOf(",");
-  const coordY = usersNotices[i].address.slice(index + 2);
-  return +coordY;
-}
-
 // получаю шаблон
-const template1 = document.querySelector("#users-notice").content;
+const template = document.querySelector("#users-notice").content;
 // создам фрагмент, в который буду "складывать" сгенерированные элементы
-let fragment1 = document.createDocumentFragment();
+let fragment = document.createDocumentFragment();
+
+// создаю в фрагменте одельные div, в которые буду вставлять нужные элементы из шаблона
+getElementsForFragment(3);
+
+let elem1 = fragment.querySelector("#elem1"); // div для элементов .map__pin (userNotice)
+let elem2 = fragment.querySelector("#elem2"); // div для элементов .popup__photo
+let elem3 = fragment.querySelector("#elem3"); // div для элемента .map__card (userBigNotice)
+
+function getElementsForFragment(counter) {
+  for (let i = 0; i < counter; i++) {
+    let elem = document.createElement("div");
+    elem.id = "elem" + (i + 1);
+    fragment.append(elem);
+  }
+}
+
 // напишу функцию для создания каждого элемента userNotice
 function getUserNotice(i) {
-  const newElem1 = template1.querySelector(".map__pin").cloneNode(true);
-  newElem1.querySelector("img").src = usersNotices[i].autor;
-  newElem1.querySelector("img").alt = usersNotices[i].title;
-  const x = getCoordХFromAdress(i) + 1/2 * newElem1.offsetWidth;
-  const y = getCoordYFromAdress(i) + newElem1.offsetHeight;
-  newElem1.style = "left:" + x + "px;" + " top:" + y + "px;";
-  return newElem1;
+  const mapPin = template.querySelector(".map__pin").cloneNode(true);
+  mapPin.querySelector("img").src = usersNotices[i].author.avatar;
+  mapPin.querySelector("img").alt = usersNotices[i].offer.title;
+  mapPin.style = getStrokeCoordsCenter(i, mapPin);
+  return mapPin;
 }
 
-// получу фрагмент, перебирая каждый элемент массива usersPhoto
-for (let i = 0; i < usersNotices.length; i++) {
-fragment1.append(getUserNotice(i));
+// функции для получения координат центра метки:
+function getUserNoticeCoordCenterX(index, elem) {
+  const x = usersNotices[index].location.x + 1/2 * elem.offsetWidth;
+  return x;
 }
 
-// ---4.Вставляю все полученные элементы за один прием в блок ".users-photo"
-  let block1 = document.querySelector(".map__pins");
-  block1.append(fragment1);
+function getUserNoticeCoordCenterY(index, elem) {
+  const y = usersNotices[index].location.y + elem.offsetHeight;
+  return y;
+}
+
+// функция для получения строки с координатами
+function getStrokeCoordsCenter (index, elem) {
+  let x = getUserNoticeCoordCenterX(index, elem);
+  let y = getUserNoticeCoordCenterY(index, elem);
+  let str = "left:" + x + "px;" + " top:" + y + "px;"
+  return str;
+}
+
+// функция для получения объявлений пользователей
+function getUsersPins(arr, whereInsert) {
+  for (let i = 0; i < arr.length; i++) {
+    whereInsert.append(getUserNotice(i));
+  }
+}
+
+// получу elem1 фрагмента из массива usersNotices
+getUsersPins(usersNotices, elem1)
+
+// ---4.Вставляю все полученные элементы из elem1 за один прием в блок ".map__pins"
+let block1 = document.querySelector(".map__pins");
+insertChildrenAppend(elem1, block1);
+
+// функция для вставки всех элементов из родительского блока:
+function insertChildrenAppend(parentName, whereInsert) {
+  let counter = parentName.children.length;
+  for (let i = 0; i < counter; i++) {
+    let child = parentName.firstChild;
+    whereInsert.append(child);
+  }
+}
+
+function insertChildrenBefore(parentName, whereInsert) {
+  let counter = parentName.children.length;
+  for (let i = 0; i < counter; i++) {
+    let child = parentName.firstChild;
+    whereInsert.before(child);
+  }
+}
 
 // ---5. На основе первого по порядку элемента 
 // из сгенерированного массива и шаблона .map__card 
@@ -223,34 +307,63 @@ fragment1.append(getUserNotice(i));
 // и вставляю полученный DOM-элемент в блок .map 
 // перед блоком.map__filters-container
 
-const template2 = document.querySelector("#users-notice").content;
-let fragment2 = document.createDocumentFragment();
-let fragment3 = document.createDocumentFragment();
-
 function getUserBigNotice(number) {
-  const newElem2 = template2.querySelector(".map__card").cloneNode(true);
+  const popup = template.querySelector(".map__card").cloneNode(true);
   const userNotice = usersNotices[number];
-  const x = getCoordХFromAdress(number) + 1/2 * newElem2.offsetWidth;
-  const y = getCoordYFromAdress(number) + newElem2.offsetHeight;
-  const capacity = userNotice.rooms + " комнаты для " + userNotice.guests + " гостей";
-  const time = "Заезд после " + userNotice.checkin + ", выезд до " + userNotice.checkout;
-  let whereInsertFeatures = newElem2.querySelector(".popup__features");
-  let whereInsertPhotos = newElem2.querySelector(".popup__photos");
-  newElem2.querySelector(".popup__avatar").src = userNotice.autor
-  newElem2.style = "left:" + x + "px;" + " top:" + y + "px;";
-  newElem2.querySelector(".popup__text--address").textContent = userNotice.price;
-  newElem2.querySelector(".popup__type").textContent = UserNotice.type;
-  newElem2.querySelector(".popup__text--capacity").textContent = capacity;
-  newElem2.querySelector(".popup__text--time").textContent = time;
-  newElem2.querySelector(".popup__description").textContent = userNotice.description;
-  clear(newElem2, ".popup__features");
-  getElemFeatures(userNotice.features, whereInsertFeatures);
-  clear(newElem2, ".popup__photos");
-  whereInsertPhotos.append(getElemPhotos(userNotice.photos));
-  return newElem2;
+  const capacity = getStrokeCapacity(number);
+  const time = getStrokeTime(number);
+  let whereInsertFeatures = popup.querySelector(".popup__features");
+  let whereInsertPhotos = popup.querySelector(".popup__photos");
+  popup.querySelector(".popup__avatar").src = userNotice.author.avatar;
+  popup.style = getStrokeCoordsCenter(number, popup);
+  popup.querySelector(".popup__title").textContent = userNotice.offer.title;
+  popup.querySelector(".popup__text--price").innerHTML = getStrokePrice(number);
+  popup.querySelector(".popup__type").textContent = userNotice.offer.type;
+  popup.querySelector(".popup__text--capacity").textContent = capacity;
+  popup.querySelector(".popup__text--time").textContent = time;
+  popup.querySelector(".popup__description").textContent = userNotice.offer.description;
+  clear(popup, ".popup__features");
+  getElemFeatures(userNotice.offer.features, whereInsertFeatures);
+  clear(popup, ".popup__photos");
+  
+  // получим elem2 фрагмента
+  getPopupPhotos(userNotice.offer.photos);
+  
+  // вставим содержимое elem2 в элемент с классом popup__photos
+  insertChildrenAppend(elem2, whereInsertPhotos);
+  return popup;
 }
 
-// напишем функцию для очистки элемента
+// функция для получения строки capacity
+function getStrokeCapacity(number) {
+  const roomsFromUserNotice = usersNotices[number].offer.rooms;
+  const guestsFromUserNotice = usersNotices[number].offer.guests;
+  const capacity = roomsFromUserNotice + " комнаты для " + guestsFromUserNotice + " гостей";
+  return capacity;
+}
+
+function getStrokeTime(number) {
+  const checkinFromUserNotice = usersNotices[number].offer.checkin;
+  const checkoutFromUserNotice = usersNotices[number].offer.checkout;
+  const time = "Заезд после " + checkinFromUserNotice + ", выезд до " + checkoutFromUserNotice;
+  return time;
+}
+
+// функция для получения строки price
+function getStrokePrice(number) {
+  const priceFromUserNotice = roundNumber(usersNotices[number].offer.price, 100);
+  const addStroke = "&#x20bd;<span>/ночь</span>";
+  const price = priceFromUserNotice + addStroke;
+  return price;
+}
+
+// функция для округления числа
+function roundNumber(number, to) {
+  const roundNumber = Math.round((number)/to) * to;
+  return roundNumber;
+}
+
+// функция для очистки элемента
 function clear(where, elem) {
   //DOM не поддерживает удаления элемента напрямую. 
   //При удалении элемента с JavaScript, 
@@ -261,6 +374,7 @@ function clear(where, elem) {
   }
 }
 
+// функция для получения элементов блока .popup__features
 function getElemFeatures(arr, whereInsert) {
   for (let elem = 0; elem < arr.length; elem++) {
     const newElem = document.createElement("li");
@@ -271,15 +385,19 @@ function getElemFeatures(arr, whereInsert) {
   }
 }
 
-function getElemPhotos(arr) {
+// функция для получения элементов блока .popup__photos. Для их создания использую шаблон
+function getPopupPhotos(arr) {
   for (let elem = 0; elem < arr.length; elem++) {
-    const newElem = template2.querySelector(".popup__photo").cloneNode(true);
-    newElem.src = arr[elem];
-    fragment3.append(newElem);
+    const popupPhoto = template.querySelector(".popup__photo").cloneNode(true);
+    popupPhoto.src = arr[elem];
+    elem2.append(popupPhoto);
   }
-  return fragment3;
+  return elem2;
 }
 
-fragment2.append(getUserBigNotice(0));
-let block2 = document.querySelector(".map__filters-container");
-block2.before(fragment2);
+// вставим userBigNotice в elem3 фрагмента
+elem3.append(getUserBigNotice(0));
+
+// вставим содержимое elem3 в документ - элемент с классом .map__filters-container
+let block3 = document.querySelector(".map__filters-container");
+insertChildrenBefore(elem3, block3);
