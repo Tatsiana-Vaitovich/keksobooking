@@ -1,6 +1,7 @@
 "use strict";
 // ---1.создаю массив объявлений пользователей
 const map = document.querySelector(".map");
+const mapPins = document.querySelector(".map__pins");
 const indent = 120;
 let usersNotices = [];
 const author = {};
@@ -57,6 +58,9 @@ const maxRooms = 5;
 const minGuests = 1;
 const maxGuests = 15;
 const avatarsArr = getAvatars(1, 8);
+const mapPinWidth = 50;
+const mapPinHeight = 70;
+
 // функция, генерирующая случайное число:
 function getRandomNumber(min, max) {
   const rand = min + Math.random() * (max + 1 - min);
@@ -113,18 +117,18 @@ function getAvatars(min, max) {
 
 function getLocation(indent) {
   const location = {};
-  // определим размер родительского блока .map, в котором находится метка
-  // const mapWidth = map.offsetWidth;
-  // const mapHeight = map.offsetHeight;
-  // const x = getRandomNumber(indent, mapWidth - indent);
-  // const y = getRandomNumber(indent, mapHeight - indent);
+  // определим размер родительского блока mapPins, в котором находится метка
+  // const mapPinsWidth = mapPins.offsetWidth;
+  // const mapPinsHeight = mapPins.offsetHeight;
+  // const x = getRandomNumber(indent, mapPinsWidth - indent);
+  // const y = getRandomNumber(indent, mapPinsHeight - indent);
   // location.x = x;
   // location.y = y;
   // технически любая функция может быть использована как конструктор. 
   // То есть, каждая функция может быть вызвана при помощи оператора new
   // вместо кода выше использую конструктор функции
-  const coordX = new GetCoord(map, "x", indent);
-  const coordY = new GetCoord(map, "y", indent);
+  const coordX = new GetCoord(mapPins, "x", indent);
+  const coordY = new GetCoord(mapPins, "y", indent);
   location.x = coordX.coord;
   location.y = coordY.coord;
   return location;
@@ -141,7 +145,6 @@ function GetCoord(elem, coordName, indent) {
   }
   this.coord = getRandomNumber(this.indent, this.getSize() - this.indent);
 }
-
 
 // функция для получения координат метки
 function getStrokeCoords(location) {
@@ -246,18 +249,18 @@ function getUserNotice(i) {
   const mapPin = template.querySelector(".map__pin").cloneNode(true);
   mapPin.querySelector("img").src = usersNotices[i].author.avatar;
   mapPin.querySelector("img").alt = usersNotices[i].offer.title;
-  mapPin.style = getStrokeCoordsCenter(i, mapPin);
+  mapPin.style = getStrokeCoordsCenter(i);
   return mapPin;
 }
 
 // функции для получения координат центра метки:
-function getUserNoticeCoordCenterX(index, elem) {
-  const x = usersNotices[index].location.x + 1/2 * elem.offsetWidth;
+function getUserNoticeCoordCenterX(index) {
+  const x = usersNotices[index].location.x - 1/2 * mapPinWidth;
   return x;
 }
 
-function getUserNoticeCoordCenterY(index, elem) {
-  const y = usersNotices[index].location.y + elem.offsetHeight;
+function getUserNoticeCoordCenterY(index) {
+  const y = usersNotices[index].location.y - mapPinHeight;
   return y;
 }
 
@@ -315,10 +318,10 @@ function getUserBigNotice(number) {
   let whereInsertFeatures = popup.querySelector(".popup__features");
   let whereInsertPhotos = popup.querySelector(".popup__photos");
   popup.querySelector(".popup__avatar").src = userNotice.author.avatar;
-  popup.style = getStrokeCoordsCenter(number, popup);
   popup.querySelector(".popup__title").textContent = userNotice.offer.title;
+  popup.querySelector(".popup__text--address").textContent = userNotice.offer.address;
   popup.querySelector(".popup__text--price").innerHTML = getStrokePrice(number);
-  popup.querySelector(".popup__type").textContent = userNotice.offer.type;
+  popup.querySelector(".popup__type").textContent = getStrokeType(number);
   popup.querySelector(".popup__text--capacity").textContent = capacity;
   popup.querySelector(".popup__text--time").textContent = time;
   popup.querySelector(".popup__description").textContent = userNotice.offer.description;
@@ -334,6 +337,35 @@ function getUserBigNotice(number) {
   return popup;
 }
 
+// функция для получения строки price
+function getStrokePrice(number) {
+  const priceFromUserNotice = roundNumber(usersNotices[number].offer.price, 100);
+  const addStroke = "&#x20bd;<span>/ночь</span>";
+  const price = priceFromUserNotice + addStroke;
+  return price;
+}
+
+// функция для округления числа
+function roundNumber(number, to) {
+  const roundNumber = Math.round((number)/to) * to;
+  return roundNumber;
+}
+
+// функция для получения строки type
+function getStrokeType(number) {
+  const typeFromUserNotice = usersNotices[number].offer.type;
+  switch (typeFromUserNotice) {
+    case "flat":
+      return "Квартира";
+    case "bungalo":
+      return "Бунгало";
+    case "house":
+      return "Дом";
+    case "palace":
+      return "Дворец";
+    }
+  }
+
 // функция для получения строки capacity
 function getStrokeCapacity(number) {
   const roomsFromUserNotice = usersNotices[number].offer.rooms;
@@ -347,20 +379,6 @@ function getStrokeTime(number) {
   const checkoutFromUserNotice = usersNotices[number].offer.checkout;
   const time = "Заезд после " + checkinFromUserNotice + ", выезд до " + checkoutFromUserNotice;
   return time;
-}
-
-// функция для получения строки price
-function getStrokePrice(number) {
-  const priceFromUserNotice = roundNumber(usersNotices[number].offer.price, 100);
-  const addStroke = "&#x20bd;<span>/ночь</span>";
-  const price = priceFromUserNotice + addStroke;
-  return price;
-}
-
-// функция для округления числа
-function roundNumber(number, to) {
-  const roundNumber = Math.round((number)/to) * to;
-  return roundNumber;
 }
 
 // функция для очистки элемента
