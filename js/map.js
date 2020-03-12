@@ -234,7 +234,7 @@ getElementsForFragment(3);
 
 let elem1 = fragment.querySelector("#elem1"); // div для элементов .map__pin (userNotice)
 let elem2 = fragment.querySelector("#elem2"); // div для элементов .popup__photo
-let elem3 = fragment.querySelector("#elem3"); // div для элемента .map__card (userBigNotice)
+let elem3 = fragment.querySelector("#elem3"); // div для элемента .map__card (Popup)
 
 function getElementsForFragment(counter) {
   for (let i = 0; i < counter; i++) {
@@ -245,7 +245,7 @@ function getElementsForFragment(counter) {
 }
 
 // напишу функцию для создания каждого элемента userNotice
-function getUserNotice(i) {
+function getMapPin(i) {
   const mapPin = template.querySelector(".map__pin").cloneNode(true);
   mapPin.querySelector("img").src = usersNotices[i].author.avatar;
   mapPin.querySelector("img").alt = usersNotices[i].offer.title;
@@ -254,33 +254,33 @@ function getUserNotice(i) {
 }
 
 // функции для получения координат центра метки:
-function getUserNoticeCoordCenterX(index) {
+function getMapPinCoordCenterX(index) {
   const x = usersNotices[index].location.x - 1/2 * mapPinWidth;
   return x;
 }
 
-function getUserNoticeCoordCenterY(index) {
+function getMapPinCoordCenterY(index) {
   const y = usersNotices[index].location.y - mapPinHeight;
   return y;
 }
 
 // функция для получения строки с координатами
 function getStrokeCoordsCenter (index, elem) {
-  let x = getUserNoticeCoordCenterX(index, elem);
-  let y = getUserNoticeCoordCenterY(index, elem);
+  let x = getMapPinCoordCenterX(index, elem);
+  let y = getMapPinCoordCenterY(index, elem);
   let str = "left:" + x + "px;" + " top:" + y + "px;"
   return str;
 }
 
 // функция для получения объявлений пользователей
-function getUsersPins(arr, whereInsert) {
+function getMapPins(arr, whereInsert) {
   for (let i = 0; i < arr.length; i++) {
-    whereInsert.append(getUserNotice(i));
+    whereInsert.append(getMapPin(i));
   }
 }
 
 // получу elem1 фрагмента из массива usersNotices
-getUsersPins(usersNotices, elem1)
+getMapPins(usersNotices, elem1)
 
 // ---4.Вставляю все полученные элементы из elem1 за один прием в блок ".map__pins"
 let block1 = document.querySelector(".map__pins");
@@ -310,7 +310,7 @@ function insertChildrenBefore(parentName, whereInsert) {
 // и вставляю полученный DOM-элемент в блок .map 
 // перед блоком.map__filters-container
 
-function getUserBigNotice(number) {
+function getPopup(number) {
   const popup = template.querySelector(".map__card").cloneNode(true);
   const userNotice = usersNotices[number];
   const capacity = getStrokeCapacity(number);
@@ -339,7 +339,7 @@ function getUserBigNotice(number) {
 
 // функция для получения строки price
 function getStrokePrice(number) {
-  const priceFromUserNotice = roundNumber(usersNotices[number].offer.price, 100);
+  const priceFromUserNotice = roundNumber(usersNotices[number].offer.price, 1000);
   const addStroke = "&#x20bd;<span>/ночь</span>";
   const price = priceFromUserNotice + addStroke;
   return price;
@@ -413,8 +413,8 @@ function getPopupPhotos(arr) {
   return elem2;
 }
 
-// вставим userBigNotice в elem3 фрагмента
-elem3.append(getUserBigNotice(0));
+// вставим Popup в elem3 фрагмента
+elem3.append(getPopup(0));
 
 // вставим содержимое elem3 в документ - элемент с классом .map__filters-container
 let block3 = document.querySelector(".map__filters-container");
