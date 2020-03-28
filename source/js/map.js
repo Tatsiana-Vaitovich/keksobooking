@@ -127,23 +127,28 @@ function getLocation(indent) {
   // технически любая функция может быть использована как конструктор. 
   // То есть, каждая функция может быть вызвана при помощи оператора new
   // вместо кода выше использую конструктор функции
-  const coordX = new GetCoord(mapPins, "x", indent);
-  const coordY = new GetCoord(mapPins, "y", indent);
+  const coordX = new GetCoord("x", mapPins, indent);
+  const coordY = new GetCoord("y", mapPins, indent);
   location.x = coordX.coord;
   location.y = coordY.coord;
   return location;
 }
 
 // конструктор функции для получения координат метки
-function GetCoord(elem, coordName, indent) {
+function GetCoord(coordName, elem, indent) {
+  this.W = "offsetWidth";
+  this.H = "offsetHeight"
   this.coordName = coordName;
   this.elem = elem;
   this.indent = indent;
-  this.getSize = function() {
-    (coordName == "x") ? this.size = elem.offsetWidth : this.size = elem.offsetHeight;
-    return this.size;
+  this.getSizeName = function() {
+    if (this.coordName === "x") {return this.W}
+    else {return this.H}
+    // (this.coordName === "x") ? this.W : this.H
   }
-  this.coord = getRandomNumber(this.indent, this.getSize() - this.indent);
+  this.sizeName = this.getSizeName();
+  this.size = elem[this.sizeName];
+  this.coord = getRandomNumber(this.indent, (this.size - this.indent));
 }
 
 // функция для получения координат метки
