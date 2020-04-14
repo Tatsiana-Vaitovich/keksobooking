@@ -424,3 +424,93 @@ elem3.append(getPopup(0));
 // вставим содержимое elem3 в документ - элемент с классом .map__filters-container
 let block3 = document.querySelector(".map__filters-container");
 insertChildrenBefore(elem3, block3);
+
+// ----ДЗ НОВОЕ------
+
+// ---2. Переключаем карту из активного состояния в неактивное
+addClass(map, "map--faded");
+
+// проверяю, соответствует ли проект требованиям ТЗ
+// + Форма заполнения информации об объявлении .ad-form 
+// содержит класс ad-form--disabled
+
+// Все <input> и <select> формы .ad-form заблокированы с помощью атрибута disabled, 
+// добавленного на них или на их родительские блоки fieldset
+// Форма с фильтрами .map__filters заблокирована так же, 
+// как и форма .ad-form.
+
+const form = document.querySelector(".ad-form");
+const formElements = form.querySelectorAll(".ad-form__element");
+const filterSelects = document.querySelector(".map__filters").querySelectorAll("select");
+const filterInputs = document.querySelector(".map__filters").querySelectorAll("input");
+
+formElements.forEach(function(elem) {
+  if (elem.querySelector("input") || elem.querySelector("select")) {
+    addDisabled(elem);
+  }
+});
+filterSelects.forEach(function(elem) {
+  addDisabled(elem);
+});
+filterInputs.forEach(function(elem) {
+  addDisabled(elem);
+});
+
+// Любое перетаскивание состоит из трёх фаз: захвата элемента, 
+// его перемещения и отпускания элемента. На данном этапе 
+// нам достаточно описать реакцию на третью фазу: отпускание элемента. 
+// Для этого нужно добавить обработчик события mouseup на элемент 
+// .map__pin--main.
+// Обработчик события mouseup должен вызывать функцию, 
+// которая будет отменять изменения DOM-элементов, 
+// описанные в пункте «Неактивное состояние» технического задания
+
+const mainPin = document.querySelector(".map__pin--main");
+
+mainPin.addEventListener("mouseup", function() {
+  removeClass(map, "map--faded");
+  removeClass(form, "ad-form--disabled");
+  formElements.forEach(function(elem) {
+    if (elem.querySelector("input") || elem.querySelector("select")) {
+      removeDisabled(elem);
+    }
+  });
+  filterSelects.forEach(function(elem) {
+    removeDisabled(elem);
+  });
+  filterInputs.forEach(function(elem) {
+    removeDisabled(elem);
+  });
+});
+
+function addClass(elem, className) {
+  elem.classList.add(className);
+}
+
+function removeClass(elem, className) {
+  elem.classList.remove(className);
+}
+
+function addDisabled(elem) {
+  elem.setAttribute("disabled", "");
+}
+
+function removeDisabled(elem) {
+  elem.removeAttribute("disabled");
+}
+
+// поле адреса должно быть заполнено всегда, 
+// в том числе сразу после открытия страницы. 
+// мы можем взять за исходное значение поля адреса середину метки.
+
+let formAdress = document.querySelector("#address");
+// formAdress.value = 
+
+function getMainPinCoordCenterX() {
+  const coordX = new GetCoord("x", mainPin, 0);
+  const coordY = new GetCoord("y", mainPin, 0);
+  console.log(coordX.coord);
+  console.log(coordY.coord);
+}
+
+getMainPinCoordCenterX();
