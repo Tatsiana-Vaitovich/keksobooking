@@ -443,6 +443,11 @@ const form = document.querySelector(".ad-form");
 const formElements = form.querySelectorAll(".ad-form__element");
 const filterSelects = document.querySelector(".map__filters").querySelectorAll("select");
 const filterInputs = document.querySelector(".map__filters").querySelectorAll("input");
+const mainPin = document.querySelector(".map__pin--main");
+const formAdress = document.querySelector("#address");
+
+formAdress.value = getMainPinCoordStroke();
+
 
 formElements.forEach(function(elem) {
   if (elem.querySelector("input") || elem.querySelector("select")) {
@@ -465,9 +470,7 @@ filterInputs.forEach(function(elem) {
 // которая будет отменять изменения DOM-элементов, 
 // описанные в пункте «Неактивное состояние» технического задания
 
-const mainPin = document.querySelector(".map__pin--main");
-
-mainPin.addEventListener("mouseup", function() {
+mainPin.addEventListener("mouseup", function(evt) {
   removeClass(map, "map--faded");
   removeClass(form, "ad-form--disabled");
   formElements.forEach(function(elem) {
@@ -481,6 +484,7 @@ mainPin.addEventListener("mouseup", function() {
   filterInputs.forEach(function(elem) {
     removeDisabled(elem);
   });
+  formAdress.value = evt.clientX + ", " + evt.clientY;// позже уточню значение; при «перетаскивании» значение поля изменится на то, на которое будет указывать острый конец метки
 });
 
 function addClass(elem, className) {
@@ -503,14 +507,17 @@ function removeDisabled(elem) {
 // в том числе сразу после открытия страницы. 
 // мы можем взять за исходное значение поля адреса середину метки.
 
-let formAdress = document.querySelector("#address");
-// formAdress.value = 
-
-function getMainPinCoordCenterX() {
-  const coordX = new GetCoord("x", mainPin, 0);
-  const coordY = new GetCoord("y", mainPin, 0);
-  console.log(coordX.coord);
-  console.log(coordY.coord);
+function getMainPinCoord(coordName) {
+  let coord;
+  if (coordName === "x") {
+    coord = mainPin.offsetLeft + 1/2 * mainPin.offsetWidth;
+  } else {
+    coord = mainPin.offsetTop + 1/2 * mainPin.offsetHeight;
+  }
+  return coord;
 }
 
-getMainPinCoordCenterX();
+function getMainPinCoordStroke() {
+  const str = roundNumber(getMainPinCoord("x"), 10) + ", "+ roundNumber(getMainPinCoord("y"), 10)
+  return str;
+}
