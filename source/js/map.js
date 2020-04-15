@@ -470,7 +470,9 @@ filterInputs.forEach(function(elem) {
 // которая будет отменять изменения DOM-элементов, 
 // описанные в пункте «Неактивное состояние» технического задания
 
-mainPin.addEventListener("mouseup", function(evt) {
+mainPin.addEventListener("mouseup", onMainPinActivatePage)
+
+function onMainPinActivatePage(evt) {
   removeClass(map, "map--faded");
   removeClass(form, "ad-form--disabled");
   formElements.forEach(function(elem) {
@@ -484,8 +486,7 @@ mainPin.addEventListener("mouseup", function(evt) {
   filterInputs.forEach(function(elem) {
     removeDisabled(elem);
   });
-  formAdress.value = evt.clientX + ", " + evt.clientY;// позже уточню значение; при «перетаскивании» значение поля изменится на то, на которое будет указывать острый конец метки
-});
+};
 
 function addClass(elem, className) {
   elem.classList.add(className);
@@ -521,3 +522,76 @@ function getMainPinCoordStroke() {
   const str = roundNumber(getMainPinCoord("x"), 10) + ", "+ roundNumber(getMainPinCoord("y"), 10)
   return str;
 }
+
+// Перетаскивание метки реализую используя события мыши
+
+// отменю браузерные события на map - чтобы текст "и снова токио" не выделялся при щелчке
+map.addEventListener("mousedown", function(evt) {
+  evt.preventDefault();
+})
+
+// чтобы не сработало браузерное событие drag_and_drop
+mainPin.addEventListener("dragstart", function() {
+  return false;
+});
+
+
+// чтобы изначальный сдвиг курсора на элементе сохранялся запоминаем этот сдвиг
+mainPin.addEventListener("mousedown", onMainPinMouseUp);
+
+function onMainPinMouseUp(evt) {
+  evt.preventDefault();
+
+  const mainPinCoordCapture = {};
+  const mapCoords = {};
+
+  mainPinCoordCapture.x = evt.clientX - mainPin.getBoundingClientRect().left;
+  mainPinCoordCapture.y = evt.clientY - mainPin.getBoundingClientRect().top;
+  mapCoords.x = map.getBoundingClientRect().left;
+  mapCoords.y = map.getBoundingClientRect().top;
+
+  map.addEventListener("mousemove", onMainPinMouseMove);
+  map.addEventListener("mouseup", onMainPinMouseUp);
+
+  function onMainPinMouseMove(evt) {
+    // на протяжении всего перетаскивания нужно следить за тем, чтобы метка не вышла за пределы карты
+    let newLeft = evt.clientX - map.getBoundingClientRect().left - mainPinCoordCapture.x 
+    let newTop = evt.clientY - map.getBoundingClientRect().top - mainPinCoordCapture.y 
+  
+    const minLeft = 0;
+    const maxLeft = map.offsetWidth -mainPin.offsetWidth;
+    const minTop = 0;
+    const maxTop = map.offsetHeight - mainPin.offsetHeight;
+    // mapPin вышла из map => оставить mapPin в еe границах.
+    if (newLeft < minLeft) {
+      newLeft = minLeft;
+    } else if (newLeft > maxLeft) {
+      newLeft = maxLeft;
+    } 
+    if (newTop < minTop) {
+      newTop = minTop;
+    } else if (newTop > maxTop) {
+      newTop = maxTop;
+    }
+    mainPin.style.top = newTop + "px";
+    mainPin.style.left = newLeft + "px";
+  }
+  
+  function onMainPinMouseUp(evt) {
+    let newLeft = evt.clientX - mainPinCoordCapture.x - mapCoords.x;
+    let newTop = evt.clientY - mainPinCoordCapture.y - mapCoords.y;
+  
+    mainPin.style.top = newTop + "px";
+    mainPin.style.left = newLeft + "px";
+  
+    map.removeEventListener("mouseup", onMainPinMouseUp);
+    map.removeEventListener("mousemove", onMainPinMouseMove);
+    
+    // заполним поле адрес
+    formAdress.value = newLeft + ", " + newTop;
+  }
+};
+
+
+
+
