@@ -232,6 +232,7 @@ map.classList.remove("map--faded");
 // получаю шаблон
 const template = document.querySelector("#users-notice").content;
 // создам фрагмент, в который буду "складывать" сгенерированные элементы
+// ------??? похоже нужно избегать использвания document.....()???
 let fragment = document.createDocumentFragment();
 
 // создаю в фрагменте одельные div, в которые буду вставлять нужные элементы из шаблона
@@ -339,6 +340,9 @@ function getPopup(number) {
   
   // вставим содержимое elem2 в элемент с классом popup__photos
   insertChildrenAppend(elem2, whereInsertPhotos);
+  // добавим элементу popup класс ".visually-hidden", чтобы изначально он не был виден
+  popup.classList.add("visually-hidden");
+
   return popup;
 }
 
@@ -426,10 +430,6 @@ let block3 = document.querySelector(".map__filters-container");
 insertChildrenBefore(elem3, block3);
 
 // ----ДЗ НОВОЕ------
-
-// добавим элементу popup класс ".visually-hidden", чтобы изначально он не был виден
-const popup = document.querySelector(".popup");
-popup.classList.add("visually-hidden");
 
 // ----- неактивное состояние карты. Пункт «Неактивное состояние» технического задания
 // Переключаем карту из активного состояния в неактивное
@@ -666,14 +666,35 @@ function onMainPinTouchEnd(evt) {
   const mainPinTop = mainPin.getBoundingClientRect().top;
   const mapLeft = map.getBoundingClientRect().left;
   const mapTop = map.getBoundingClientRect().top;
-  const value = (mainPinLeft - mapLeft) + ", " + (mainPinTop - mapTop);
-
+  const roundValueX = roundNumber((mainPinLeft - mapLeft), 1);
+  const roundValueY = roundNumber((mainPinTop - mapTop), 1);
+  const value =  roundValueX + ", " + roundValueY;
   formAdress.value = value;
 }
 
 // ------- Просмотр подробной информации о похожих объявлениях
 // выше при помощи добавления класса "visually-hidden" скрыла popup
+const popup = document.querySelector(".popup");
 
+map.addEventListener("click", onMapPopupOpen);
+
+
+function onMapPopupOpen(evt) {
+  const elem = evt.target;
+  if ((elem.closest(".map__pin")) && !(elem.closest(".map__pin--main"))) {
+    openPopup();
+  } else if (elem.closest(".popup__close")) {
+    closePopup();
+  }
+}
+
+function openPopup() {
+  removeClass(popup, "visually-hidden");
+}
+
+function closePopup() {
+  addClass(popup, "visually-hidden");
+}
 
 
 
