@@ -60,6 +60,8 @@ const maxGuests = 15;
 const avatarsArr = getAvatars(1, 8);
 const mapPinWidth = 50;
 const mapPinHeight = 70;
+const keyCodeEnter = 13;
+const keyCodeEsc = 27;
 
 // функция, генерирующая случайное число:
 function getRandomNumber(min, max) {
@@ -218,7 +220,7 @@ shuffle(titlesArr);
 usersNotices = createUsersNotices(8);
 
 // ---2. Переключаем карту из неактивного состояния в активное
-map.classList.remove("map--faded");
+// map.classList.remove("map--faded");
 
 // ---3. Cоздаю DOM-элементы на основе объекта usersNotices и шаблона <template>
 // На основе данных, созданных в первом пункте, создайте DOM-элементы, 
@@ -256,6 +258,7 @@ function getMapPin(i) {
   mapPin.querySelector("img").src = usersNotices[i].author.avatar;
   mapPin.querySelector("img").alt = usersNotices[i].offer.title;
   mapPin.style = getStrokeCoordsCenter(i);
+  mapPin.classList.add("visually-hidden");
   return mapPin;
 }
 
@@ -433,7 +436,7 @@ insertChildrenBefore(elem3, block3);
 
 // ----- неактивное состояние карты. Пункт «Неактивное состояние» технического задания
 // Переключаем карту из активного состояния в неактивное
-addClass(map, "map--faded");
+// addClass(map, "map--faded");
 
 // проверяю, соответствует ли проект требованиям ТЗ
 // + Форма заполнения информации об объявлении .ad-form 
@@ -478,6 +481,7 @@ mapFilterInputs.forEach(function(elem) {
 // Обработчик события mouseup должен вызывать функцию, 
 // которая будет отменять изменения DOM-элементов, 
 // описанные в пункте «Неактивное состояние» технического задания
+// --- у меня в неактивном состоянии какты элементы mapPin видны. "спрячу" их.
 
 mainPin.addEventListener("mouseup", onMainPinActivatePage)
 
@@ -495,6 +499,9 @@ function onMainPinActivatePage(evt) {
   mapFilterInputs.forEach(function(elem) {
     removeDisabled(elem);
   });
+  mapPins.querySelectorAll(".map__pin").forEach(function(elem) {
+  removeClass(elem, "visually-hidden");
+  })
 };
 
 function addClass(elem, className) {
@@ -548,10 +555,14 @@ mainPin.addEventListener("dragstart", function() {
   return false;
 });
 
+// получу координаты относительно документа, 
+// чтобы учитывать прокрутку страницы при перемещении mainPin
+const pageScrollX = window.pageXOffset;
+const pageScrollY = window.pageYOffset;
 const mainPinWidth = mainPin.offsetWidth;
 const bigMainPinWidth = bigMainPin.width.baseVal.value;
-const mapLeft = map.getBoundingClientRect().left;
-const mapTop = map.getBoundingClientRect().top;
+const mapLeft = map.getBoundingClientRect().left + pageScrollX;
+const mapTop = map.getBoundingClientRect().top + pageScrollY;
 const mapWidth = map.offsetWidth;
 const mapHeight = map.offsetHeight;
 const mapFilterHeight = mapFilter.offsetHeight;
@@ -559,7 +570,8 @@ const mainPinBorder = (bigMainPinWidth - mainPinWidth) * 1/2;
 
 // чтобы изначальный сдвиг курсора на элементе сохранялся запоминаем этот сдвиг:
 let mainPinCoordCapture = {};
-let mapCoords = {};
+// также запомню координаты, где "остановились"
+let mainPinCoordDrop = {};
 
 mainPin.addEventListener("mousedown", onMainPinMouseDown);
 
@@ -571,21 +583,23 @@ function onMainPinMouseDown(evt) {
 
   mainPinCoordCapture.x = evt.clientX - mainPinLeft;
   mainPinCoordCapture.y = evt.clientY - mainPinTop;
-  mapCoords.x = mapLeft;
-  mapCoords.y = mapTop;
 
-  mainPin.addEventListener("mousemove", onMainPinMouseMove);
-  mainPin.addEventListener("mouseup", onMapMouseUp);
+  map.addEventListener("mousemove", onMapMouseMove);
+  map.addEventListener("mouseup", onMapMouseUp);
 }
 
-function onMainPinMouseMove(evt) {
-  // на протяжении всего перетаскивания нужно следить за тем, чтобы метка не вышла за пределы карты
-  let newLeft = evt.clientX - mapLeft - mainPinCoordCapture.x 
-  let newTop = evt.clientY - mapTop - mainPinCoordCapture.y 
+function onMapMouseMove(evt) {
+  // на протяжении всего перетаскивания нужно следить за тем, 
+  // чтобы метка не вышла за пределы карты
+  const pageScrollX = window.pageXOffset;
+  const pageScrollY = window.pageYOffset;
 
-  const minLeft = mainPinBorder;
-  const maxLeft = mapWidth - mapPinWidth - mainPinBorder;
-  const minTop = mainPinBorder;
+  let newLeft = evt.clientX + pageScrollX - mapLeft - mainPinCoordCapture.x 
+  let newTop = evt.clientY + pageScrollY - mapTop - mainPinCoordCapture.y 
+
+  const minLeft = mainPinBorder + pageScrollX;
+  const maxLeft = mapWidth - mapPinWidth - mainPinBorder + pageScrollX;
+  const minTop = mainPinBorder + pageScrollY;
   const maxTop = mapHeight - mapPinHeight - mainPinBorder - mapFilterHeight;
   // mapPin вышла из map => оставить mapPin в еe границах.
   if (newLeft < minLeft) {
@@ -600,17 +614,19 @@ function onMainPinMouseMove(evt) {
   }
   mainPin.style.top = newTop + "px";
   mainPin.style.left = newLeft + "px";
+  mainPinCoordDrop.x = newLeft;
+  mainPinCoordDrop.y = newTop;
 }
 
 function onMapMouseUp(evt) {
-  let newLeft = evt.clientX - mainPinCoordCapture.x - mapCoords.x;
-  let newTop = evt.clientY - mainPinCoordCapture.y - mapCoords.y;
+  let newLeft = mainPinCoordDrop.x;
+  let newTop = mainPinCoordDrop.y;
 
   mainPin.style.top = newTop + "px";
   mainPin.style.left = newLeft + "px";
 
-  mainPin.removeEventListener("mousemove", onMainPinMouseMove);
-  mainPin.removeEventListener("mouseup", onMapMouseUp);
+  map.removeEventListener("mousemove", onMapMouseMove);
+  map.removeEventListener("mouseup", onMapMouseUp);
 
   // заполним поле адреса
   formAdress.value = newLeft + ", " + newTop;
@@ -627,21 +643,24 @@ function onMainPinTouchStart(evt) {
 
   mainPinCoordCapture.x = evt.touches[0].clientX - mainPinLeft;
   mainPinCoordCapture.y = evt.touches[0].clientY - mainPinTop;
-  mapCoords.x = mapLeft;
-  mapCoords.y = mapTop;
-  mainPin.addEventListener("touchmove", onMainPinTouchMove);
-  mainPin.addEventListener("touchend", onMainPinTouchEnd);
+  map.addEventListener("touchmove", onMapTouchMove);
+  map.addEventListener("touchend", onMapTouchEnd);
 };
 
-function onMainPinTouchMove(evt) {
+function onMapTouchMove(evt) {
   // на протяжении всего перетаскивания нужно следить за тем, чтобы метка не вышла за пределы карты
-  let newLeft = evt.touches[0].clientX - mapLeft - mainPinCoordCapture.x 
-  let newTop = evt.touches[0].clientY - mapTop - mainPinCoordCapture.y 
+  const pageScrollX = window.pageXOffset;
+  const pageScrollY = window.pageYOffset;
 
-  const minLeft = mainPinBorder;
-  const maxLeft = mapWidth - mapPinWidth - mainPinBorder;
-  const minTop = mainPinBorder;
+  let newLeft = evt.touches[0].clientX + pageScrollX - mapLeft - mainPinCoordCapture.x 
+  let newTop = evt.touches[0].clientY + pageScrollY - mapTop - mainPinCoordCapture.y 
+
+
+  const minLeft = mainPinBorder + pageScrollX;
+  const maxLeft = mapWidth - mapPinWidth - mainPinBorder + pageScrollX;
+  const minTop = mainPinBorder + pageScrollY;
   const maxTop = mapHeight - mapPinHeight - mainPinBorder - mapFilterHeight;
+
   // mapPin вышла из map => оставить mapPin в еe границах.
   if (newLeft < minLeft) {
     newLeft = minLeft;
@@ -655,11 +674,13 @@ function onMainPinTouchMove(evt) {
   }
   mainPin.style.top = newTop + "px";
   mainPin.style.left = newLeft + "px";
+  mainPinCoordDrop.x = newLeft;
+  mainPinCoordDrop.y = newTop;
 }
 
-function onMainPinTouchEnd(evt) {
-  mainPin.removeEventListener("touchEnd", onMainPinTouchEnd);
-  mainPin.removeEventListener("touchmove", onMainPinTouchMove);
+function onMapTouchEnd(evt) {
+  map.removeEventListener("touchEnd", onMapTouchEnd);
+  map.removeEventListener("touchmove", onMapTouchMove);
   
   // заполним поле адреса
   const mainPinLeft = mainPin.getBoundingClientRect().left;
@@ -675,9 +696,9 @@ function onMainPinTouchEnd(evt) {
 // ------- Просмотр подробной информации о похожих объявлениях
 // выше при помощи добавления класса "visually-hidden" скрыла popup
 const popup = document.querySelector(".popup");
+const buttonClose = popup.querySelector(".popup__close");
 
 map.addEventListener("click", onMapPopupOpen);
-
 
 function onMapPopupOpen(evt) {
   const elem = evt.target;
@@ -690,11 +711,38 @@ function onMapPopupOpen(evt) {
 
 function openPopup() {
   removeClass(popup, "visually-hidden");
+  document.addEventListener("keydown", onPopupEscPress);
 }
 
 function closePopup() {
   addClass(popup, "visually-hidden");
+  document.removeEventListener("keydown", onPopupEscPress);
 }
 
+// для доступности добавлю keyEvents, чтобы можно было закрыть popup
+// нажав кнопку esc на документе или нажав кнопку Enter на самом элементе buttonClose
 
+// сделаю buttonClose кликабельным
+buttonClose.setAttribute("tabindex", 0);
+
+buttonClose.addEventListener("keydown", onPopupEnterPress)
+
+// обработчик "закрыть с клавиатур popup"
+function onPopupEnterPress(evt) {
+  if(evt.keyCode === keyCodeEnter) {
+    openPopup();
+  }
+}
+
+function onPopupEscPress(evt) {
+  console.log("work");
+  console.log(evt.keyCode);
+  if(evt.keyCode === keyCodeEsc) {
+    closePopup();
+  }
+}
+
+// для доступности добавлю touchEvents
+map.addEventListener("touchstart", onMapPopupOpen);
+buttonClose.addEventListener("touchstart", closePopup);
 
