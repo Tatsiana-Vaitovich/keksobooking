@@ -629,7 +629,9 @@ function onMapMouseUp(evt) {
   map.removeEventListener("mouseup", onMapMouseUp);
 
   // заполним поле адреса
-  formAdress.value = newLeft + ", " + newTop;
+  const roundValueX = roundNumber((newLeft), 1);
+  const roundValueY = roundNumber((newTop), 1);
+  formAdress.value = roundValueX + ", " + roundValueY;
 }
 
 // добавим touchEvents для доступности
@@ -735,8 +737,6 @@ function onPopupEnterPress(evt) {
 }
 
 function onPopupEscPress(evt) {
-  console.log("work");
-  console.log(evt.keyCode);
   if(evt.keyCode === keyCodeEsc) {
     closePopup();
   }
@@ -746,3 +746,141 @@ function onPopupEscPress(evt) {
 map.addEventListener("touchstart", onMapPopupOpen);
 buttonClose.addEventListener("touchstart", closePopup);
 
+// ------ 2 часть задания - опишем сценарии взаимодействия пользователя с формой отправки данных и саму отправку
+
+// в соответствии с ТЗ поле "тип жилья" и минимальное значение в поле "цена за ночь" взаимосвязаны
+
+const price = document.querySelector("#price");
+const type = document.querySelector("#type");
+const timein = document.querySelector("#timein");
+const timeout = document.querySelector("#timeout");
+const roomNumber = document.querySelector("#room_number");
+const capacity = document.querySelector("#capacity");
+
+const minPriceArr = {
+  bungalo: 0,
+  flat: 1000,
+  house: 5000,
+  palace: 10000,
+};
+
+type.addEventListener("change", function() {
+  const value = this.value;
+  console.log(value);
+  switch (value) {
+    case "bungalo":
+      getMinForFieldPrice("bungalo");
+      break;
+    case "flat":
+      getMinForFieldPrice("flat");
+      break;
+    case "house":
+      getMinForFieldPrice("house");
+      break;
+    case "palace":
+      getMinForFieldPrice("palace");
+  }
+});
+
+function getMinForFieldPrice(type) {
+  price.setAttribute("min", minPriceArr[type]);
+
+  const valueMin = price.getAttribute("min");
+
+  price.setAttribute("placeholder", valueMin);
+}
+
+// в соответствии с ТЗ Поля «Время заезда» и «Время выезда» синхронизированы: 
+// при изменении значения одного поля, во втором выделяется соответствующее ему. 
+
+timein.addEventListener("change", function() {
+  newValueForTimeout.getValue();
+});
+
+timeout.addEventListener("change", function() {
+  newValueForTimein.getValue();
+});
+
+// Поле «Количество комнат» синхронизировано с полем «Количество мест» таким образом, 
+// что при выборе количества комнат вводятся ограничения на допустимые варианты выбора количества гостей:
+
+// 1 комната — «для 1 гостя»;
+// 2 комнаты — «для 2 гостей» или «для 1 гостя»;
+// 3 комнаты — «для 3 гостей», «для 2 гостей» или «для 1 гостя»;
+// 100 комнат — «не для гостей»;
+
+roomNumber.addEventListener("change", function() {
+  newValueForCapacity.getCapacity();
+})
+
+class NewValue {
+  constructor(current, target) {
+    this.targetElem = target;
+    this.currentElem = current;
+  }
+  clearElem(condition, value) {
+    const children = this.targetElem.querySelectorAll("option");
+    console.log(children);
+    for(let i = 0; i < children.length; i++ ) {
+      children[i].style.display = "";
+      console.log("value " + value);
+      console.log("childrenV " + children[i].value);
+      if (children[i].value !== (condition)) {
+        console.log("delete");
+        children[i].style.display = "none";
+      }
+    }
+  }
+  hiddenTargetElemChildren() {
+    const targetElemChildren = this.targetElem.querySelectorAll("option");
+    targetElemChildren.forEach(elem => {
+      elem.style.display = "none";
+    })
+  }
+  showTargetElemChild(condition) {
+    const targetElemChildren = this.targetElem.querySelectorAll("option");
+    targetElemChildren.forEach(elem => {
+      if (elem.value === condition) {
+        elem.style.display = "";
+      }
+    })
+  }
+  getValue() {
+    const value = this.currentElem.value;
+    this.targetElem.value = value;
+  }
+  getCapacity() {
+    let value = this.currentElem.value;
+    this.targetElem.value = value;
+    this.hiddenTargetElemChildren();
+    switch (value) {
+      case "1": 
+        this.showTargetElemChild("1")
+        break;
+      case "100":
+        this.targetElem.value = "0";
+        this.showTargetElemChild("0")
+        break;
+      case "2":
+        this.showTargetElemChild("1")
+        this.showTargetElemChild("2")
+        break;
+      case "3": 
+        this.showTargetElemChild("1")
+        this.showTargetElemChild("2")
+        this.showTargetElemChild("3")
+    }
+  }
+};
+
+const newValueForTimeout = new NewValue(timein, timeout);
+const newValueForTimein = new NewValue(timeout, timein);
+const newValueForCapacity = new NewValue(roomNumber, capacity);
+
+// Чтобы метку невозможно было поставить выше горизонта 
+// или ниже панели фильтров, значение координаты Y должно быть 
+// ограничено интервалом от 130 до 630. 
+// Значение координаты X должно быть ограничено размерами блока, 
+// в котором перетаскивается метка. 
+// ----??? я ограничила координаты метки 
+// исходя из размеров метки когда карта неактивна с учетом внешних размеров
