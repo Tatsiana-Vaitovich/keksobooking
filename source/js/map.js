@@ -119,38 +119,33 @@ function getAvatars(min, max) {
 
 function getLocation(indent) {
   const location = {};
-  // определим размер родительского блока mapPins, в котором находится метка
-  // const mapPinsWidth = mapPins.offsetWidth;
-  // const mapPinsHeight = mapPins.offsetHeight;
-  // const x = getRandomNumber(indent, mapPinsWidth - indent);
-  // const y = getRandomNumber(indent, mapPinsHeight - indent);
-  // location.x = x;
-  // location.y = y;
-  // технически любая функция может быть использована как конструктор. 
-  // То есть, каждая функция может быть вызвана при помощи оператора new
-  // вместо кода выше использую конструктор функции
   const coordX = new GetCoord("x", mapPins, indent);
   const coordY = new GetCoord("y", mapPins, indent);
-  location.x = coordX.coord;
-  location.y = coordY.coord;
+  location.x = coordX.getCoord();
+  location.y = coordY.getCoord();
   return location;
 }
 
-// конструктор функции для получения координат метки
-function GetCoord(coordName, elem, indent) {
-  this.W = "offsetWidth";
-  this.H = "offsetHeight"
-  this.coordName = coordName;
-  this.elem = elem;
-  this.indent = indent;
-  this.getSizeName = function() {
-    if (this.coordName === "x") {return this.W}
-    else {return this.H}
-    // (this.coordName === "x") ? this.W : this.H
+// конструктор класса для получения координат метки
+class GetCoord {
+  constructor(coordName, elem, indent) {
+    this.coordName = coordName;
+    this.elem = elem;
+    this.indent = indent;
   }
-  this.sizeName = this.getSizeName();
-  this.size = elem[this.sizeName];
-  this.coord = getRandomNumber(this.indent, (this.size - this.indent));
+  getSizeName() {
+    const W = "offsetWidth";
+    const H = "offsetHeight";
+    if (this.coordName === "x") {return W}
+    else {return H}
+    // (this.coordName === "x") ? W : H;
+  }
+  getCoord() {
+    const sizeName = this.getSizeName();
+    const size = this.elem[sizeName];
+    const coord = getRandomNumber(this.indent, (size - this.indent))
+    return coord;
+  }
 }
 
 // функция для получения координат метки
@@ -683,7 +678,7 @@ function onMapTouchMove(evt) {
 function onMapTouchEnd(evt) {
   map.removeEventListener("touchEnd", onMapTouchEnd);
   map.removeEventListener("touchmove", onMapTouchMove);
-  
+
   // заполним поле адреса
   const mainPinLeft = mainPin.getBoundingClientRect().left;
   const mainPinTop = mainPin.getBoundingClientRect().top;
