@@ -349,8 +349,8 @@ function getPopup(number) {
   
   // вставим содержимое elem2 в элемент с классом popup__photos
   insertChildrenAppend(elem2, whereInsertPhotos);
-  // добавим элементу popup класс ".visually-hidden", чтобы изначально он не был виден
-  popup.classList.add("visually-hidden");
+  // // добавим элементу popup класс ".visually-hidden", чтобы изначально он не был виден
+  // popup.classList.add("visually-hidden");
 
   return popup;
 }
@@ -381,6 +381,8 @@ function getStrokeType(number) {
       return "Дом";
     case "palace":
       return "Дворец";
+    default:
+      return "Квартира";
     }
   }
 
