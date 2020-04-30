@@ -162,8 +162,8 @@ class GetCoord {
 
 // функция для получения координат метки
 function getStrokeCoords(location) {
-  const coords = location.x + ", " + location.y;
-  return coords;
+  return (location.x + ", " + location.y);
+  // return coords;
 }
 
 // "features": массив строк случайной длины 
