@@ -365,8 +365,7 @@ function getStrokePrice(number) {
 
 // функция для округления числа
 function roundNumber(number, to) {
-  const roundNumber = Math.round((number)/to) * to;
-  return roundNumber;
+  return (Math.round((number)/to) * to);
 }
 
 // функция для получения строки type
