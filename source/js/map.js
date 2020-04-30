@@ -140,7 +140,6 @@ class GetCoord {
   //   const H = "offsetHeight";
   //   if (this.coordName === "x") {return W}
   //   else {return H}
-  //   // (this.coordName === "x") ? W : H;
   // }
   // getCoord() {
   //   const sizeName = this.getSizeName();
@@ -177,8 +176,8 @@ function getFeatures(arr) {
   const newArr = [];
   const elementsQuantity = getRandomNumber(0, initialArr.length);
   for (let i = 0; i < elementsQuantity; i++) {
-    let element = getRandomElement(initialArr);
-    let index = initialArr.indexOf(element);
+    const element = getRandomElement(initialArr);
+    const index = initialArr.indexOf(element);
     initialArr.splice(index, 1);
     newArr[i] = element;
   }
