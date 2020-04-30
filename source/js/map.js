@@ -119,34 +119,45 @@ function getAvatars(min, max) {
 
 function getLocation(indent) {
   const location = {};
-  const coordX = new GetCoord("x", mapPins, indent);
-  const coordY = new GetCoord("y", mapPins, indent);
-  location.x = coordX.getCoord();
-  location.y = coordY.getCoord();
+  // const coordX = new GetCoord("x", mapPins, indent);
+  // const coordY = new GetCoord("y", mapPins, indent);
+  const coord = new GetCoord(mapPins, indent);
+  location.x = coord.getCoordX();
+  location.y = coord.getCoordY();
   return location;
 }
 
 // конструктор класса для получения координат метки
 class GetCoord {
-  constructor(coordName, elem, indent) {
-    this.coordName = coordName;
+  // constructor(coordName, elem, indent) {
+  constructor (elem, indent) {
+    // this.coordName = coordName;
     this.elem = elem;
     this.indent = indent;
   }
-  getSizeName() {
-    const W = "offsetWidth";
-    const H = "offsetHeight";
-    if (this.coordName === "x") {return W}
-    else {return H}
-    // (this.coordName === "x") ? W : H;
-  }
-  getCoord() {
-    const sizeName = this.getSizeName();
-    const size = this.elem[sizeName];
-    const coord = getRandomNumber(this.indent, (size - this.indent))
+  // getSizeName() {
+  //   const W = "offsetWidth";
+  //   const H = "offsetHeight";
+  //   if (this.coordName === "x") {return W}
+  //   else {return H}
+  //   // (this.coordName === "x") ? W : H;
+  // }
+  // getCoord() {
+  //   const sizeName = this.getSizeName();
+  //   const size = this.elem[sizeName];
+  //   const coord = getRandomNumber(this.indent, (size - this.indent))
+  //   return coord;
+  // }
+  getCoordX() {
+    const size = this.elem.offsetWidth;
+    const coord = getRandomNumber(this.indent, (size - this.indent));
     return coord;
   }
-
+  getCoordY() {
+    const size = this.elem.offsetHeight;
+    const coord = getRandomNumber(this.indent, (size - this.indent));
+    return coord;
+  }
 }
 
 // функция для получения координат метки
