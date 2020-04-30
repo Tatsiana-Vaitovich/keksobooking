@@ -169,10 +169,10 @@ function getStrokeCoords(location) {
 // "features": массив строк случайной длины 
 // из элементов, перечисленных в массиве featuresArr
 // для получения features использую функцию
-function getFeatures() {
+function getFeatures(arr) {
   let initialArr = [];
-  for (let i = 0; i < featuresArr.length; i++) {
-    initialArr[i] = featuresArr[i];
+  for (let i = 0; i < arr.length; i++) {
+    initialArr[i] = arr[i];
   }
   const newArr = [];
   const elementsQuantity = getRandomNumber(0, initialArr.length);
@@ -206,7 +206,7 @@ function UserOffer(number, location){
   this.guests = getRandomNumber(minGuests, maxGuests); 
   this.checkin = getRandomElement(checkinsArr);
   this.checkout = getRandomElement(checkoutsArr);
-  this.features = getFeatures();
+  this.features = getFeatures(featuresArr);
   this.description = "";
   this.photos = shuffle(photosArr);
 }
