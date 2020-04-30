@@ -225,9 +225,6 @@ function createUsersNotices(elementsQuantity) {
 shuffle(titlesArr);
 usersNotices = createUsersNotices(8);
 
-// ---2. Переключаем карту из неактивного состояния в активное
-// map.classList.remove("map--faded");
-
 // ---3. Cоздаю DOM-элементы на основе объекта usersNotices и шаблона <template>
 // На основе данных, созданных в первом пункте, создайте DOM-элементы, 
 // соответствующие меткам на карте, и заполните их данными из массива. 
@@ -270,12 +267,12 @@ function getMapPin(i) {
 
 // функции для получения координат центра метки:
 function getMapPinCoordCenterX(index) {
-  const x = usersNotices[index].location.x - 1/2 * mapPinWidth;
+return usersNotices[index].location.x - 1/2 * mapPinWidth;
   return x;
 }
 
 function getMapPinCoordCenterY(index) {
-  const y = usersNotices[index].location.y - mapPinHeight;
+  return usersNotices[index].location.y - mapPinHeight;
   return y;
 }
 
