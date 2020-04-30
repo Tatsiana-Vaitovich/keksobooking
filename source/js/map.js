@@ -268,19 +268,17 @@ function getMapPin(i) {
 // функции для получения координат центра метки:
 function getMapPinCoordCenterX(index) {
 return usersNotices[index].location.x - 1/2 * mapPinWidth;
-  return x;
 }
 
 function getMapPinCoordCenterY(index) {
   return usersNotices[index].location.y - mapPinHeight;
-  return y;
 }
 
 // функция для получения строки с координатами
 function getStrokeCoordsCenter (index, elem) {
   let x = getMapPinCoordCenterX(index, elem);
   let y = getMapPinCoordCenterY(index, elem);
-  let str = "left:" + x + "px;" + " top:" + y + "px;"
+  return "left:" + x + "px;" + " top:" + y + "px;"
   return str;
 }
 
