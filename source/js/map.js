@@ -103,9 +103,9 @@ function shuffle(arr) {
 // в данном случае получаю массив, содержащий нужные мне 8 элементов
 function getAvatars(min, max) {
   let arr = [];
-  for (let i = min; i <= max; i++) {
-    let url = "img/avatars/user0" + i + ".png";
-    arr[i - 1] = url;
+  for (let i = (min - 1); i < max; i++) {
+    let url = "img/avatars/user0" + (i + 1) + ".png";
+    arr[i] = url;
   }
   return arr;
 }
@@ -146,6 +146,7 @@ class GetCoord {
     const coord = getRandomNumber(this.indent, (size - this.indent))
     return coord;
   }
+
 }
 
 // функция для получения координат метки
