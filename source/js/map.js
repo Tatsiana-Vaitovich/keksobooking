@@ -642,6 +642,10 @@ function onMapMouseUp(evt) {
   map.removeEventListener("mouseup", onMapMouseUp);
 
   // заполним поле адреса
+  fillFormAdress(newLeft, newTop);
+}
+
+function fillFormAdress(newLeft, newTop) {
   const roundValueX = roundNumber((newLeft), 1);
   const roundValueY = roundNumber((newTop), 1);
   formAdress.value = roundValueX + ", " + roundValueY;
@@ -673,14 +677,16 @@ function onMapTouchEnd(evt) {
   map.removeEventListener("touchmove", onMapTouchMove);
 
   // заполним поле адреса
-  const mainPinLeft = mainPin.getBoundingClientRect().left;
-  const mainPinTop = mainPin.getBoundingClientRect().top;
-  const mapLeft = map.getBoundingClientRect().left;
-  const mapTop = map.getBoundingClientRect().top;
-  const roundValueX = roundNumber((mainPinLeft - mapLeft), 1);
-  const roundValueY = roundNumber((mainPinTop - mapTop), 1);
-  const value =  roundValueX + ", " + roundValueY;
-  formAdress.value = value;
+  const mainPinBoundingClientRect = mainPin.getBoundingClientRect();
+  const mainPinLeft = mainPinBoundingClientRect.left;
+  const mainPinTop = mainPinBoundingClientRect.top;
+  const mapBoundingClientRect = map.getBoundingClientRect();
+  const mapLeft = mapBoundingClientRect.left;
+  const mapTop = mapBoundingClientRect.top;
+  const newLeft = mainPinLeft - mapLeft;
+  const newTop = mainPinTop - mapTop;
+
+  fillFormAdress(newLeft, newTop);
 }
 
 // ------- Просмотр подробной информации о похожих объявлениях
