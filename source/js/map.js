@@ -595,13 +595,20 @@ function getCaptureCoords(captureX, captureY) {
 }
 
 function onMapMouseMove(evt) {
+  const newX = evt.clientX;
+  const newY = evt.clientY;
+
+  getNewCoords(newX, newY);
+}
+
+function getNewCoords(newX, newY) {
   // на протяжении всего перетаскивания нужно следить за тем, 
   // чтобы метка не вышла за пределы карты
   const pageScrollX = window.pageXOffset;
   const pageScrollY = window.pageYOffset;
 
-  let newLeft = evt.clientX + pageScrollX - mapLeft - mainPinCoordCapture.x 
-  let newTop = evt.clientY + pageScrollY - mapTop - mainPinCoordCapture.y 
+  let newLeft = newX + pageScrollX - mapLeft - mainPinCoordCapture.x 
+  let newTop = newY + pageScrollY - mapTop - mainPinCoordCapture.y 
 
   const minLeft = mainPinBorder + pageScrollX;
   const maxLeft = mapWidth - mapPinWidth - mainPinBorder + pageScrollX;
@@ -655,34 +662,10 @@ function onMainPinTouchStart(evt) {
 };
 
 function onMapTouchMove(evt) {
-  // на протяжении всего перетаскивания нужно следить за тем, чтобы метка не вышла за пределы карты
-  const pageScrollX = window.pageXOffset;
-  const pageScrollY = window.pageYOffset;
+  const newX = evt.touches[0].clientX;
+  const newY = evt.touches[0].clientY;
 
-  let newLeft = evt.touches[0].clientX + pageScrollX - mapLeft - mainPinCoordCapture.x 
-  let newTop = evt.touches[0].clientY + pageScrollY - mapTop - mainPinCoordCapture.y 
-
-
-  const minLeft = mainPinBorder + pageScrollX;
-  const maxLeft = mapWidth - mapPinWidth - mainPinBorder + pageScrollX;
-  const minTop = mainPinBorder + pageScrollY;
-  const maxTop = mapHeight - mapPinHeight - mainPinBorder - mapFilterHeight;
-
-  // mapPin вышла из map => оставить mapPin в еe границах.
-  if (newLeft < minLeft) {
-    newLeft = minLeft;
-  } else if (newLeft > maxLeft) {
-    newLeft = maxLeft;
-  } 
-  if (newTop < minTop) {
-    newTop = minTop;
-  } else if (newTop > maxTop) {
-    newTop = maxTop;
-  }
-  mainPin.style.top = newTop + "px";
-  mainPin.style.left = newLeft + "px";
-  mainPinCoordDrop.x = newLeft;
-  mainPinCoordDrop.y = newTop;
+  getNewCoords(newX, newY);
 }
 
 function onMapTouchEnd(evt) {
