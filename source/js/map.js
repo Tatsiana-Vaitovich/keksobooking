@@ -249,7 +249,7 @@ let elem3 = fragment.querySelector("#elem3"); // div для элемента .ma
 
 function getElementsForFragment(counter) {
   for (let i = 0; i < counter; i++) {
-    let elem = document.createElement("div");
+    const elem = document.createElement("div");
     elem.id = "elem" + (i + 1);
     fragment.append(elem);
   }
@@ -279,7 +279,6 @@ function getStrokeCoordsCenter (index, elem) {
   let x = getMapPinCoordCenterX(index, elem);
   let y = getMapPinCoordCenterY(index, elem);
   return "left:" + x + "px;" + " top:" + y + "px;"
-  return str;
 }
 
 // функция для получения объявлений пользователей
@@ -578,14 +577,21 @@ mainPin.addEventListener("mousedown", onMainPinMouseDown);
 function onMainPinMouseDown(evt) {
   evt.preventDefault();
 
-  const mainPinLeft = mainPin.getBoundingClientRect().left;
-  const mainPinTop = mainPin.getBoundingClientRect().top;
-
-  mainPinCoordCapture.x = evt.clientX - mainPinLeft;
-  mainPinCoordCapture.y = evt.clientY - mainPinTop;
+  const captureX = evt.clientX;
+  const captureY = evt.clientY;
+  getCaptureCoords(captureX, captureY);
 
   map.addEventListener("mousemove", onMapMouseMove);
   map.addEventListener("mouseup", onMapMouseUp);
+}
+
+function getCaptureCoords(captureX, captureY) {
+  const mainPinBoundingClientRect = mainPin.getBoundingClientRect();
+  const mainPinLeft = mainPinBoundingClientRect.left;
+  const mainPinTop = mainPinBoundingClientRect.top;
+
+  mainPinCoordCapture.x = captureX - mainPinLeft;
+  mainPinCoordCapture.y = captureY - mainPinTop;
 }
 
 function onMapMouseMove(evt) {
@@ -640,11 +646,10 @@ mainPin.addEventListener("touchstart", onMainPinTouchStart);
 function onMainPinTouchStart(evt) {
   evt.preventDefault();
 
-  const mainPinLeft = mainPin.getBoundingClientRect().left;
-  const mainPinTop = mainPin.getBoundingClientRect().top;
+  const captureX = evt.touches[0].clientX;
+  const captureY = evt.touches[0].clientY;
+  getCaptureCoords(captureX, captureY);
 
-  mainPinCoordCapture.x = evt.touches[0].clientX - mainPinLeft;
-  mainPinCoordCapture.y = evt.touches[0].clientY - mainPinTop;
   map.addEventListener("touchmove", onMapTouchMove);
   map.addEventListener("touchend", onMapTouchEnd);
 };
