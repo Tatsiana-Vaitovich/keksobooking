@@ -306,9 +306,9 @@ function insertChildrenAppend(parentName, whereInsert) {
 }
 
 function insertChildrenBefore(parentName, whereInsert) {
-  let counter = parentName.children.length;
+  const counter = parentName.children.length;
   for (let i = 0; i < counter; i++) {
-    let child = parentName.firstChild;
+    const child = parentName.firstChild;
     whereInsert.before(child);
   }
 }
@@ -354,13 +354,12 @@ function getPopup(number) {
 function getStrokePrice(number) {
   const priceFromUserNotice = roundNumber(usersNotices[number].offer.price, 1000);
   const addStroke = "&#x20bd;<span>/ночь</span>";
-  const price = priceFromUserNotice + addStroke;
-  return price;
+  return priceFromUserNotice + addStroke;
 }
 
 // функция для округления числа
 function roundNumber(number, to) {
-  return (Math.round((number)/to) * to);
+  return Math.round((number)/to) * to;
 }
 
 // функция для получения строки type
@@ -459,7 +458,6 @@ const bigMainPin = mainPin.querySelector("svg");
 const formAdress = document.querySelector("#address");
 
 formAdress.value = getMainPinCoordStroke();
-
 
 formElements.forEach(function(elem) {
   if (elem.querySelector("input") || elem.querySelector("select")) {
