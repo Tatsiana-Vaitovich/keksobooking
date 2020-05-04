@@ -687,9 +687,9 @@ function onMapPopupOpen(evt) {
   const elem = evt.target;
   if ((elem.closest(".map__pin")) && !(elem.closest(".map__pin--main"))) {
     if (!document.querySelector(".popup")) {
-    openPopup();
-    lastElementInFocus = elem.closest(".map__pin");
-    document.querySelector(".popup__close").focus();
+      lastElementInFocus = elem.closest(".map__pin");
+      openPopup();
+      document.querySelector(".popup__close").focus();
     } else {closePopup()}
   } else if (elem.closest(".popup__close")) {
     closePopup();
@@ -790,71 +790,35 @@ timeout.addEventListener("change", function() {
 // 3 комнаты — «для 3 гостей», «для 2 гостей» или «для 1 гостя»;
 // 100 комнат — «не для гостей»;
 
-roomNumber.addEventListener("change", function() {
-  newValueForCapacity.getCapacity();
-})
+roomNumber.addEventListener("change", newValueForCapacity)
 
-class NewValue {
-  constructor(current, target) {
-    this.targetElem = target;
-    this.currentElem = current;
+function newValueForCapacity() {
+  const rooms = this.value;
+  const collection = capacity.options;
+  const arr = Array.from(collection);
+  arr.forEach(elem => removeDisabled(elem));
+  switch (rooms) {
+    case "1":
+      arr.forEach(function(elem) {
+        if (elem.value !== "1") addDisabled(elem);
+      });
+      break;
+    case "2":
+      arr.forEach(function(elem) {
+        if (elem.value !== "1" && elem.value !== "2") addDisabled(elem);
+      })
+      break;
+    case "3":
+      arr.forEach(function(elem) {
+        if (elem.value === "0") addDisabled(elem);
+      })
+      break;
+    case "100":
+      arr.forEach(function(elem) {
+      if (elem.value !== "0") addDisabled(elem);
+      })
   }
-  clearElem(condition, value) {
-    const children = this.targetElem.querySelectorAll("option");
-    console.log(children);
-    for(let i = 0; i < children.length; i++ ) {
-      children[i].style.display = "";
-      console.log("value " + value);
-      console.log("childrenV " + children[i].value);
-      if (children[i].value !== (condition)) {
-        console.log("delete");
-        children[i].style.display = "none";
-      }
-    }
-  }
-  hiddenTargetElemChildren() {
-    const targetElemChildren = this.targetElem.querySelectorAll("option");
-    targetElemChildren.forEach(elem => {
-      elem.style.display = "none";
-    })
-  }
-  showTargetElemChild(condition) {
-    const targetElemChildren = this.targetElem.querySelectorAll("option");
-    targetElemChildren.forEach(elem => {
-      if (elem.value === condition) {
-        elem.style.display = "";
-      }
-    })
-  }
-  getValue() {
-    const value = this.currentElem.value;
-    this.targetElem.value = value;
-  }
-  getCapacity() {
-    let value = this.currentElem.value;
-    this.targetElem.value = value;
-    this.hiddenTargetElemChildren();
-    switch (value) {
-      case "1": 
-        this.showTargetElemChild("1")
-        break;
-      case "100":
-        this.targetElem.value = "0";
-        this.showTargetElemChild("0")
-        break;
-      case "2":
-        this.showTargetElemChild("1")
-        this.showTargetElemChild("2")
-        break;
-      case "3": 
-        this.showTargetElemChild("1")
-        this.showTargetElemChild("2")
-        this.showTargetElemChild("3")
-    }
-  }
-};
+}
 
-const newValueForTimeout = new NewValue(timein, timeout);
-const newValueForTimein = new NewValue(timeout, timein);
-const newValueForCapacity = new NewValue(roomNumber, capacity);
+
 
