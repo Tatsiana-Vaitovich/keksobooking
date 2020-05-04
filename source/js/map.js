@@ -681,14 +681,19 @@ function fillFormAdress(newLeft, newTop) {
 // ------- Просмотр подробной информации о похожих объявлениях
 map.addEventListener("click", onMapPopupOpen);
 
+let lastElementInFocus;
+
 function onMapPopupOpen(evt) {
   const elem = evt.target;
   if ((elem.closest(".map__pin")) && !(elem.closest(".map__pin--main"))) {
     if (!document.querySelector(".popup")) {
     openPopup();
+    lastElementInFocus = elem.closest(".map__pin");
+    document.querySelector(".popup__close").focus();
     } else {closePopup()}
   } else if (elem.closest(".popup__close")) {
     closePopup();
+    lastElementInFocus.focus();
   }
 }
 
