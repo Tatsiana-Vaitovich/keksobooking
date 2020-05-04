@@ -261,7 +261,6 @@ function getMapPin(i) {
   mapPin.querySelector("img").src = usersNotices[i].author.avatar;
   mapPin.querySelector("img").alt = usersNotices[i].offer.title;
   mapPin.style = getStrokeCoordsCenter(i);
-  mapPin.classList.add("visually-hidden");
   return mapPin;
 }
 
@@ -291,9 +290,9 @@ function getMapPins(arr, whereInsert) {
 // получу elem1 фрагмента из массива usersNotices
 getMapPins(usersNotices, elem1)
 
-// ---4.Вставляю все полученные элементы из elem1 за один прием в блок ".map__pins"
-let block1 = document.querySelector(".map__pins");
-insertChildrenAppend(elem1, block1);
+// // ---4.Вставляю все полученные элементы из elem1 за один прием в блок ".map__pins"
+// let block1 = document.querySelector(".map__pins");
+// insertChildrenAppend(elem1, block1);
 
 // функция для вставки всех элементов из родительского блока:
 function insertChildrenAppend(parentName, whereInsert) {
@@ -343,8 +342,6 @@ function getPopup(number) {
   
   // вставим содержимое elem2 в элемент с классом popup__photos
   insertChildrenAppend(elem2, whereInsertPhotos);
-  // // добавим элементу popup класс ".visually-hidden", чтобы изначально он не был виден
-  // popup.classList.add("visually-hidden");
 
   return popup;
 }
@@ -485,6 +482,10 @@ mapFilterInputs.forEach(function(elem) {
 mainPin.addEventListener("mouseup", onMainPinActivatePage)
 
 function onMainPinActivatePage(evt) {
+// ---4.Вставляю все полученные элементы из elem1 за один прием в блок ".map__pins"
+  const block1 = document.querySelector(".map__pins");
+  insertChildrenAppend(elem1, block1);
+
   removeClass(map, "map--faded");
   removeClass(form, "ad-form--disabled");
   formElements.forEach(function(elem) {
@@ -538,8 +539,7 @@ function getMainPinCoord(coordName) {
 }
 
 function getMainPinCoordStroke() {
-  const str = roundNumber(getMainPinCoord("x"), 10) + ", "+ roundNumber(getMainPinCoord("y"), 10)
-  return str;
+  return roundNumber(getMainPinCoord("x"), 10) + ", "+ roundNumber(getMainPinCoord("y"), 10)
 }
 
 // ------- Перетаскивание метки реализую используя события мыши
@@ -864,10 +864,3 @@ const newValueForTimeout = new NewValue(timein, timeout);
 const newValueForTimein = new NewValue(timeout, timein);
 const newValueForCapacity = new NewValue(roomNumber, capacity);
 
-// Чтобы метку невозможно было поставить выше горизонта 
-// или ниже панели фильтров, значение координаты Y должно быть 
-// ограничено интервалом от 130 до 630. 
-// Значение координаты X должно быть ограничено размерами блока, 
-// в котором перетаскивается метка. 
-// ----??? я ограничила координаты метки 
-// исходя из размеров метки когда карта неактивна с учетом внешних размеров
