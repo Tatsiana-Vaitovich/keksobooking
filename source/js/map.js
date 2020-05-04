@@ -290,10 +290,6 @@ function getMapPins(arr, whereInsert) {
 // получу elem1 фрагмента из массива usersNotices
 getMapPins(usersNotices, elem1)
 
-// // ---4.Вставляю все полученные элементы из elem1 за один прием в блок ".map__pins"
-// let block1 = document.querySelector(".map__pins");
-// insertChildrenAppend(elem1, block1);
-
 // функция для вставки всех элементов из родительского блока:
 function insertChildrenAppend(parentName, whereInsert) {
   let counter = parentName.children.length;
@@ -422,12 +418,12 @@ function getPopupPhotos(arr) {
   return elem2;
 }
 
-// вставим Popup в elem3 фрагмента
-elem3.append(getPopup(0));
+// // вставим Popup в elem3 фрагмента
+// elem3.append(getPopup(0));
 
 // вставим содержимое elem3 в документ - элемент с классом .map__filters-container
-let block3 = document.querySelector(".map__filters-container");
-insertChildrenBefore(elem3, block3);
+// let block3 = document.querySelector(".map__filters-container");
+// insertChildrenBefore(elem3, block3);
 
 // ----ДЗ НОВОЕ------
 
@@ -683,55 +679,48 @@ function fillFormAdress(newLeft, newTop) {
 }
 
 // ------- Просмотр подробной информации о похожих объявлениях
-// выше при помощи добавления класса "visually-hidden" скрыла popup
-const popup = document.querySelector(".popup");
-const buttonClose = popup.querySelector(".popup__close");
-
 map.addEventListener("click", onMapPopupOpen);
 
 function onMapPopupOpen(evt) {
   const elem = evt.target;
   if ((elem.closest(".map__pin")) && !(elem.closest(".map__pin--main"))) {
+    if (!document.querySelector(".popup")) {
     openPopup();
+    } else {closePopup()}
   } else if (elem.closest(".popup__close")) {
     closePopup();
   }
 }
 
 function openPopup() {
-  removeClass(popup, "visually-hidden");
-  document.addEventListener("keydown", onPopupEscPress);
+  const block3 = document.querySelector(".map__filters-container");
+  elem3.append(getPopup(0));
+  insertChildrenBefore(elem3, block3);
+
+  document.addEventListener("keydown", onPopupEnterOREscPress)
 }
 
 function closePopup() {
-  addClass(popup, "visually-hidden");
-  document.removeEventListener("keydown", onPopupEscPress);
+  const popup = map.querySelector(".popup");
+  popup.parentElement.removeChild(popup);
+
+  document.removeEventListener("keydown", onPopupEnterOREscPress);
 }
 
 // для доступности добавлю keyEvents, чтобы можно было закрыть popup
 // нажав кнопку esc на документе или нажав кнопку Enter на самом элементе buttonClose
 
-// сделаю buttonClose кликабельным
-buttonClose.setAttribute("tabindex", 0);
-
-buttonClose.addEventListener("keydown", onPopupEnterPress)
-
-// обработчик "закрыть с клавиатур popup"
-function onPopupEnterPress(evt) {
-  if(evt.keyCode === keyCodeEnter) {
-    openPopup();
+// обработчик "закрыть/открыть с клавиатур popup"
+function onPopupEnterOREscPress(evt) {
+  switch (evt.keyCode) {
+    case keyCodeEnter:
+      if(!document.querySelector(".popup")) {
+      openPopup();
+    } break;
+    case keyCodeEsc:
+      closePopup();
   }
 }
-
-function onPopupEscPress(evt) {
-  if(evt.keyCode === keyCodeEsc) {
-    closePopup();
-  }
-}
-
-// для доступности добавлю touchEvents
-map.addEventListener("touchstart", onMapPopupOpen);
-buttonClose.addEventListener("touchstart", closePopup);
 
 // ------ 2 часть задания - опишем сценарии взаимодействия пользователя с формой отправки данных и саму отправку
 
