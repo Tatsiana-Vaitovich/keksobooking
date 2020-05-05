@@ -452,17 +452,17 @@ console.log(form.elements)
 
 formAdress.value = getMainPinCoordStroke();
 
-formElements.forEach(function(elem) {
-  if (elem.querySelector("input") || elem.querySelector("select")) {
-    addDisabled(elem);
-  }
-});
-mapFilterelects.forEach(function(elem) {
-  addDisabled(elem);
-});
-mapFilterInputs.forEach(function(elem) {
-  addDisabled(elem);
-});
+// formElements.forEach(function(elem) {
+//   if (elem.querySelector("input") || elem.querySelector("select")) {
+//     addDisabled(elem);
+//   }
+// });
+// mapFilterelects.forEach(function(elem) {
+//   addDisabled(elem);
+// });
+// mapFilterInputs.forEach(function(elem) {
+//   addDisabled(elem);
+// });
 
 // -------Активирование карты
 
@@ -484,6 +484,7 @@ function onMainPinActivatePage(evt) {
   // активирую карту
   removeClass(map, "map--faded");
   removeClass(form, "ad-form--disabled");
+  addClass(form, "ad-form--enebled");
   formElements.forEach(function(elem) {
     if (elem.querySelector("input") || elem.querySelector("select")) {
       removeDisabled(elem);
