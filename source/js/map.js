@@ -441,14 +441,14 @@ function getPopupPhotos(arr) {
 // как и форма .ad-form.
 
 const form = document.querySelector(".ad-form");
-const formElements = form.querySelectorAll(".ad-form__element");
+const formElements = Array.from(form.elements);
 const mapFilter = document.querySelector(".map__filters");
 const mapFilterelects = mapFilter.querySelectorAll("select");
 const mapFilterInputs = mapFilter.querySelectorAll("input");
 const mainPin = document.querySelector(".map__pin--main");
 const bigMainPin = mainPin.querySelector("svg");
 const formAdress = document.querySelector("#address");
-console.log(form.elements)
+console.log(formElements);
 
 formAdress.value = getMainPinCoordStroke();
 
@@ -486,7 +486,7 @@ function onMainPinActivatePage(evt) {
   removeClass(form, "ad-form--disabled");
   addClass(form, "ad-form--enebled");
   formElements.forEach(function(elem) {
-    if (elem.querySelector("input") || elem.querySelector("select")) {
+    if (elem.closest("input") || elem.closest("select")) {
       removeDisabled(elem);
     }
   });
