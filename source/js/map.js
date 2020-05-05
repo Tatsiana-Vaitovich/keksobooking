@@ -441,17 +441,16 @@ function getPopupPhotos(arr) {
 // как и форма .ad-form.
 
 const form = document.querySelector(".ad-form");
-const formElements = Array.from(form.elements);
 const mapFilter = document.querySelector(".map__filters");
 const mapFilterelects = mapFilter.querySelectorAll("select");
 const mapFilterInputs = mapFilter.querySelectorAll("input");
 const mainPin = document.querySelector(".map__pin--main");
 const bigMainPin = mainPin.querySelector("svg");
 const formAdress = document.querySelector("#address");
-console.log(formElements);
 
 formAdress.value = getMainPinCoordStroke();
 
+// добавила disabled в разметку вручную
 // formElements.forEach(function(elem) {
 //   if (elem.querySelector("input") || elem.querySelector("select")) {
 //     addDisabled(elem);
@@ -485,17 +484,8 @@ function onMainPinActivatePage(evt) {
   removeClass(map, "map--faded");
   removeClass(form, "ad-form--disabled");
   addClass(form, "ad-form--enebled");
-  formElements.forEach(function(elem) {
-    if (elem.closest("input") || elem.closest("select")) {
-      removeDisabled(elem);
-    }
-  });
-  mapFilterelects.forEach(function(elem) {
-    removeDisabled(elem);
-  });
-  mapFilterInputs.forEach(function(elem) {
-    removeDisabled(elem);
-  });
+  enebledForm(form);
+  enebledForm(mapFilter);
 };
 
 function addClass(elem, className) {
@@ -504,6 +494,15 @@ function addClass(elem, className) {
 
 function removeClass(elem, className) {
   elem.classList.remove(className);
+}
+
+function enebledForm(formName) {
+  const formElements = Array.from(formName.elements);
+  formElements.forEach(function(elem) {
+    if (elem.closest("input") || elem.closest("select")) {
+      removeDisabled(elem);
+    }
+  });
 }
 
 function addDisabled(elem) {
@@ -792,8 +791,8 @@ roomNumber.addEventListener("change", newValueForCapacity)
 
 function newValueForCapacity() {
   const rooms = this.value;
-  const arrCapacity = getArrFromCollection(capacity);
-  const arr = getArrFromCollection(this);
+  const arrCapacity = getArrFromCollectionOptions(capacity);
+  const arr = getArrFromCollectionOptions(this);
   arrCapacity.forEach(function(elem) {
     removeDisabled(elem);
     removeSeleced(elem);
@@ -828,7 +827,7 @@ function newValueForCapacity() {
   }
 }
 
-function getArrFromCollection(elem) {
+function getArrFromCollectionOptions(elem) {
   const collection = elem.options;
   return Array.from(collection);
 }
