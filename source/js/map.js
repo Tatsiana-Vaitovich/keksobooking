@@ -448,6 +448,7 @@ const mapFilterInputs = mapFilter.querySelectorAll("input");
 const mainPin = document.querySelector(".map__pin--main");
 const bigMainPin = mainPin.querySelector("svg");
 const formAdress = document.querySelector("#address");
+console.log(form.elements)
 
 formAdress.value = getMainPinCoordStroke();
 
@@ -478,10 +479,9 @@ mapFilterInputs.forEach(function(elem) {
 mainPin.addEventListener("mouseup", onMainPinActivatePage)
 
 function onMainPinActivatePage(evt) {
-// ---4.Вставляю все полученные элементы из elem1 за один прием в блок ".map__pins"
-  const block1 = document.querySelector(".map__pins");
-  insertChildrenAppend(elem1, block1);
-
+// --Вставляю все полученные элементы из elem1 за один прием в блок ".map__pins"
+  insertChildrenAppend(elem1, mapPins);
+  // активирую карту
   removeClass(map, "map--faded");
   removeClass(form, "ad-form--disabled");
   formElements.forEach(function(elem) {
@@ -495,9 +495,6 @@ function onMainPinActivatePage(evt) {
   mapFilterInputs.forEach(function(elem) {
     removeDisabled(elem);
   });
-  mapPins.querySelectorAll(".map__pin").forEach(function(elem) {
-  removeClass(elem, "visually-hidden");
-  })
 };
 
 function addClass(elem, className) {
@@ -775,11 +772,11 @@ function getMinForFieldPrice(type) {
 // при изменении значения одного поля, во втором выделяется соответствующее ему. 
 
 timein.addEventListener("change", function() {
-  newValueForTimeout.getValue();
+  timeout.value = this.value;
 });
 
 timeout.addEventListener("change", function() {
-  newValueForTimein.getValue();
+  timein.value = this.value;
 });
 
 // Поле «Количество комнат» синхронизировано с полем «Количество мест» таким образом, 
@@ -794,31 +791,51 @@ roomNumber.addEventListener("change", newValueForCapacity)
 
 function newValueForCapacity() {
   const rooms = this.value;
-  const collection = capacity.options;
-  const arr = Array.from(collection);
-  arr.forEach(elem => removeDisabled(elem));
+  const arrCapacity = getArrFromCollection(capacity);
+  const arr = getArrFromCollection(this);
+  arrCapacity.forEach(function(elem) {
+    removeDisabled(elem);
+    removeSeleced(elem);
+  });
+  arr.forEach(function(elem) {
+    removeSeleced(elem);
+  })
   switch (rooms) {
     case "1":
-      arr.forEach(function(elem) {
+      arrCapacity.forEach(function(elem) {
         if (elem.value !== "1") addDisabled(elem);
+        if (elem.value === "1") addSelected(elem);
       });
       break;
     case "2":
-      arr.forEach(function(elem) {
+      arrCapacity.forEach(function(elem) {
         if (elem.value !== "1" && elem.value !== "2") addDisabled(elem);
+        if (elem.value == "2") addSelected(elem);
       })
       break;
     case "3":
-      arr.forEach(function(elem) {
+      arrCapacity.forEach(function(elem) {
         if (elem.value === "0") addDisabled(elem);
+        if (elem.value === "3") addSelected(elem);
       })
       break;
     case "100":
-      arr.forEach(function(elem) {
+      arrCapacity.forEach(function(elem) {
       if (elem.value !== "0") addDisabled(elem);
+      else addSelected(elem);
       })
   }
 }
 
+function getArrFromCollection(elem) {
+  const collection = elem.options;
+  return Array.from(collection);
+}
 
+function addSelected(elem) {
+  elem.setAttribute("selected", "");
+}
 
+function removeSeleced(elem) {
+  elem.removeAttribute("selected");
+}
