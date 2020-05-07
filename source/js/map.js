@@ -4,33 +4,34 @@ const map = document.querySelector(".map");
 const mapPins = document.querySelector(".map__pins");
 const indent = 120;
 let usersNotices = [];
-const author = {};
-// "title": строка, заголовок предложения, одно из фиксированных значений 
-//. Значения не должны повторяться.
+// const author = {};
+
+// "title": строка, заголовок предложения, одно из фиксированных значений
+// Значения не должны повторяться.
 const titlesArr = [
   "Большая уютная квартира",
   "Маленькая неуютная квартира",
   "Огромный прекрасный дворец",
-  "Маленький ужасный дворец", 
+  "Маленький ужасный дворец",
   "Красивый гостевой домик",
   "Некрасивый негостеприимный домик",
   "Уютное бунгало далеко от моря",
   "Неуютное бунгало по колено в воде",
 ];
-// "type": строка с одним из четырёх фиксированных значений: 
+// "type": строка с одним из четырёх фиксированных значений:
 const typesArr = [
   "palace",
   "flat",
   "house",
   "bungalo",
 ];
-// "checkin": строка с одним из трёх фиксированных значений: 
+// "checkin": строка с одним из трёх фиксированных значений:
 const checkinsArr = [
   "12:00",
   "13:00",
   "14:00",
 ];
-// "checkout": строка с одним из трёх фиксированных значений: 
+// "checkout": строка с одним из трёх фиксированных значений:
 const checkoutsArr = [
   "12:00",
   "13:00",
@@ -38,11 +39,11 @@ const checkoutsArr = [
 ];
 // "photos": массив из строк  расположенных в произвольном порядке
 const photosArr = [
-  "http://o0.github.io/assets/images/tokyo/hotel1.jpg", 
+  "http://o0.github.io/assets/images/tokyo/hotel1.jpg",
   "http://o0.github.io/assets/images/tokyo/hotel2.jpg",
   "http://o0.github.io/assets/images/tokyo/hotel3.jpg",
 ];
-// "features": массив строк случайной длины из ниже предложенных: 
+// "features": массив строк случайной длины из ниже предложенных:
 const featuresArr = [
   "wifi",
   "dishwasher",
@@ -76,7 +77,7 @@ function getRandomElement(arr) {
   // мы должны генерировать числа от 0 до arr.lenght - 1
   // случайное число от min до (max+1)
   const min = 0;
-  const max = arr.length - 1
+  const max = arr.length - 1;
   const random = getRandomNumber(min, max);
   return arr[random];
 }
@@ -84,9 +85,9 @@ function getRandomElement(arr) {
 // для "перемешивания элементов массива" использую функцию:
 function shuffle(arr) {
   let currentIndex = arr.length;
-  let temporaryValue; //временное значение
+  let temporaryValue; // временное значение
   let randomIndex;
-  while (0 !== currentIndex) {
+  while (currentIndex !== 0) {
     randomIndex = Math.floor(Math.random() * currentIndex);
     currentIndex -= 1;
     temporaryValue = arr[currentIndex];
@@ -96,22 +97,22 @@ function shuffle(arr) {
   return arr;
 }
 
-// "avatar": строка, адрес изображения вида img/avatars/user{{xx}}.png, 
-// где {{xx}} это число от 1 до 8 с ведущим нулём. 
+// "avatar": строка, адрес изображения вида img/avatars/user{{xx}}.png,
+// где {{xx}} это число от 1 до 8 с ведущим нулём.
 // Например, 01, 02 и т. д. Адреса изображений не повторяются
-// для получения аватар использую следующую функцию. 
+// для получения аватар использую следующую функцию.
 // в данном случае получаю массив, содержащий нужные мне 8 элементов
 function getAvatars(min, max) {
-  let arr = [];
+  const arr = [];
   for (let i = (min - 1); i < max; i++) {
-    let url = "img/avatars/user0" + (i + 1) + ".png";
+    const url = "img/avatars/user0" + (i + 1) + ".png";
     arr[i] = url;
   }
   return arr;
 }
 
 // "location": {
-// «x»: случайное число, координата x метки на карте. 
+// «x»: случайное число, координата x метки на карте.
 // Значение ограничено размерами блока, в котором перетаскивается метка.
 // «y»: случайное число, координата y метки на карте от 130 до 630.
 // беру у - случайное число, зависящее от высоты блока.
@@ -130,7 +131,7 @@ function getLocation(indent) {
 // конструктор класса для получения координат метки
 class GetCoord {
   // constructor(coordName, elem, indent) {
-  constructor (elem, indent) {
+  constructor(elem, indent) {
     // this.coordName = coordName;
     this.elem = elem;
     this.indent = indent;
@@ -165,11 +166,11 @@ function getStrokeCoords(location) {
   // return coords;
 }
 
-// "features": массив строк случайной длины 
+// "features": массив строк случайной длины
 // из элементов, перечисленных в массиве featuresArr
 // для получения features использую функцию
 function getFeatures(arr) {
-  let initialArr = [];
+  const initialArr = [];
   for (let i = 0; i < arr.length; i++) {
     initialArr[i] = arr[i];
   }
@@ -184,7 +185,7 @@ function getFeatures(arr) {
   return newArr;
 }
 
-// для создания js объектов, описывающих объявления пользователей, 
+// для создания js объектов, описывающих объявления пользователей,
 // использую конструктор объектов
 function UserNotice(number, location) {
   this.author = new UserAuthor(number);
@@ -196,13 +197,13 @@ function UserAuthor(number) {
   this.avatar = avatarsArr[number];
 }
 
-function UserOffer(number, location){
+function UserOffer(number, location) {
   this.title = titlesArr[number];
   this.address = getStrokeCoords(location);
   this.price = getRandomNumber(minPrice, maxPrice);
   this.type = getRandomElement(typesArr);
   this.rooms = getRandomNumber(minRooms, maxRooms);
-  this.guests = getRandomNumber(minGuests, maxGuests); 
+  this.guests = getRandomNumber(minGuests, maxGuests);
   this.checkin = getRandomElement(checkinsArr);
   this.checkout = getRandomElement(checkoutsArr);
   this.features = getFeatures(featuresArr);
@@ -212,7 +213,7 @@ function UserOffer(number, location){
 
 // функция для создания массива, содержащего объявления пользователей
 function createUsersNotices(elementsQuantity) {
-  let usersNotices = [];
+  const usersNotices = [];
   for (let i = 0; i < elementsQuantity; i++) {
     const location = getLocation(indent);
     usersNotices[i] = new UserNotice(i, location);
@@ -226,8 +227,8 @@ shuffle(titlesArr);
 usersNotices = createUsersNotices(8);
 
 // ---3. Cоздаю DOM-элементы на основе объекта usersNotices и шаблона <template>
-// На основе данных, созданных в первом пункте, создайте DOM-элементы, 
-// соответствующие меткам на карте, и заполните их данными из массива. 
+// На основе данных, созданных в первом пункте, создайте DOM-элементы,
+// соответствующие меткам на карте, и заполните их данными из массива.
 // Итоговую разметку метки .map__pin можно взять из шаблона .map__card.
 // У метки должны быть следующие данные:
 // Координаты:style="left: {{location.x}}px; top: {{location.y}}px;"
@@ -238,14 +239,14 @@ usersNotices = createUsersNotices(8);
 const template = document.querySelector("#users-notice").content;
 // создам фрагмент, в который буду "складывать" сгенерированные элементы
 // ------??? похоже нужно избегать использвания document.....()???
-let fragment = document.createDocumentFragment();
+const fragment = document.createDocumentFragment();
 
 // создаю в фрагменте одельные div, в которые буду вставлять нужные элементы из шаблона
 getElementsForFragment(3);
 
-let elem1 = fragment.querySelector("#elem1"); // div для элементов .map__pin (userNotice)
-let elem2 = fragment.querySelector("#elem2"); // div для элементов .popup__photo
-let elem3 = fragment.querySelector("#elem3"); // div для элемента .map__card (Popup)
+const elem1 = fragment.querySelector("#elem1"); // div для элементов .map__pin (userNotice)
+const elem2 = fragment.querySelector("#elem2"); // div для элементов .popup__photo
+const elem3 = fragment.querySelector("#elem3"); // div для элемента .map__card (Popup)
 
 function getElementsForFragment(counter) {
   for (let i = 0; i < counter; i++) {
@@ -266,7 +267,7 @@ function getMapPin(i) {
 
 // функции для получения координат центра метки:
 function getMapPinCoordCenterX(index) {
-return usersNotices[index].location.x - 1/2 * mapPinWidth;
+  return usersNotices[index].location.x - 1 / 2 * mapPinWidth;
 }
 
 function getMapPinCoordCenterY(index) {
@@ -274,10 +275,10 @@ function getMapPinCoordCenterY(index) {
 }
 
 // функция для получения строки с координатами
-function getStrokeCoordsCenter (index, elem) {
-  let x = getMapPinCoordCenterX(index, elem);
-  let y = getMapPinCoordCenterY(index, elem);
-  return "left:" + x + "px;" + " top:" + y + "px;"
+function getStrokeCoordsCenter(index) {
+  const x = getMapPinCoordCenterX(index);
+  const y = getMapPinCoordCenterY(index);
+  return "left:" + x + "px;" + " top:" + y + "px;";
 }
 
 // функция для получения объявлений пользователей
@@ -288,13 +289,13 @@ function getMapPins(arr, whereInsert) {
 }
 
 // получу elem1 фрагмента из массива usersNotices
-getMapPins(usersNotices, elem1)
+getMapPins(usersNotices, elem1);
 
 // функция для вставки всех элементов из родительского блока:
 function insertChildrenAppend(parentName, whereInsert) {
-  let counter = parentName.children.length;
+  const counter = parentName.children.length;
   for (let i = 0; i < counter; i++) {
-    let child = parentName.firstChild;
+    const child = parentName.firstChild;
     whereInsert.append(child);
   }
 }
@@ -307,11 +308,11 @@ function insertChildrenBefore(parentName, whereInsert) {
   }
 }
 
-// ---5. На основе первого по порядку элемента 
-// из сгенерированного массива и шаблона .map__card 
-// создаю DOM-элемент объявления, 
-// заполняю его данными из объекта 
-// и вставляю полученный DOM-элемент в блок .map 
+// ---5. На основе первого по порядку элемента
+// из сгенерированного массива и шаблона .map__card
+// создаю DOM-элемент объявления,
+// заполняю его данными из объекта
+// и вставляю полученный DOM-элемент в блок .map
 // перед блоком.map__filters-container
 
 function getPopup(number) {
@@ -319,8 +320,8 @@ function getPopup(number) {
   const userNotice = usersNotices[number];
   const capacity = getStrokeCapacity(number);
   const time = getStrokeTime(number);
-  let whereInsertFeatures = popup.querySelector(".popup__features");
-  let whereInsertPhotos = popup.querySelector(".popup__photos");
+  const whereInsertFeatures = popup.querySelector(".popup__features");
+  const whereInsertPhotos = popup.querySelector(".popup__photos");
   popup.querySelector(".popup__avatar").src = userNotice.author.avatar;
   popup.querySelector(".popup__title").textContent = userNotice.offer.title;
   popup.querySelector(".popup__text--address").textContent = userNotice.offer.address;
@@ -332,10 +333,10 @@ function getPopup(number) {
   clear(popup, ".popup__features");
   getElemFeatures(userNotice.offer.features, whereInsertFeatures);
   clear(popup, ".popup__photos");
-  
+
   // получим elem2 фрагмента
   getPopupPhotos(userNotice.offer.photos);
-  
+
   // вставим содержимое elem2 в элемент с классом popup__photos
   insertChildrenAppend(elem2, whereInsertPhotos);
 
@@ -351,7 +352,7 @@ function getStrokePrice(number) {
 
 // функция для округления числа
 function roundNumber(number, to) {
-  return Math.round((number)/to) * to;
+  return Math.round((number) / to) * to;
 }
 
 // функция для получения строки type
@@ -368,8 +369,8 @@ function getStrokeType(number) {
       return "Дворец";
     default:
       return "Квартира";
-    }
   }
+}
 
 // функция для получения строки capacity
 function getStrokeCapacity(number) {
@@ -388,12 +389,12 @@ function getStrokeTime(number) {
 
 // функция для очистки элемента
 function clear(where, elem) {
-  //DOM не поддерживает удаления элемента напрямую. 
-  //При удалении элемента с JavaScript, 
-  //мы должны сначала перейти на его РОДИТЕЛЕЙ. 
-  let list = where.querySelector(elem);
+  // DOM не поддерживает удаления элемента напрямую.
+  // При удалении элемента с JavaScript,
+  // мы должны сначала перейти на его РОДИТЕЛЕЙ.
+  const list = where.querySelector(elem);
   while (list.firstChild) {
-  list.firstChild.remove();
+    list.firstChild.remove();
   }
 }
 
@@ -432,18 +433,16 @@ function getPopupPhotos(arr) {
 // addClass(map, "map--faded");
 
 // проверяю, соответствует ли проект требованиям ТЗ
-// + Форма заполнения информации об объявлении .ad-form 
+// + Форма заполнения информации об объявлении .ad-form
 // содержит класс ad-form--disabled
 
-// Все <input> и <select> формы .ad-form заблокированы с помощью атрибута disabled, 
+// Все <input> и <select> формы .ad-form заблокированы с помощью атрибута disabled,
 // добавленного на них или на их родительские блоки fieldset
-// Форма с фильтрами .map__filters заблокирована так же, 
+// Форма с фильтрами .map__filters заблокирована так же,
 // как и форма .ad-form.
 
 const form = document.querySelector(".ad-form");
 const mapFilter = document.querySelector(".map__filters");
-const mapFilterelects = mapFilter.querySelectorAll("select");
-const mapFilterInputs = mapFilter.querySelectorAll("input");
 const mainPin = document.querySelector(".map__pin--main");
 const bigMainPin = mainPin.querySelector("svg");
 const formAdress = document.querySelector("#address");
@@ -465,19 +464,19 @@ formAdress.value = getMainPinCoordStroke();
 
 // -------Активирование карты
 
-// Любое перетаскивание состоит из трёх фаз: захвата элемента, 
-// его перемещения и отпускания элемента. На данном этапе 
-// нам достаточно описать реакцию на третью фазу: отпускание элемента. 
-// Для этого нужно добавить обработчик события mouseup на элемент 
+// Любое перетаскивание состоит из трёх фаз: захвата элемента,
+// его перемещения и отпускания элемента. На данном этапе
+// нам достаточно описать реакцию на третью фазу: отпускание элемента.
+// Для этого нужно добавить обработчик события mouseup на элемент
 // .map__pin--main.
-// Обработчик события mouseup должен вызывать функцию, 
-// которая будет отменять изменения DOM-элементов, 
+// Обработчик события mouseup должен вызывать функцию,
+// которая будет отменять изменения DOM-элементов,
 // описанные в пункте «Неактивное состояние» технического задания
 // --- у меня в неактивном состоянии какты элементы mapPin видны. "спрячу" их.
 
-mainPin.addEventListener("mouseup", onMainPinActivatePage)
+mainPin.addEventListener("mouseup", onMainPinActivatePage);
 
-function onMainPinActivatePage(evt) {
+function onMainPinActivatePage() {
 // --Вставляю все полученные элементы из elem1 за один прием в блок ".map__pins"
   insertChildrenAppend(elem1, mapPins);
   // активирую карту
@@ -486,7 +485,7 @@ function onMainPinActivatePage(evt) {
   addClass(form, "ad-form--enebled");
   enebledForm(form);
   enebledForm(mapFilter);
-};
+}
 
 function addClass(elem, className) {
   elem.classList.add(className);
@@ -514,25 +513,25 @@ function removeDisabled(elem) {
 }
 
 // для доступности на мобильных устройствах добавлю touchEvents
-mainPin.addEventListener("touchend", onMainPinActivatePage)
+mainPin.addEventListener("touchend", onMainPinActivatePage);
 
 // ---------Заполнение поля адреса
-// поле адреса должно быть заполнено всегда, 
-// в том числе сразу после открытия страницы. 
+// поле адреса должно быть заполнено всегда,
+// в том числе сразу после открытия страницы.
 // мы можем взять за исходное значение поля адреса середину метки.
 
 function getMainPinCoord(coordName) {
   let coord;
   if (coordName === "x") {
-    coord = mainPin.offsetLeft + 1/2 * mainPin.offsetWidth;
+    coord = mainPin.offsetLeft + 1 / 2 * mainPin.offsetWidth;
   } else {
-    coord = mainPin.offsetTop + 1/2 * mainPin.offsetHeight;
+    coord = mainPin.offsetTop + 1 / 2 * mainPin.offsetHeight;
   }
   return coord;
 }
 
 function getMainPinCoordStroke() {
-  return roundNumber(getMainPinCoord("x"), 10) + ", "+ roundNumber(getMainPinCoord("y"), 10)
+  return roundNumber(getMainPinCoord("x"), 10) + ", " + roundNumber(getMainPinCoord("y"), 10);
 }
 
 // ------- Перетаскивание метки реализую используя события мыши
@@ -540,14 +539,14 @@ function getMainPinCoordStroke() {
 // отменю браузерные события на map - чтобы текст "и снова токио" не выделялся при щелчке
 map.addEventListener("mousedown", function(evt) {
   evt.preventDefault();
-})
+});
 
 // чтобы не сработало браузерное событие drag_and_drop
 mainPin.addEventListener("dragstart", function() {
   return false;
 });
 
-// получу координаты относительно документа, 
+// получу координаты относительно документа,
 // чтобы учитывать прокрутку страницы при перемещении mainPin
 const pageScrollX = window.pageXOffset;
 const pageScrollY = window.pageYOffset;
@@ -559,12 +558,12 @@ const mapTop = mapBoundingClientRect.top + pageScrollY;
 const mapWidth = map.offsetWidth;
 const mapHeight = map.offsetHeight;
 const mapFilterHeight = mapFilter.offsetHeight;
-const mainPinBorder = (bigMainPinWidth - mainPinWidth) * 1/2;
+const mainPinBorder = (bigMainPinWidth - mainPinWidth) * 1 / 2;
 
 // чтобы изначальный сдвиг курсора на элементе сохранялся запоминаем этот сдвиг:
-let mainPinCoordCapture = {};
+const mainPinCoordCapture = {};
 // также запомню координаты, где "остановились"
-let mainPinCoordDrop = {};
+const mainPinCoordDrop = {};
 
 // mainPin.addEventListener("mousedown", onMainPinMouseDown);
 mainPin.addEventListener("mousedown", onMainPinCursorStart);
@@ -575,12 +574,12 @@ function onMainPinCursorStart(evt) {
 
   let captureX;
   let captureY;
-  if (evt.type == "mousedown") {
+  if (evt.type === "mousedown") {
     captureX = evt.clientX;
     captureY = evt.clientY;
     map.addEventListener("mousemove", onMapCursorMove);
     map.addEventListener("mouseup", onMapCursorEnd);
-  } else if (evt.type == "touchstart") {
+  } else if (evt.type === "touchstart") {
     captureX = evt.touches[0].clientX;
     captureY = evt.touches[0].clientY;
     map.addEventListener("touchmove", onMapCursorMove);
@@ -601,10 +600,10 @@ function getCaptureCoords(captureX, captureY) {
 function onMapCursorMove(evt) {
   let newX;
   let newY;
-  if (evt.type == "mousemove") {
+  if (evt.type === "mousemove") {
     newX = evt.clientX;
     newY = evt.clientY;
-  } else if (evt.type == "touchmove") {
+  } else if (evt.type === "touchmove") {
     newX = evt.touches[0].clientX;
     newY = evt.touches[0].clientY;
   }
@@ -612,13 +611,13 @@ function onMapCursorMove(evt) {
 }
 
 function getNewCoords(newX, newY) {
-  // на протяжении всего перетаскивания нужно следить за тем, 
+  // на протяжении всего перетаскивания нужно следить за тем,
   // чтобы метка не вышла за пределы карты
   const pageScrollX = window.pageXOffset;
   const pageScrollY = window.pageYOffset;
 
-  let newLeft = newX + pageScrollX - mapLeft - mainPinCoordCapture.x 
-  let newTop = newY + pageScrollY - mapTop - mainPinCoordCapture.y 
+  let newLeft = newX + pageScrollX - mapLeft - mainPinCoordCapture.x;
+  let newTop = newY + pageScrollY - mapTop - mainPinCoordCapture.y;
 
   const minLeft = mainPinBorder + pageScrollX;
   const maxLeft = mapWidth - mapPinWidth - mainPinBorder + pageScrollX;
@@ -629,7 +628,7 @@ function getNewCoords(newX, newY) {
     newLeft = minLeft;
   } else if (newLeft > maxLeft) {
     newLeft = maxLeft;
-  } 
+  }
   if (newTop < minTop) {
     newTop = minTop;
   } else if (newTop > maxTop) {
@@ -644,7 +643,7 @@ function getNewCoords(newX, newY) {
 function onMapCursorEnd(evt) {
   let newLeft;
   let newTop;
-  if (evt.type == "mouseup") {
+  if (evt.type === "mouseup") {
     newLeft = mainPinCoordDrop.x;
     newTop = mainPinCoordDrop.y;
     mainPin.style.top = newTop + "px";
@@ -652,7 +651,7 @@ function onMapCursorEnd(evt) {
 
     map.removeEventListener("mousemove", onMapCursorMove);
     map.removeEventListener("mouseup", onMapCursorEnd);
-  } else if (evt.type == "touchend") {
+  } else if (evt.type === "touchend") {
     const mainPinBoundingClientRect = mainPin.getBoundingClientRect();
     const mainPinLeft = mainPinBoundingClientRect.left;
     const mainPinTop = mainPinBoundingClientRect.top;
@@ -687,7 +686,9 @@ function onMapPopupOpen(evt) {
       lastElementInFocus = elem.closest(".map__pin");
       openPopup();
       document.querySelector(".popup__close").focus();
-    } else {closePopup()}
+    } else {
+      closePopup();
+    }
   } else if (elem.closest(".popup__close")) {
     closePopup();
     lastElementInFocus.focus();
@@ -699,7 +700,7 @@ function openPopup() {
   elem3.append(getPopup(0));
   insertChildrenBefore(elem3, block3);
 
-  document.addEventListener("keydown", onPopupEnterOREscPress)
+  document.addEventListener("keydown", onPopupEnterOREscPress);
 }
 
 function closePopup() {
@@ -716,9 +717,9 @@ function closePopup() {
 function onPopupEnterOREscPress(evt) {
   switch (evt.keyCode) {
     case keyCodeEnter:
-      if(!document.querySelector(".popup")) {
-      openPopup();
-    } break;
+      if (!document.querySelector(".popup")) {
+        openPopup();
+      } break;
     case keyCodeEsc:
       closePopup();
   }
@@ -744,7 +745,6 @@ const minPriceArr = {
 
 type.addEventListener("change", function() {
   const value = this.value;
-  console.log(value);
   switch (value) {
     case "bungalo":
       getMinForFieldPrice("bungalo");
@@ -768,8 +768,8 @@ function getMinForFieldPrice(type) {
   price.setAttribute("placeholder", valueMin);
 }
 
-// в соответствии с ТЗ Поля «Время заезда» и «Время выезда» синхронизированы: 
-// при изменении значения одного поля, во втором выделяется соответствующее ему. 
+// в соответствии с ТЗ Поля «Время заезда» и «Время выезда» синхронизированы:
+// при изменении значения одного поля, во втором выделяется соответствующее ему.
 
 timein.addEventListener("change", function() {
   timeout.value = this.value;
@@ -779,7 +779,7 @@ timeout.addEventListener("change", function() {
   timein.value = this.value;
 });
 
-// Поле «Количество комнат» синхронизировано с полем «Количество мест» таким образом, 
+// Поле «Количество комнат» синхронизировано с полем «Количество мест» таким образом,
 // что при выборе количества комнат вводятся ограничения на допустимые варианты выбора количества гостей:
 
 // 1 комната — «для 1 гостя»;
@@ -787,7 +787,7 @@ timeout.addEventListener("change", function() {
 // 3 комнаты — «для 3 гостей», «для 2 гостей» или «для 1 гостя»;
 // 100 комнат — «не для гостей»;
 
-roomNumber.addEventListener("change", newValueForCapacity)
+roomNumber.addEventListener("change", newValueForCapacity);
 
 function newValueForCapacity() {
   const rooms = this.value;
@@ -799,31 +799,46 @@ function newValueForCapacity() {
   });
   arr.forEach(function(elem) {
     removeSeleced(elem);
-  })
+  });
   switch (rooms) {
     case "1":
       arrCapacity.forEach(function(elem) {
-        if (elem.value !== "1") addDisabled(elem);
-        if (elem.value === "1") addSelected(elem);
+        if (elem.value !== "1") {
+          addDisabled(elem);
+        }
+        if (elem.value === "1") {
+          addSelected(elem);
+        }
       });
       break;
     case "2":
       arrCapacity.forEach(function(elem) {
-        if (elem.value !== "1" && elem.value !== "2") addDisabled(elem);
-        if (elem.value == "2") addSelected(elem);
-      })
+        if (elem.value !== "1" && elem.value !== "2") {
+          addDisabled(elem);
+        }
+        if (elem.value === "2") {
+          addSelected(elem);
+        }
+      });
       break;
     case "3":
       arrCapacity.forEach(function(elem) {
-        if (elem.value === "0") addDisabled(elem);
-        if (elem.value === "3") addSelected(elem);
-      })
+        if (elem.value === "0") {
+          addDisabled(elem);
+        }
+        if (elem.value === "3") {
+          addSelected(elem);
+        }
+      });
       break;
     case "100":
       arrCapacity.forEach(function(elem) {
-      if (elem.value !== "0") addDisabled(elem);
-      else addSelected(elem);
-      })
+        if (elem.value !== "0") {
+          addDisabled(elem);
+        } else {
+          addSelected(elem);
+        }
+      });
   }
 }
 
