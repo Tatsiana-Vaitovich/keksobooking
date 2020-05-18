@@ -483,8 +483,8 @@ function onMainPinActivatePage() {
   removeClass(map, "map--faded");
   removeClass(form, "ad-form--disabled");
   addClass(form, "ad-form--enebled");
-  enebledForm(form);
-  enebledForm(mapFilter);
+  enebleForm(form);
+  enebleForm(mapFilter);
 }
 
 function addClass(elem, className) {
@@ -495,7 +495,7 @@ function removeClass(elem, className) {
   elem.classList.remove(className);
 }
 
-function enebledForm(formName) {
+function enebleForm(formName) {
   const formElements = Array.from(formName.elements);
   formElements.forEach(function(elem) {
     if (elem.closest("input") || elem.closest("select")) {
