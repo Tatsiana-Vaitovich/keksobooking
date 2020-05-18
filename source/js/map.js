@@ -707,6 +707,8 @@ function closePopup() {
   const popup = map.querySelector(".popup");
   popup.parentElement.removeChild(popup);
 
+  lastElementInFocus.focus();
+
   document.removeEventListener("keydown", onPopupEnterOREscPress);
 }
 
