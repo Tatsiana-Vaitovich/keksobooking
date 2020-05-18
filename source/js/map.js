@@ -540,8 +540,8 @@ function getMainPinCoordStroke() {
 // ------- Перетаскивание метки реализую используя события мыши
 
 // отменю браузерные события на map - чтобы текст "и снова токио" не выделялся при щелчке
-map.addEventListener("mousedown", function(evt) {
-  evt.preventDefault();
+map.addEventListener("mousedown", function(mouseDownevt) {
+  mouseDownevt.preventDefault();
 });
 
 // чтобы не сработало браузерное событие drag_and_drop
@@ -572,20 +572,20 @@ const mainPinCoordDrop = {};
 mainPin.addEventListener("mousedown", onMainPinCursorStart);
 mainPin.addEventListener("touchstart", onMainPinCursorStart);
 
-function onMainPinCursorStart(evt) {
-  evt.preventDefault();
+function onMainPinCursorStart(cursorStartEvt) {
+  cursorStartEvt.preventDefault();
 
   let captureX;
   let captureY;
 
-  if (evt.type === "mousedown") {
-    captureX = evt.clientX;
-    captureY = evt.clientY;
+  if (cursorStartEvt.type === "mousedown") {
+    captureX = cursorStartEvt.clientX;
+    captureY = cursorStartEvt.clientY;
     map.addEventListener("mousemove", onMapCursorMove);
     map.addEventListener("mouseup", onMapCursorEnd);
-  } else if (evt.type === "touchstart") {
-    captureX = evt.touches[0].clientX;
-    captureY = evt.touches[0].clientY;
+  } else if (cursorStartEvt.type === "touchstart") {
+    captureX = cursorStartEvt.touches[0].clientX;
+    captureY = cursorStartEvt.touches[0].clientY;
     map.addEventListener("touchmove", onMapCursorMove);
     map.addEventListener("touchend", onMapCursorEnd);
   }
@@ -614,16 +614,16 @@ function getCaptureCoords(captureX, captureY) {
   mainPinCoordCapture.y = captureY - mainPinTop;
 }
 
-function onMapCursorMove(evt) {
+function onMapCursorMove(cursorMoveEvt) {
   dragged = true;
   let newX;
   let newY;
-  if (evt.type === "mousemove") {
-    newX = evt.clientX;
-    newY = evt.clientY;
-  } else if (evt.type === "touchmove") {
-    newX = evt.touches[0].clientX;
-    newY = evt.touches[0].clientY;
+  if (cursorMoveEvt.type === "mousemove") {
+    newX = cursorMoveEvt.clientX;
+    newY = cursorMoveEvt.clientY;
+  } else if (cursorMoveEvt.type === "touchmove") {
+    newX = cursorMoveEvt.touches[0].clientX;
+    newY = cursorMoveEvt.touches[0].clientY;
   }
   getNewCoords(newX, newY);
 }
@@ -658,10 +658,10 @@ function getNewCoords(newX, newY) {
   mainPinCoordDrop.y = newTop;
 }
 
-function onMapCursorEnd(evt) {
+function onMapCursorEnd(cursorEndEvt) {
   let newLeft;
   let newTop;
-  if (evt.type === "mouseup") {
+  if (cursorEndEvt.type === "mouseup") {
     newLeft = mainPinCoordDrop.x;
     newTop = mainPinCoordDrop.y;
     mainPin.style.top = newTop + "px";
@@ -669,7 +669,7 @@ function onMapCursorEnd(evt) {
 
     map.removeEventListener("mousemove", onMapCursorMove);
     map.removeEventListener("mouseup", onMapCursorEnd);
-  } else if (evt.type === "touchend") {
+  } else if (cursorEndEvt.type === "touchend") {
     const mainPinBoundingClientRect = mainPin.getBoundingClientRect();
     const mainPinLeft = mainPinBoundingClientRect.left;
     const mainPinTop = mainPinBoundingClientRect.top;
@@ -697,8 +697,8 @@ map.addEventListener("click", onMapPopupOpen);
 
 let lastElementInFocus;
 
-function onMapPopupOpen(evt) {
-  const elem = evt.target;
+function onMapPopupOpen(clickEvt) {
+  const elem = clickEvt.target;
   if ((elem.closest(".map__pin")) && !(elem.closest(".map__pin--main"))) {
     if (!document.querySelector(".popup")) {
       lastElementInFocus = elem.closest(".map__pin");
@@ -734,8 +734,8 @@ function closePopup() {
 // нажав кнопку esc на документе или нажав кнопку Enter на самом элементе buttonClose
 
 // обработчик "закрыть/открыть с клавиатур popup"
-function onPopupEnterOREscPress(evt) {
-  switch (evt.keyCode) {
+function onPopupEnterOREscPress(keyEvt) {
+  switch (keyEvt.keyCode) {
     case keyCodeEnter:
       if (!document.querySelector(".popup")) {
         openPopup();
