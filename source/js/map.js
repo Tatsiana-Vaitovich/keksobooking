@@ -445,9 +445,13 @@ const form = document.querySelector(".ad-form");
 const mapFilter = document.querySelector(".map__filters");
 const mainPin = document.querySelector(".map__pin--main");
 const bigMainPin = mainPin.querySelector("svg");
-const formAdress = document.querySelector("#address");
+const formAddress = document.querySelector("#address");
 
-formAdress.value = getMainPinCoordStroke();
+// использую переменную dragged, чтобы проверить, было ли перемещение 
+// mainPin или не было
+let dragged = false;
+
+formAddress.value = getMainPinCoordStroke();
 
 // добавила disabled в разметку вручную
 // formElements.forEach(function(elem) {
@@ -476,6 +480,10 @@ formAdress.value = getMainPinCoordStroke();
 
 mainPin.addEventListener("mouseup", onMainPinActivatePage);
 
+// также добавим событие click на mainPin -
+// чтобы строка адреса была заполнена, даже если не было перетаскивания
+// mainPin.addEventListener("click", getMainPinCoordStroke);
+
 function onMainPinActivatePage() {
 // --Вставляю все полученные элементы из elem1 за один прием в блок ".map__pins"
   insertChildrenAppend(elem1, mapPins);
@@ -485,6 +493,8 @@ function onMainPinActivatePage() {
   addClass(form, "ad-form--enebled");
   enebleForm(form);
   enebleForm(mapFilter);
+
+  mainPin.style.zIndex = "100";
 }
 
 function addClass(elem, className) {
@@ -574,6 +584,7 @@ function onMainPinCursorStart(evt) {
 
   let captureX;
   let captureY;
+
   if (evt.type === "mousedown") {
     captureX = evt.clientX;
     captureY = evt.clientY;
@@ -585,7 +596,20 @@ function onMainPinCursorStart(evt) {
     map.addEventListener("touchmove", onMapCursorMove);
     map.addEventListener("touchend", onMapCursorEnd);
   }
+
   getCaptureCoords(captureX, captureY);
+}
+
+// если mainPin не перетаскивался - в поле адреса будут записаны начальные
+// координаты, если перетаскивался - новые координаты:
+if (dragged) {
+  mainPin.removeEventListener("click", onMainPinClick);
+} else {
+  mainPin.addEventListener("click", onMainPinClick);
+}
+
+function onMainPinClick() {
+  formAddress.value = getMainPinCoordStroke();
 }
 
 function getCaptureCoords(captureX, captureY) {
@@ -598,6 +622,7 @@ function getCaptureCoords(captureX, captureY) {
 }
 
 function onMapCursorMove(evt) {
+  dragged = true;
   let newX;
   let newY;
   if (evt.type === "mousemove") {
@@ -665,13 +690,13 @@ function onMapCursorEnd(evt) {
     map.removeEventListener("touchmove", onMapCursorMove);
   }
   // заполним поле адреса
-  fillFormAdress(newLeft, newTop);
+  fillFormAddress(newLeft, newTop);
 }
 
-function fillFormAdress(newLeft, newTop) {
+function fillFormAddress(newLeft, newTop) {
   const roundValueX = roundNumber((newLeft), 1);
   const roundValueY = roundNumber((newTop), 1);
-  formAdress.value = roundValueX + ", " + roundValueY;
+  formAddress.value = roundValueX + ", " + roundValueY;
 }
 
 // ------- Просмотр подробной информации о похожих объявлениях
