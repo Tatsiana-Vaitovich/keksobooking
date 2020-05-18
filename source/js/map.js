@@ -419,13 +419,6 @@ function getPopupPhotos(arr) {
   return elem2;
 }
 
-// // вставим Popup в elem3 фрагмента
-// elem3.append(getPopup(0));
-
-// вставим содержимое elem3 в документ - элемент с классом .map__filters-container
-// let block3 = document.querySelector(".map__filters-container");
-// insertChildrenBefore(elem3, block3);
-
 // ----ДЗ НОВОЕ------
 
 // ----- неактивное состояние карты. Пункт «Неактивное состояние» технического задания
@@ -758,6 +751,7 @@ function onPopupEnterOREscPress(evt) {
 
 const price = document.querySelector("#price");
 const type = document.querySelector("#type");
+const time = document.querySelector(".ad-form__element--time");
 const timein = document.querySelector("#timein");
 const timeout = document.querySelector("#timeout");
 const roomNumber = document.querySelector("#room_number");
@@ -797,14 +791,22 @@ function getMinForFieldPrice(type) {
 
 // в соответствии с ТЗ Поля «Время заезда» и «Время выезда» синхронизированы:
 // при изменении значения одного поля, во втором выделяется соответствующее ему.
-
-timein.addEventListener("change", function() {
-  timeout.value = this.value;
+time.addEventListener("change", function(changeEvt) {
+  const elem = changeEvt.target;
+  if (elem === timein) {
+    timeout.value = elem.value;
+  } else if (elem === timeout) {
+    timein.value = elem.value;
+  }
 });
 
-timeout.addEventListener("change", function() {
-  timein.value = this.value;
-});
+// timein.addEventListener("change", function() {
+//   timeout.value = this.value;
+// });
+
+// timeout.addEventListener("change", function() {
+//   timein.value = this.value;
+// });
 
 // Поле «Количество комнат» синхронизировано с полем «Количество мест» таким образом,
 // что при выборе количества комнат вводятся ограничения на допустимые варианты выбора количества гостей:
