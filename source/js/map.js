@@ -523,15 +523,15 @@ mainPin.addEventListener("touchend", onMainPinActivatePage);
 function getMainPinCoord(coordName) {
   let coord;
   if (coordName === "x") {
-    coord = mainPin.offsetLeft + 1 / 2 * mainPin.offsetWidth;
+    coord = mainPin.offsetLeft + (1 / 2 * mainPin.offsetWidth);
   } else {
-    coord = mainPin.offsetTop + 1 / 2 * mainPin.offsetHeight;
+    coord = mainPin.offsetTop + (1 / 2 * mainPin.offsetHeight);
   }
   return coord;
 }
 
 function getMainPinCoordStroke() {
-  return (roundNumber(getMainPinCoord("x"), 10) + ", " + roundNumber(getMainPinCoord("y"), 10));
+  return ((roundNumber(getMainPinCoord("x"), 10) + ", " + roundNumber(getMainPinCoord("y"), 10)));
 }
 
 // ------- Перетаскивание метки реализую используя события мыши
