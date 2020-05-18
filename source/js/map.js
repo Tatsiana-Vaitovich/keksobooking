@@ -267,7 +267,7 @@ function getMapPin(i) {
 
 // функции для получения координат центра метки:
 function getMapPinCoordCenterX(index) {
-  return usersNotices[index].location.x - 1 / 2 * mapPinWidth;
+  return usersNotices[index].location.x - (1 / 2 * mapPinWidth);
 }
 
 function getMapPinCoordCenterY(index) {
@@ -347,7 +347,7 @@ function getPopup(number) {
 function getStrokePrice(number) {
   const priceFromUserNotice = roundNumber(usersNotices[number].offer.price, 1000);
   const addStroke = "&#x20bd;<span>/ночь</span>";
-  return priceFromUserNotice + addStroke;
+  return (priceFromUserNotice + addStroke);
 }
 
 // функция для округления числа
@@ -531,7 +531,7 @@ function getMainPinCoord(coordName) {
 }
 
 function getMainPinCoordStroke() {
-  return roundNumber(getMainPinCoord("x"), 10) + ", " + roundNumber(getMainPinCoord("y"), 10);
+  return (roundNumber(getMainPinCoord("x"), 10) + ", " + roundNumber(getMainPinCoord("y"), 10));
 }
 
 // ------- Перетаскивание метки реализую используя события мыши
