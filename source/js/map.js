@@ -447,7 +447,7 @@ const mainPin = document.querySelector(".map__pin--main");
 const bigMainPin = mainPin.querySelector("svg");
 const formAddress = document.querySelector("#address");
 
-// использую переменную dragged, чтобы проверить, было ли перемещение 
+// использую переменную dragged, чтобы проверить, было ли перемещение
 // mainPin или не было
 let dragged = false;
 
@@ -721,9 +721,9 @@ function onMapPopupOpen(evt) {
 }
 
 function openPopup() {
-  const block3 = document.querySelector(".map__filters-container");
+  const mapFilters = document.querySelector(".map__filters-container");
   elem3.append(getPopup(0));
-  insertChildrenBefore(elem3, block3);
+  insertChildrenBefore(elem3, mapFilters);
 
   document.addEventListener("keydown", onPopupEnterOREscPress);
 }
