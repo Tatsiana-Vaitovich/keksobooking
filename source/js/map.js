@@ -816,58 +816,132 @@ time.addEventListener("change", function(changeEvt) {
 // 3 комнаты — «для 3 гостей», «для 2 гостей» или «для 1 гостя»;
 // 100 комнат — «не для гостей»;
 
-roomNumber.addEventListener("change", newValueForCapacity);
+// roomNumber.addEventListener("change", newValueForCapacity);
+
+form.addEventListener("change", newValue);
+
+function newValue(changeEvt) {
+  changeEvt.preventDefault();
+  const arr = [roomNumber, capacity];
+  const targetElem = changeEvt.target;
+  if (arr.includes(targetElem)) {
+    const topElem = targetElem;
+    const slaveElem = arr.find((item) => (item !== topElem));
+    const slavesArr = getArrFromCollectionOptions(slaveElem);
+    const topsArr = getArrFromCollectionOptions(topElem);
+    slavesArr.forEach(function(elem) {
+      removeDisabled(elem);
+      // removeSelected(elem);
+    });
+    topsArr.forEach(function(elem) {
+      // removeSelected(elem);
+      removeDisabled(elem);
+    });
+    if (topElem === roomNumber) {
+      newValueForCapacity();
+    } else {
+      newValueForRoomNumber();
+    }
+  }
+}
 
 function newValueForCapacity() {
-  const rooms = this.value;
-  const arrCapacity = getArrFromCollectionOptions(capacity);
-  const arr = getArrFromCollectionOptions(this);
-  arrCapacity.forEach(function(elem) {
-    removeDisabled(elem);
-    removeSeleced(elem);
-  });
-  arr.forEach(function(elem) {
-    removeSeleced(elem);
-  });
-  switch (rooms) {
+  const value = roomNumber.value;
+  const capacitysArr = getArrFromCollectionOptions(capacity);
+  switch (value) {
     case "1":
-      arrCapacity.forEach(function(elem) {
+      capacitysArr.forEach(function(elem) {
         if (elem.value !== "1") {
           addDisabled(elem);
-        }
-        if (elem.value === "1") {
-          addSelected(elem);
+        // } else {
+        //   addSelected(elem);
+        //   console.log(capacity.options);
         }
       });
+      capacity.selectedIndex = 2;
       break;
     case "2":
-      arrCapacity.forEach(function(elem) {
-        if (elem.value !== "1" && elem.value !== "2") {
+      capacitysArr.forEach(function(elem) {
+        if ((elem.value !== "1") && (elem.value !== "2")) {
           addDisabled(elem);
-        }
-        if (elem.value === "2") {
-          addSelected(elem);
+        // } else if (elem.value === "2") {
+        //   addSelected(elem);
+        //   console.log(capacity.options);
         }
       });
+      capacity.selectedIndex = 1;
       break;
     case "3":
-      arrCapacity.forEach(function(elem) {
+      capacitysArr.forEach(function(elem) {
         if (elem.value === "0") {
           addDisabled(elem);
-        }
-        if (elem.value === "3") {
-          addSelected(elem);
+        // } else if (elem.value === "3") {
+        //   addSelected(elem);
+        //   console.log(capacity.options);
         }
       });
+      capacity.selectedIndex = 0;
       break;
     case "100":
-      arrCapacity.forEach(function(elem) {
+      capacitysArr.forEach(function(elem) {
         if (elem.value !== "0") {
           addDisabled(elem);
-        } else {
-          addSelected(elem);
+        // } else {
+        //   addSelected(elem);
+        //   console.log(capacity.options);
         }
       });
+      capacity.selectedIndex = 3;
+  }
+}
+
+function newValueForRoomNumber() {
+  const value = capacity.value;
+  const roomNumdersArr = getArrFromCollectionOptions(roomNumber);
+  switch (value) {
+    case "3":
+      roomNumdersArr.forEach(function(elem) {
+        if (elem.value !== "3") {
+          addDisabled(elem);
+        // } else if (elem.value === "3") {
+        //   addSelected(elem);
+        //   console.log(roomNumber.options);
+        }
+      });
+      roomNumber.selectedIndex = 2;
+      break;
+    case "2":
+      roomNumdersArr.forEach(function(elem) {
+        if ((elem.value !== "2") && (elem.value !== "3")) {
+          addDisabled(elem);
+        // } else if (elem.value === "2") {
+        //   addSelected(elem);
+        //   console.log(roomNumber.options);
+        }
+      });
+      roomNumber.selectedIndex = 1;
+      break;
+    case "1":
+      roomNumdersArr.forEach(function(elem) {
+        if (elem.value === "100") {
+          addDisabled(elem);
+        // } else if (elem.value === "1") {
+        //   addSelected(elem);
+        //   console.log(roomNumber.options);
+        }
+      });
+      roomNumber.selectedIndex = 0;
+      break;
+    case "0":
+      roomNumdersArr.forEach(function(elem) {
+        if (elem.value !== "100") {
+          addDisabled(elem);
+        // } else {
+        //   addSelected(elem);
+        //   console.log(roomNumber.options);
+        }
+      });
+      roomNumber.selectedIndex = 3;
   }
 }
 
@@ -876,10 +950,10 @@ function getArrFromCollectionOptions(elem) {
   return Array.from(collection);
 }
 
-function addSelected(elem) {
-  elem.setAttribute("selected", "");
-}
+// function addSelected(elem) {
+//   elem.setAttribute("selected", "");
+// }
 
-function removeSeleced(elem) {
+function removeSelected(elem) {
   elem.removeAttribute("selected");
 }
