@@ -702,7 +702,8 @@ function onMapPopupOpen(clickEvt) {
   if ((elem.closest(".map__pin")) && !(elem.closest(".map__pin--main"))) {
     if (!document.querySelector(".popup")) {
       lastElementInFocus = elem.closest(".map__pin");
-      openPopup();
+      const index = getIndex(lastElementInFocus);
+      openPopup(index);
       document.querySelector(".popup__close").focus();
     } else {
       closePopup();
@@ -713,9 +714,18 @@ function onMapPopupOpen(clickEvt) {
   }
 }
 
-function openPopup() {
+function getIndex(elem) {
+  const MapPinsCollection = mapPins.querySelectorAll(".map__pin");
+  const mapPinsArr = Array.from(MapPinsCollection);
+  const index = (mapPinsArr.indexOf(elem));
+  // т.к полученный массив содержит и map__pin--main,
+  // для получения индекса кнопки нужно вычесть 1:
+  return (index - 1);
+}
+
+function openPopup(index) {
   const mapFilters = document.querySelector(".map__filters-container");
-  elem3.append(getPopup(0));
+  elem3.append(getPopup(index));
   insertChildrenBefore(elem3, mapFilters);
 
   document.addEventListener("keydown", onPopupEnterOREscPress);
@@ -954,6 +964,6 @@ function getArrFromCollectionOptions(elem) {
 //   elem.setAttribute("selected", "");
 // }
 
-function removeSelected(elem) {
-  elem.removeAttribute("selected");
-}
+// function removeSelected(elem) {
+//   elem.removeAttribute("selected");
+// }
