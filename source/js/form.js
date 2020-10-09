@@ -159,6 +159,17 @@
     const collection = elem.options;
     return Array.from(collection);
   }
+  // FormData - встроенное API, которое превращает данные формы в объект,
+  // пригодный для отправки на сервер
+  // создается при помощи конструктора объектов
+  // в качестве параметра передаем форму
+  window.dom.form.addEventListener("submit", function(submitEvt) {
+    window.upload(new FormData(this), function() {
+      window.dom.success
+      .window.util.removeClass("hidden");
+    });
+    submitEvt.preventDefault();
+  });
 
   window.form = {
     "enebleForm": enebleForm,
