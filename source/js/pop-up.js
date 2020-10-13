@@ -98,6 +98,7 @@
     if ((elem.closest(".map__pin")) && !(elem.closest(".map__pin--main"))) {
       if (!document.querySelector(".popup")) {
         lastElementInFocus = elem.closest(".map__pin");
+        window.util.addClass(lastElementInFocus, "map__pin--active");
         const index = getIndex(lastElementInFocus);
         openPopup(index);
         document.querySelector(".popup__close").focus();
@@ -132,6 +133,7 @@
     popup.parentElement.removeChild(popup);
 
     lastElementInFocus.focus();
+    window.util.removeClass(lastElementInFocus, "map__pin--active");
 
     document.removeEventListener("keydown", onPopupEnterOREscPress);
   }

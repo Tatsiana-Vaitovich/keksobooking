@@ -10,6 +10,7 @@
   const timeout = document.querySelector("#timeout");
   const roomNumber = document.querySelector("#room_number");
   const capacity = document.querySelector("#capacity");
+  const WAITING_TIME_FORM_SEND = 3000;
 
   function enebleForm(formName) {
     const formElements = Array.from(formName.elements);
@@ -164,9 +165,10 @@
   // создается при помощи конструктора объектов
   // в качестве параметра передаем форму
   window.dom.form.addEventListener("submit", function(submitEvt) {
-    window.upload(new FormData(this), function() {
+    window.backend.upload(new FormData(window.dom.form), function() {
       window.dom.success
       .window.util.removeClass("hidden");
+      setTimeout(window.util.addClass("hidden"), WAITING_TIME_FORM_SEND);
     });
     submitEvt.preventDefault();
   });

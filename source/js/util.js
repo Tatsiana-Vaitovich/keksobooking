@@ -84,6 +84,11 @@
     elem.removeAttribute("disabled");
   }
 
+  function removeElem(elem) {
+    const parent = elem.parentNode;
+    parent.removeChild(elem);
+  }
+
   window.util = {
     "KEY_CODE_ENTER": KEY_CODE_ENTER,
     "KEY_CODE_ESC": KEY_CODE_ESC,
@@ -98,5 +103,6 @@
     "removeClass": removeClass,
     "addDisabled": addDisabled,
     "removeDisabled": removeDisabled,
+    "removeElem": removeElem,
   };
 })();

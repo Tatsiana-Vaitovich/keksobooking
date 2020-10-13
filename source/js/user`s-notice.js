@@ -60,6 +60,7 @@
   }
 
   // получу elem1 фрагмента из массива usersNotices
-  getMapPins(window.data.usersNotices, window.createFragment.elem1);
+  // getMapPins(window.data.usersNotices, window.createFragment.elem1);
 
+  window.getMapPins = getMapPins;
 })();
