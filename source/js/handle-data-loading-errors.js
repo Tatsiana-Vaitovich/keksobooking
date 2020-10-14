@@ -5,9 +5,10 @@
 (function() {
 
   function onError(message) {
-    const parentNode = document.querySelector(".success");
+    const parentNode = window.dom.success;
     const errorMessage = parentNode.cloneNode(true);
     const TIME_SHOW_MESSAGE = 3000;
+
     errorMessage.firstElementChild.textContent = message;
     errorMessage.style.zIndex = "100";
     window.util.removeClass(errorMessage, "hidden");

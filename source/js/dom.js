@@ -7,7 +7,7 @@
   const map = document.querySelector(".map");
   const mapPins = document.querySelector(".map__pins");
   const form = document.querySelector(".ad-form");
-  const success = document.querySelector(".succes");
+  const success = document.querySelector(".success");
 
   window.dom = {
     "map": map,

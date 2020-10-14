@@ -62,8 +62,8 @@
     });
 
     xhr.open("GET", URL_GET);
+    // xhr.setRequestHeader("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");
     xhr.send();
-
     xhr.timeout = MAX_WAITING_TIME_RESPONSE;
   }
 
