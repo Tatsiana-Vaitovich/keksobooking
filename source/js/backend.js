@@ -12,13 +12,38 @@
 
   let error;
 
-  function upload(data, onSuccess) {
+  // обработка xhr ответа
+
+  function handleXhrResponse(onSuccess, onError) {
+    switch (xhr.status) {
+      case 200:
+        onSuccess(xhr.response);
+        break;
+      case 400:
+        error = "неверный запрос";
+        break;
+      case 404:
+        error = "ничего не найдено";
+        break;
+      default:
+        error("Статус ответа: " + xhr.status + " xhr.statusText");
+    }
+    if (error) {
+      onError(error);
+    }
+  }
+
+  // загрузка данных на сервер
+
+  function upload(data, onSuccess, onError) {
     const xhr = new XMLHttpRequest();
     xhr.response = "json";
 
     xhr.addEventListener("load", function() {
-      onSuccess(xhr.response);
+      handleXhrResponse(onSuccess, onError);
     });
+    // xhr.addEventListener("load", function() {
+    //   onSuccess(xhr.response);
 
     xhr.open("POST", URL_POST);
     xhr.send(data);
@@ -29,24 +54,10 @@
   function load(onLoad, onError) {
     const xhr = new XMLHttpRequest();
     xhr.responseType = "json";
+    xhr.timeout = MAX_WAITING_TIME_RESPONSE;
 
     xhr.addEventListener("load", function() {
-      switch (xhr.status) {
-        case 200:
-          onLoad(xhr.response);
-          break;
-        case 400:
-          error = "неверный запрос";
-          break;
-        case 404:
-          error = "ничего не найдено";
-          break;
-        default:
-          error("Статус ответа: " + xhr.status + " xhr.statusText");
-      }
-      if (error) {
-        onError(error);
-      }
+      handleXhrResponse(onLoad, onError);
     });
 
     // load произойдет даже если в ответ придет ошибка
@@ -64,7 +75,6 @@
     xhr.open("GET", URL_GET);
     // xhr.setRequestHeader("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");
     xhr.send();
-    xhr.timeout = MAX_WAITING_TIME_RESPONSE;
   }
 
   window.backend = {

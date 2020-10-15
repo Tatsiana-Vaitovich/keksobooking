@@ -5,8 +5,8 @@
 (function() {
 
   function onLoad(data) {
-    console.log(data);
-    window.getMapPins(data, window.createFragment.elem1);
+    // window.getMapPins(data, window.createFragment.elem1);
+    // window.data.usersNotices = data;
   }
 
   window.handleDateLoadingSuccess = onLoad;
