@@ -4,15 +4,17 @@
 
 (function() {
 
-  function onError(message) {
-    const parentNode = window.dom.success;
-    const errorMessage = parentNode.cloneNode(true);
+  function onXhrDataLoadingErrors(message) {
+
+    const errorMessage = window.createFragment.template.querySelector(".error-message").cloneNode(true);
     const TIME_SHOW_MESSAGE = 3000;
+    const whereInsertErrorMessage = window.dom.map;
 
     errorMessage.firstElementChild.textContent = message;
     errorMessage.style.zIndex = "100";
     window.util.removeClass(errorMessage, "hidden");
-    window.dom.map.appendChild(errorMessage);
+
+    whereInsertErrorMessage.appendChild(errorMessage);
 
     // удалим сообщение о ошибке через time_show_message
     setTimeout(removeMessage, TIME_SHOW_MESSAGE);
@@ -22,5 +24,5 @@
     }
   }
 
-  window.handleDataLoadingErrors = onError;
+  window.handleDataLoadingErrors = onXhrDataLoadingErrors;
 })();
