@@ -64,7 +64,7 @@
     xhr.addEventListener("error", function() {
       error = "Произошла ошибка соединения";
       onError(error);
-      window.buckupMethodForLoadingData.useMock();
+      window.buckupMethodForLoadingData.useJSONP();
     });
 
     // перестрахуемся от слишком долгого ответа

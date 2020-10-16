@@ -6,6 +6,11 @@
 
 (function() {
 
+  function getMapPins () {
+    window.usersNotice.getMapPins(window.data.usersNotices, window.createFragment.elem1, 8);
+    window.util.insertChildrenAppend(window.createFragment.elem1, window.dom.mapPins);
+  }
+
   function useMock() {
 
     console.log("use mock");
@@ -334,39 +339,48 @@
       }
     ];
     window.data.usersNotices = mock;
-    window.usersNotice.getMapPins(window.data.usersNotices, window.createFragment.elem1, 8);
-    // Вставляю все полученные элементы из elem1 за один прием в блок ".map__pins"
-    window.util.insertChildrenAppend(window.createFragment.elem1, window.dom.mapPins);
+    getMapPins();
+    // window.usersNotice.getMapPins(window.data.usersNotices, window.createFragment.elem1, 8);
+    // window.util.insertChildrenAppend(window.createFragment.elem1, window.dom.mapPins);
   }
 
   function useJSONP() {
 
-    const callback = function(data) {
-      const objJson = data;
-      const objJs = JSON.parse(objJson);
-      window.data.usersNotices = objJs;
-    };
+    console.log("use JSONP");
 
     // const URL_GET = window.backend.URL_GET;
     const URL = "//js.dump.academy/keksobooking/data";
     const scriptJSONP = document.createElement("script");
-    scriptJSONP.src = URL + "?callback=callback";
+    scriptJSONP.src = URL + "?callback=_jsonpCallBack";
 
     document.body.append(scriptJSONP);
   }
 
   function useMyMock() {
+
+    console.log("use myMock");
+
     // Создаю массив, состоящий из 8 сгенерированных JS объектов, которые будут описывать похожие объявления неподалёку
     // перед тем как создать массив объектов, перемешаю массив заголовков
     window.util.shuffle(window.data.titlesArr);
     window.data.usersNotices = window.usersNotice.createUsersNotices(8);
-    window.usersNotice.getMapPins(window.data.usersNotices, window.createFragment.elem1, 8);
+    getMapPins();
+    // window.usersNotice.getMapPins(window.data.usersNotices, window.createFragment.elem1, 8);
+    // window.util.insertChildrenAppend(window.createFragment.elem1, window.dom.mapPins);
   }
 
+  const _jsonpCallBack = function(data) {
+    // почему пришел в ответ объект js, а не json???
+    window.data.usersNotices = data;
+    window.usersNotice.getMapPins(window.data.usersNotices, window.createFragment.elem1, 8);
+    window.util.insertChildrenAppend(window.createFragment.elem1, window.dom.mapPins);
+  };
 
   window.buckupMethodForLoadingData = {
     "useMock": useMock,
     "useJSONP": useJSONP,
     "useMyMock": useMyMock,
   };
+
+  window._jsonpCallBack = _jsonpCallBack;
 })();
