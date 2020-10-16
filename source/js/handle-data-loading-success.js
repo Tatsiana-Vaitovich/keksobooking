@@ -4,10 +4,9 @@
 
 (function() {
 
-  function onLoad(data) {
-    // window.getMapPins(data, window.createFragment.elem1);
-    // window.data.usersNotices = data;
+  function onXhrDataLoadingSuccess(data) {
+    window.usersNotice.getMapPins(data, window.createFragment.elem1, 8);
   }
 
-  window.handleDateLoadingSuccess = onLoad;
+  window.handleDateLoadingSuccess = onXhrDataLoadingSuccess;
 })();
