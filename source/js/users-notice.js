@@ -68,7 +68,7 @@
 
 
   // получу elem1 фрагмента из массива usersNotices
-  getMapPins(window.data.mock, window.createFragment.elem1, 5);
+  // getMapPins(window.data.usersNotices, window.createFragment.elem1, 8);
 
   window.usersNotice = {
     "getMapPins": getMapPins,

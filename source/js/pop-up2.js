@@ -100,7 +100,7 @@
         lastElementInFocus = elem.closest(".map__pin");
         window.util.addClass(lastElementInFocus, "map__pin--active");
         const index = getIndex(lastElementInFocus);
-        openPopup(index, window.data.mock);
+        openPopup(index, window.data.usersNotices);
         document.querySelector(".popup__close").focus();
       } else {
         closePopup();

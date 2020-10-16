@@ -8,16 +8,16 @@
 
   const URL_POST = "https//js.dump.academy/keksobooking";
   const URL_GET = "https://js.dump.academy/keksobooking/data";
-  const MAX_WAITING_TIME_RESPONSE = 1000;
+  const MAX_WAITING_TIME_RESPONSE = 3000;
 
   let error;
 
   // обработка xhr ответа
 
-  function handleXhrResponse(onSuccess, onError) {
+  function handleXhrResponse(onLoad, onError) {
     switch (xhr.status) {
       case 200:
-        onSuccess(xhr.response);
+        onLoad(xhr.response);
         break;
       case 400:
         error = "неверный запрос";
@@ -64,7 +64,7 @@
     xhr.addEventListener("error", function() {
       error = "Произошла ошибка соединения";
       onError(error);
-      // window.buckupMethodForLoadingData.useMock();
+      window.buckupMethodForLoadingData.useMock();
     });
 
     // перестрахуемся от слишком долгого ответа

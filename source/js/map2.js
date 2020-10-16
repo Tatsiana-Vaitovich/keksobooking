@@ -17,9 +17,9 @@
   function onMainPinActivatePage() {
     // получу elem1 фрагмента из данных, полученных с сервера
     // для этого нужно запустить функцию load()
-    // window.backend.load(window.handleDateLoadingSuccess, window.handleDataLoadingErrors);
+    window.backend.load(window.handleDateLoadingSuccess, window.handleDataLoadingErrors);
     // Вставляю все полученные элементы из elem1 за один прием в блок ".map__pins"
-    window.util.insertChildrenAppend(window.createFragment.elem1, window.dom.mapPins);
+    // window.util.insertChildrenAppend(window.createFragment.elem1, window.dom.mapPins);
     // активирую карту
     window.util.removeClass(window.dom.map, "map--faded");
     window.util.removeClass(window.dom.form, "ad-form--disabled");
