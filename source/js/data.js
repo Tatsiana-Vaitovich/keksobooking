@@ -4,7 +4,7 @@
 
 (function() {
 
-  // let usersNotices = [];
+  let usersNotices;
   const titlesArr = [
     "Большая уютная квартира",
     "Маленькая неуютная квартира",
@@ -67,8 +67,8 @@
   const mapPinHeight = 70;
   const indent = 120;
 
-  // const mock = [
-  const usersNotices = [
+  const mock = [
+  // const usersNotices = [
     {
       "author": {
         "avatar": "img/avatars/user01.png"
@@ -393,7 +393,7 @@
   ];
 
   window.data = {
-    // "mock": mock,
+    "mock": mock,
     "usersNotices": usersNotices,
     "titlesArr": titlesArr,
     "typesArr": typesArr,

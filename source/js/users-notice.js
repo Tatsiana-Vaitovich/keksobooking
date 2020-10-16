@@ -29,27 +29,26 @@
 
   // напишу функцию для создания каждого элемента userNotice
   function getMapPin(i, arr) {
-    // const obj = arr;
     const mapPin = window.createFragment.template.querySelector(".map__pin").cloneNode(true);
-    mapPin.querySelector("img").src = window.data.usersNotices[i].author.avatar;
-    mapPin.querySelector("img").alt = window.data.usersNotices[i].offer.title;
-    mapPin.style = getStrokeCoordsCenter(i);
+    mapPin.querySelector("img").src = arr[i].author.avatar;
+    mapPin.querySelector("img").alt = arr[i].offer.title;
+    mapPin.style = getStrokeCoordsCenter(i, arr);
     return mapPin;
   }
 
   // функции для получения координат центра метки:
-  function getMapPinCoordCenterX(index) {
-    return window.data.usersNotices[index].location.x - (1 / 2 * window.data.mapPinWidth);
+  function getMapPinCoordCenterX(index, arr) {
+    return arr[index].location.x - (1 / 2 * window.data.mapPinWidth);
   }
 
-  function getMapPinCoordCenterY(index) {
-    return window.data.usersNotices[index].location.y - window.data.mapPinHeight;
+  function getMapPinCoordCenterY(index, arr) {
+    return arr[index].location.y - window.data.mapPinHeight;
   }
 
   // функция для получения строки с координатами
-  function getStrokeCoordsCenter(index) {
-    const x = getMapPinCoordCenterX(index);
-    const y = getMapPinCoordCenterY(index);
+  function getStrokeCoordsCenter(index, arr) {
+    const x = getMapPinCoordCenterX(index, arr);
+    const y = getMapPinCoordCenterY(index, arr);
     return "left:" + x + "px;" + " top:" + y + "px;";
   }
 
@@ -69,7 +68,7 @@
 
 
   // получу elem1 фрагмента из массива usersNotices
-  getMapPins(window.data.usersNotice, window.createFragment.elem1, 5);
+  getMapPins(window.data.mock, window.createFragment.elem1, 5);
 
   window.usersNotice = {
     "getMapPins": getMapPins,
