@@ -24,15 +24,15 @@
 
   // Создаю массив, состоящий из 8 сгенерированных JS объектов, которые будут описывать похожие объявления неподалёку
   // перед тем как создать массив объектов, перемешаю массив заголовков
-  window.util.shuffle(window.data.titlesArr);
-  window.data.usersNotices = createUsersNotices(8);
+  // window.util.shuffle(window.data.titlesArr);
+  // window.data.usersNotices = createUsersNotices(8);
 
   // напишу функцию для создания каждого элемента userNotice
-  function getMapPin(i) {
-    const obj = window.data.usersNotices;
+  function getMapPin(i, arr) {
+    // const obj = arr;
     const mapPin = window.createFragment.template.querySelector(".map__pin").cloneNode(true);
-    mapPin.querySelector("img").src = obj[i].author.avatar;
-    mapPin.querySelector("img").alt = obj[i].offer.title;
+    mapPin.querySelector("img").src = window.data.usersNotices[i].author.avatar;
+    mapPin.querySelector("img").alt = window.data.usersNotices[i].offer.title;
     mapPin.style = getStrokeCoordsCenter(i);
     return mapPin;
   }
@@ -69,7 +69,7 @@
 
 
   // получу elem1 фрагмента из массива usersNotices
-  getMapPins(window.data.usersNotices, window.createFragment.elem1, 8);
+  getMapPins(window.data.usersNotice, window.createFragment.elem1, 5);
 
   window.usersNotice = {
     "getMapPins": getMapPins,

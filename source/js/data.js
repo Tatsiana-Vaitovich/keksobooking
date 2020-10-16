@@ -4,7 +4,7 @@
 
 (function() {
 
-  let usersNotices = [];
+  // let usersNotices = [];
   const titlesArr = [
     "Большая уютная квартира",
     "Маленькая неуютная квартира",
@@ -68,7 +68,7 @@
   const indent = 120;
 
   // const mock = [
-  usersNotices = [
+  const usersNotices = [
     {
       "author": {
         "avatar": "img/avatars/user01.png"
