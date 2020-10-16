@@ -67,6 +67,7 @@
   const mapPinHeight = 70;
   const indent = 120;
 
+  // const mock = [
   usersNotices = [
     {
       "author": {
@@ -392,6 +393,7 @@
   ];
 
   window.data = {
+    // "mock": mock,
     "usersNotices": usersNotices,
     "titlesArr": titlesArr,
     "typesArr": typesArr,
