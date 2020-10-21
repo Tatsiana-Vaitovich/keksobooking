@@ -6,7 +6,7 @@
 
 (function() {
 
-  function getMapPins () {
+  function getMapPins() {
     window.usersNotice.getMapPins(window.data.usersNotices, window.createFragment.elem1, 8);
     window.util.insertChildrenAppend(window.createFragment.elem1, window.dom.mapPins);
   }

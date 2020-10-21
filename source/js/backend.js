@@ -10,40 +10,52 @@
   const URL_GET = "https://js.dump.academy/keksobooking/data";
   const MAX_WAITING_TIME_RESPONSE = 3000;
 
-  let error;
-
   // обработка xhr ответа
 
-  function handleXhrResponse(onLoad, onError) {
-    switch (xhr.status) {
-      case 200:
-        onLoad(xhr.response);
-        break;
-      case 400:
-        error = "неверный запрос";
-        break;
-      case 404:
-        error = "ничего не найдено";
-        break;
-      default:
-        error("Статус ответа: " + xhr.status + " xhr.statusText");
-    }
-    if (error) {
-      onError(error);
-    }
-  }
+  // function handleXhrResponse(xhr, onLoad, onError) {
+  //   console.log(xhr.status);
+  //   switch (xhr.status) {
+  //     case 200:
+  //       onLoad();
+  //       break;
+  //     case 400:
+  //       error = "неверный запрос";
+  //       break;
+  //     case 404:
+  //       error = "ничего не найдено";
+  //       break;
+  //     default:
+  //       error("Статус ответа: " + xhr.status + " xhr.statusText");
+  //   }
+  //   if (error) {
+  //     onError(error);
+  //   }
+  // }
 
   // загрузка данных на сервер
 
-  function upload(data, onSuccess, onError) {
+  function upload(data, onLoad, onError) {
     const xhr = new XMLHttpRequest();
-    xhr.response = "json";
+    let error;
 
     xhr.addEventListener("load", function() {
-      handleXhrResponse(onSuccess, onError);
+      switch (xhr.status) {
+        case 200:
+          onLoad();
+          break;
+        default:
+          error = ("Извините, произошла ошибка,<br>Ваше объявление не удалось опубликовать");
+      }
+      if (error) {
+        onError(error);
+      }
     });
-    // xhr.addEventListener("load", function() {
-    //   onSuccess(xhr.response);
+
+    // load произойдет даже если в ответ придет ошибка
+    xhr.addEventListener("error", function() {
+      error = "Не удалось загрузить форму.<br>Произошла ошибка соединения";
+      onError(error);
+    });
 
     xhr.open("POST", URL_POST);
     xhr.send(data);
@@ -55,9 +67,25 @@
     const xhr = new XMLHttpRequest();
     xhr.responseType = "json";
     xhr.timeout = MAX_WAITING_TIME_RESPONSE;
+    let error;
 
     xhr.addEventListener("load", function() {
-      handleXhrResponse(onLoad, onError);
+      switch (xhr.status) {
+        case 200:
+          onLoad(xhr.response);
+          break;
+        case 400:
+          error = "неверный запрос";
+          break;
+        case 404:
+          error = "ничего не найдено";
+          break;
+        default:
+          error("Статус ответа: " + xhr.status + " xhr.statusText");
+      }
+      if (error) {
+        onError(error);
+      }
     });
 
     // load произойдет даже если в ответ придет ошибка
@@ -74,7 +102,6 @@
     });
 
     xhr.open("GET", URL_GET);
-    // xhr.setRequestHeader("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");
     xhr.send();
   }
 

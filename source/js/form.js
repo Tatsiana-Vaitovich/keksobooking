@@ -10,7 +10,7 @@
   const timeout = document.querySelector("#timeout");
   const roomNumber = document.querySelector("#room_number");
   const capacity = document.querySelector("#capacity");
-  const TIME_SHOW_MESSAGE = 3000;
+  // const TIME_SHOW_MESSAGE = 3000;
 
   function enebleForm(formName) {
     const formElements = Array.from(formName.elements);
@@ -166,16 +166,16 @@
   // в качестве параметра передаем форму
   window.dom.form.addEventListener("submit", function(submitEvt) {
     submitEvt.preventDefault();
-    // window.backend.upload(new FormData(window.dom.form), function() {
-    window.util.removeClass(window.dom.success, "hidden");
-    setTimeout(hiddenMessage, TIME_SHOW_MESSAGE);
-
-    function hiddenMessage() {
-      window.util.addClass(window.dom.success, "hidden");
-    }
+    const formData = new FormData(window.dom.form);
+    window.backend.upload(formData, window.handleFormUploadingSuccess, window.handleFormUploadingErrors);
   });
+
+  function hiddenMessage() {
+    window.util.addClass(window.dom.success, "hidden");
+  }
 
   window.form = {
     "enebleForm": enebleForm,
+    "hiddenMessage": hiddenMessage,
   };
 })();
