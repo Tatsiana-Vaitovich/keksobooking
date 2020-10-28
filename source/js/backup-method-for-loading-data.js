@@ -370,6 +370,10 @@
   const _jsonpCallBack = function(data) {
     // почему пришел в ответ объект js, а не json???
     window.data.usersNotices = data;
+    window.data.usersNotices.forEach(function(elem) {
+      window.filter.getRank(elem);
+    });
+
     window.usersNotice.getMapPins(window.data.usersNotices, window.createFragment.elem1, window.handleDateLoadingSuccess.NUMBER_OF_USERS_NOTICES);
     window.util.insertChildrenAppend(window.createFragment.elem1, window.dom.mapPins);
   };
@@ -378,6 +382,7 @@
     "useMock": useMock,
     "useJSONP": useJSONP,
     "useMyMock": useMyMock,
+    "getMapPins": getMapPins,
   };
 
   window._jsonpCallBack = _jsonpCallBack;
