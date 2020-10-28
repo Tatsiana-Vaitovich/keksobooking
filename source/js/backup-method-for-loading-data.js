@@ -7,7 +7,7 @@
 (function() {
 
   function getMapPins() {
-    window.usersNotice.getMapPins(window.data.usersNotices, window.createFragment.elem1, 8);
+    window.usersNotice.getMapPins(window.data.usersNotices, window.createFragment.elem1, window.handleDateLoadingSuccess.NUMBER_OF_USERS_NOTICES);
     window.util.insertChildrenAppend(window.createFragment.elem1, window.dom.mapPins);
   }
 
@@ -340,8 +340,6 @@
     ];
     window.data.usersNotices = mock;
     getMapPins();
-    // window.usersNotice.getMapPins(window.data.usersNotices, window.createFragment.elem1, 8);
-    // window.util.insertChildrenAppend(window.createFragment.elem1, window.dom.mapPins);
   }
 
   function useJSONP() {
@@ -363,7 +361,7 @@
     // Создаю массив, состоящий из 8 сгенерированных JS объектов, которые будут описывать похожие объявления неподалёку
     // перед тем как создать массив объектов, перемешаю массив заголовков
     window.util.shuffle(window.data.titlesArr);
-    window.data.usersNotices = window.usersNotice.createUsersNotices(8);
+    window.data.usersNotices = window.usersNotice.createUsersNotices(window.handleDateLoadingSuccess.NUMBER_OF_USERS_NOTICES);
     getMapPins();
     // window.usersNotice.getMapPins(window.data.usersNotices, window.createFragment.elem1, 8);
     // window.util.insertChildrenAppend(window.createFragment.elem1, window.dom.mapPins);
@@ -372,11 +370,11 @@
   const _jsonpCallBack = function(data) {
     // почему пришел в ответ объект js, а не json???
     window.data.usersNotices = data;
-    window.usersNotice.getMapPins(window.data.usersNotices, window.createFragment.elem1, 8);
+    window.usersNotice.getMapPins(window.data.usersNotices, window.createFragment.elem1, window.handleDateLoadingSuccess.NUMBER_OF_USERS_NOTICES);
     window.util.insertChildrenAppend(window.createFragment.elem1, window.dom.mapPins);
   };
 
-  window.buckupMethodForLoadingData = {
+  window.backupMethodForLoadingData = {
     "useMock": useMock,
     "useJSONP": useJSONP,
     "useMyMock": useMyMock,

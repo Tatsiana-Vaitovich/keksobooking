@@ -9,28 +9,13 @@
   const URL_POST = "https//js.dump.academy/keksobooking";
   const URL_GET = "https://js.dump.academy/keksobooking/data";
   const MAX_WAITING_TIME_RESPONSE = 3000;
-
-  // обработка xhr ответа
-
-  // function handleXhrResponse(xhr, onLoad, onError) {
-  //   console.log(xhr.status);
-  //   switch (xhr.status) {
-  //     case 200:
-  //       onLoad();
-  //       break;
-  //     case 400:
-  //       error = "неверный запрос";
-  //       break;
-  //     case 404:
-  //       error = "ничего не найдено";
-  //       break;
-  //     default:
-  //       error("Статус ответа: " + xhr.status + " xhr.statusText");
-  //   }
-  //   if (error) {
-  //     onError(error);
-  //   }
-  // }
+  // использую перечисление - объект для сохранения однородных данных (констант))
+  const Code = {
+    "SUCCESS": 200,
+    "CACHED": 400,
+    "NOT_FOUND_ERROR": 404,
+    "SERVER_ERROR": 500,
+  };
 
   // загрузка данных на сервер
 
@@ -40,7 +25,7 @@
 
     xhr.addEventListener("load", function() {
       switch (xhr.status) {
-        case 200:
+        case (Code.SUCCESS):
           onLoad();
           break;
         default:
@@ -71,13 +56,13 @@
 
     xhr.addEventListener("load", function() {
       switch (xhr.status) {
-        case 200:
+        case (Code.SUCCESS):
           onLoad(xhr.response);
           break;
-        case 400:
+        case (Code.CACHED):
           error = "неверный запрос";
           break;
-        case 404:
+        case (Code.NOT_FOUND_ERROR):
           error = "ничего не найдено";
           break;
         default:
@@ -92,7 +77,7 @@
     xhr.addEventListener("error", function() {
       error = "Произошла ошибка соединения";
       onError(error);
-      window.buckupMethodForLoadingData.useJSONP();
+      window.backupMethodForLoadingData.useJSONP();
     });
 
     // перестрахуемся от слишком долгого ответа

@@ -37,19 +37,38 @@
   }
 
   // функция для получения строки type
+  // function getStrokeType(number, arr) {
+  //   const typeFromUserNotice = arr[number].offer.type;
+  //   switch (typeFromUserNotice) {
+  //     case "flat":
+  //       return "Квартира";
+  //     case "bungalo":
+  //       return "Бунгало";
+  //     case "house":
+  //       return "Дом";
+  //     case "palace":
+  //       return "Дворец";
+  //     default:
+  //       return "Квартира";
+  //   }
+  // }
+
+  // для упрощения функции использую способ использования
+  // объектов - словарь
+
+  const valueToTypeOfHousing = {
+    "flat": "Квартира",
+    "bungalo": "Бунгало",
+    "house": "Дом",
+    "palace": "Дворец",
+  };
+
   function getStrokeType(number, arr) {
     const typeFromUserNotice = arr[number].offer.type;
-    switch (typeFromUserNotice) {
-      case "flat":
-        return "Квартира";
-      case "bungalo":
-        return "Бунгало";
-      case "house":
-        return "Дом";
-      case "palace":
-        return "Дворец";
-      default:
-        return "Квартира";
+    if (valueToTypeOfHousing[typeFromUserNotice]) {
+      return (valueToTypeOfHousing[typeFromUserNotice]);
+    } else {
+      return "Квартира";
     }
   }
 

@@ -25,7 +25,7 @@
     window.util.removeClass(window.dom.form, "ad-form--disabled");
     window.util.addClass(window.dom.form, "ad-form--enebled");
     window.form.enebleForm(window.dom.form);
-    window.form.enebleForm(mapFilter);
+    window.form.enebleForm(window.dom.mapFilters);
 
     mainPin.style.zIndex = "100";
   }
@@ -46,7 +46,7 @@
     return ((window.util.roundNumber(getMainPinCoord("x"), 10) + ", " + window.util.roundNumber(getMainPinCoord("y"), 10)));
   }
 
-  window.dom.map.addEventListener("mousedown", function(mouseDownevt) {
+  window.dom.mapPins.addEventListener("mousedown", function(mouseDownevt) {
     mouseDownevt.preventDefault();
   });
 

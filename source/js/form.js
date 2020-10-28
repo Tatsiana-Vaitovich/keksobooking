@@ -21,21 +21,26 @@
     });
   }
 
+  // type.addEventListener("change", function() {
+  //   const value = this.value;
+  //   switch (value) {
+  //     case "bungalo":
+  //       getMinForFieldPrice("bungalo");
+  //       break;
+  //     case "flat":
+  //       getMinForFieldPrice("flat");
+  //       break;
+  //     case "house":
+  //       getMinForFieldPrice("house");
+  //       break;
+  //     case "palace":
+  //       getMinForFieldPrice("palace");
+  //   }
+  // });
+
   type.addEventListener("change", function() {
     const value = this.value;
-    switch (value) {
-      case "bungalo":
-        getMinForFieldPrice("bungalo");
-        break;
-      case "flat":
-        getMinForFieldPrice("flat");
-        break;
-      case "house":
-        getMinForFieldPrice("house");
-        break;
-      case "palace":
-        getMinForFieldPrice("palace");
-    }
+    getMinForFieldPrice(value);
   });
 
   function getMinForFieldPrice(type) {

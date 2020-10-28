@@ -7,7 +7,7 @@
   function onXhrDataLoadingErrors(message) {
 
     const errorMessage = window.createFragment.template.querySelector(".error-message").cloneNode(true);
-    const TIME_SHOW_MESSAGE = 2000;
+    const TIME_SHOW_MESSAGE = 1000;
     const whereInsertErrorMessage = window.dom.map;
 
     errorMessage.firstElementChild.textContent = message;
