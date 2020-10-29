@@ -32,7 +32,7 @@
     "space-before-function-paren": [2, "never"],
     "no-invalid-this": [0],
     "class-methods-use-this": [2],
-    "no-console": [1],
+    "no-console": [0],
     "prefer-const": [2]
   }
 }
