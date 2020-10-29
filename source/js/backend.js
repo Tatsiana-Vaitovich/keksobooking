@@ -77,7 +77,12 @@
     xhr.addEventListener("error", function() {
       error = "Произошла ошибка соединения";
       onError(error);
-      window.backupMethodForLoadingData.useJSONP();
+      try {
+        window.backupMethodForLoadingData.useJSONP();
+      } catch (err) {
+        console.log(err.message);
+        window.backupMethodForLoadingData.useMock();
+      }
     });
 
     // перестрахуемся от слишком долгого ответа
