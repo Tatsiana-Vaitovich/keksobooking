@@ -8,7 +8,7 @@
 
   function onXhrDataLoadingSuccess(data) {
     window.data.usersNotices = data;
-    window.usersNotice.getMapPins(window.data.usersNotice, window.createFragment.elem1, NUMBER_OF_USERS_NOTICES);
+    window.usersNotice.showMapPins(window.data.usersNotice);
   }
 
   window.handleDateLoadingSuccess = {

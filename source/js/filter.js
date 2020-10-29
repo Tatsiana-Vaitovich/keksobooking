@@ -9,7 +9,7 @@
   // она используется в backupMethodForLoadingData и здесь
   function updateUsersNotices() {
     const data = window.data.usersNotices;
-    window.backupMethodForLoadingData.getMapPins(data);
+    window.usersNotice.showMapPins(data);
   }
 
   // функция для подсчета рейтинга соответствия каждого объявления

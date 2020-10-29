@@ -22,11 +22,6 @@
     return usersNotices;
   }
 
-  // Создаю массив, состоящий из 8 сгенерированных JS объектов, которые будут описывать похожие объявления неподалёку
-  // перед тем как создать массив объектов, перемешаю массив заголовков
-  // window.util.shuffle(window.data.titlesArr);
-  // window.data.usersNotices = createUsersNotices(8);
-
   // напишу функцию для создания каждого элемента userNotice
   function getMapPin(i, arr) {
     const mapPin = window.createFragment.template.querySelector(".map__pin").cloneNode(true);
@@ -53,12 +48,6 @@
   }
 
   // функция для получения объявлений пользователей
-  // function getMapPins(arr, whereInsert) {
-  //   for (let i = 0; i < arr.length; i++) {
-  //     whereInsert.append(getMapPin(i));
-  //   }
-  // }
-  // функция для получения объявлений пользователей
   // + дополнительный параметр - количество объявлений
   function getMapPins(arr, whereInsert, numberOfNotices) {
     for (let i = 0; i < numberOfNotices; i++) {
@@ -66,12 +55,15 @@
     }
   }
 
+  function showMapPins(data) {
+    getMapPins(data, window.createFragment.elem1, window.handleDateLoadingSuccess.NUMBER_OF_USERS_NOTICES);
+    window.util.insertChildrenAppend(window.createFragment.elem1, window.dom.mapPins);
+  }
 
-  // получу elem1 фрагмента из массива usersNotices
-  // getMapPins(window.data.usersNotices, window.createFragment.elem1, 8);
 
   window.usersNotice = {
     "getMapPins": getMapPins,
     "createUsersNotices": createUsersNotices,
+    "showMapPins": showMapPins,
   };
 })();

@@ -6,11 +6,6 @@
 
 (function() {
 
-  function getMapPins(data) {
-    window.usersNotice.getMapPins(data, window.createFragment.elem1, window.handleDateLoadingSuccess.NUMBER_OF_USERS_NOTICES);
-    window.util.insertChildrenAppend(window.createFragment.elem1, window.dom.mapPins);
-  }
-
   function useMock() {
 
     console.log("use mock");
@@ -339,7 +334,7 @@
       }
     ];
     window.data.usersNotices = mock;
-    getMapPins(window.data.usersNotices);
+    window.usersNotice.showMapPins(window.data.usersNotices);
   }
 
   function useJSONP() {
@@ -362,28 +357,19 @@
     // перед тем как создать массив объектов, перемешаю массив заголовков
     window.util.shuffle(window.data.titlesArr);
     window.data.usersNotices = window.usersNotice.createUsersNotices(window.handleDateLoadingSuccess.NUMBER_OF_USERS_NOTICES);
-    getMapPins(window.data.usersNotices);
-    // window.usersNotice.getMapPins(window.data.usersNotices, window.createFragment.elem1, 8);
-    // window.util.insertChildrenAppend(window.createFragment.elem1, window.dom.mapPins);
+    window.usersNotice.showMapPins(window.data.usersNotices);
   }
 
   const _jsonpCallBack = function(data) {
     // почему пришел в ответ объект js, а не json???
     window.data.usersNotices = data;
-    // тестовая проверка работы getRank()
-    // window.data.usersNotices.forEach(function(elem) {
-    //   window.filter.getRank(elem);
-    // });
-
-    window.usersNotice.getMapPins(window.data.usersNotices, window.createFragment.elem1, window.handleDateLoadingSuccess.NUMBER_OF_USERS_NOTICES);
-    window.util.insertChildrenAppend(window.createFragment.elem1, window.dom.mapPins);
+    window.usersNotice.showMapPins(window.data.usersNotices);
   };
 
   window.backupMethodForLoadingData = {
     "useMock": useMock,
     "useJSONP": useJSONP,
     "useMyMock": useMyMock,
-    "getMapPins": getMapPins,
   };
 
   window._jsonpCallBack = _jsonpCallBack;
