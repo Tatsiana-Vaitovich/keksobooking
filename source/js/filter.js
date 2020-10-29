@@ -7,9 +7,9 @@
 
   // не забыть вынести эту функцию в отдельный модуль
   // она используется в backupMethodForLoadingData и здесь
-  function updateUsersNotices(data) {
-    window.data.usersNotices = data;
-    window.backupMethodForLoadingData.getMapPins();
+  function updateUsersNotices() {
+    const data = window.data.usersNotices;
+    window.backupMethodForLoadingData.getMapPins(data);
   }
 
   // функция для подсчета рейтинга соответствия каждого объявления
@@ -25,33 +25,24 @@
     const housingFeatures = Array.from(window.dom.mapFilters.elements["housing-features"]
     .elements);
 
-    // словарь для price
     const valueToHousingPrice = {
-      "middle": {"min": 10000, "max": 50000},
-      "low": {"max": 10000},
-      "high": {"min": 50000},
+      "min": 10000,
+      "max": 50000,
     };
 
     if (housingType.value === userNotice.offer.type) {
       rank++;
     }
     if (housingPrice.value === "middle") {
-      if (valueToHousingPrice[housingPrice.value].min <= userNotice.offer.price && valueToHousingPrice[housingPrice.value].max > userNotice.offer.price) {
-        console.log("min " + valueToHousingPrice[housingPrice.value].min);
-        console.log("max " + valueToHousingPrice[housingPrice.value].max);
-        console.log("userNotice.offer.price " + userNotice.offer.price);
+      if (valueToHousingPrice.min <= userNotice.offer.price && valueToHousingPrice.max > userNotice.offer.price) {
         rank++;
       }
     } else if (housingPrice.value === "high") {
-      if (valueToHousingPrice[housingPrice.value].min <= userNotice.offer.price) {
-        console.log("min " + valueToHousingPrice[housingPrice.value].min);
-        console.log("userNotice.offer.price " + userNotice.offer.price);
+      if (valueToHousingPrice.max <= userNotice.offer.price) {
         rank++;
       }
     } else if (housingPrice.value === "low") {
-      if (valueToHousingPrice[housingPrice.value].max > userNotice.offer.price) {
-        console.log("max " + valueToHousingPrice[housingPrice.value].max);
-        console.log("userNotice.offer.price " + userNotice.offer.price);
+      if (valueToHousingPrice[housingPrice.value].min > userNotice.offer.price) {
         rank++;
       }
     }
@@ -66,15 +57,25 @@
         rank++;
       }
     });
-    console.log(userNotice);
+    console.log(userNotice.offer);
     console.log("rank=" + rank);
     return rank;
   }
 
-  // window.data.usersNotices.forEach(function(elem) {
-  //   console.log(elem);
-  //   getRank(elem);
-  // });
+  // похожие объявления будут отрисовываться после изменения выбора в полях
+  // формы map__filters. для регистрации этих изменений использую событие change
+
+  window.dom.mapFilters.addEventListener("change", onMapFiltersChange);
+
+  function onMapFiltersChange(changeEvt) {
+    const elem = changeEvt.target;
+    if (elem.closest("select") || elem.closest("input")) {
+      console.log("----");
+      window.data.usersNotices.forEach(function(elem) {
+        getRank(elem);
+      });
+    }
+  }
 
   // отсортируем массив usersNotices по рейтингу
   // соответствия запросу пользователя
@@ -82,9 +83,18 @@
   // т.к метод sort() деструктивный,
   // результат сохраню в виде дубликата массива
 
-  // const newUsersNotices = window.data.usersNotices.sort(function(first, second) {
-
-  // });
+  const newUsersNotices = window.data.usersNotices.sort(compareRankOfUsersNotices);
+  // по умолчанию сортирует как "stroke";
+  // чтобы сравнивались числа напишем функцию
+  function compareRankOfUsersNotices(first, second) {
+    if ((first - second) < 0) {
+      return (-1);
+    } else if ((first - second) > 0) {
+      return (1);
+    } else {
+      return (0);
+    }
+  }
 
   window.filter = {
     "getRank": getRank,

@@ -6,8 +6,8 @@
 
 (function() {
 
-  function getMapPins() {
-    window.usersNotice.getMapPins(window.data.usersNotices, window.createFragment.elem1, window.handleDateLoadingSuccess.NUMBER_OF_USERS_NOTICES);
+  function getMapPins(data) {
+    window.usersNotice.getMapPins(data, window.createFragment.elem1, window.handleDateLoadingSuccess.NUMBER_OF_USERS_NOTICES);
     window.util.insertChildrenAppend(window.createFragment.elem1, window.dom.mapPins);
   }
 
@@ -339,7 +339,7 @@
       }
     ];
     window.data.usersNotices = mock;
-    getMapPins();
+    getMapPins(window.data.usersNotices);
   }
 
   function useJSONP() {
@@ -362,7 +362,7 @@
     // перед тем как создать массив объектов, перемешаю массив заголовков
     window.util.shuffle(window.data.titlesArr);
     window.data.usersNotices = window.usersNotice.createUsersNotices(window.handleDateLoadingSuccess.NUMBER_OF_USERS_NOTICES);
-    getMapPins();
+    getMapPins(window.data.usersNotices);
     // window.usersNotice.getMapPins(window.data.usersNotices, window.createFragment.elem1, 8);
     // window.util.insertChildrenAppend(window.createFragment.elem1, window.dom.mapPins);
   }
@@ -370,9 +370,10 @@
   const _jsonpCallBack = function(data) {
     // почему пришел в ответ объект js, а не json???
     window.data.usersNotices = data;
-    window.data.usersNotices.forEach(function(elem) {
-      window.filter.getRank(elem);
-    });
+    // тестовая проверка работы getRank()
+    // window.data.usersNotices.forEach(function(elem) {
+    //   window.filter.getRank(elem);
+    // });
 
     window.usersNotice.getMapPins(window.data.usersNotices, window.createFragment.elem1, window.handleDateLoadingSuccess.NUMBER_OF_USERS_NOTICES);
     window.util.insertChildrenAppend(window.createFragment.elem1, window.dom.mapPins);
