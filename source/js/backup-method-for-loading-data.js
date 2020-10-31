@@ -341,10 +341,9 @@
 
     console.log("use JSONP");
 
-    // const URL_GET = window.backend.URL_GET;
-    const URL = "//js.dump.academy/keksobooking/data";
+    const URL_GET = window.backend.URL_GET;
     const scriptJSONP = document.createElement("script");
-    scriptJSONP.src = URL + "?callback=_jsonpCallBack";
+    scriptJSONP.src = URL_GET + "?callback=_jsonpCallBack";
 
     document.body.append(scriptJSONP);
   }

@@ -13,8 +13,8 @@
     const housingPrice = window.dom.mapFilters.elements["housing-price"];
     const housingRooms = window.dom.mapFilters.elements["housing-rooms"];
     const housingGuests = window.dom.mapFilters.elements["housing-guests"];
-    // это checkbox
-    // массив элементов housingFeatures
+    // housing-features это fieldset, содержащий checkbox.
+    // получу массив элементов, содержащий эти checkbox
     const housingFeatures = Array.from(window.dom.mapFilters.elements["housing-features"]
     .elements);
     const valueToHousingPrice = {
@@ -52,7 +52,7 @@
     return rank;
   }
 
-  // напишем функцию-cb для сортировки массива по значению rank
+  // напишем функцию-callback для сортировки массива по значению rank
   // т.к. по умолчанию sort() сортирует массив как "stroke";
   function compareRankOfUsersNotices(first, second) {
     const rankDiff = getRank(first) - getRank(second);
@@ -64,9 +64,6 @@
       return 0;
     }
   }
-
-  // похожие объявления будут отрисовываться после изменения выбора в полях
-  // формы map__filters. для регистрации этих изменений использую событие change
 
   function updateUsersNotices() {
     // отсортируем массив usersNotices по рейтингу
@@ -89,14 +86,21 @@
     // отрисуем новые
     window.usersNotice.showMapPins(newUsersNotices);
   }
-
+  // похожие объявления будут отрисовываться после изменения выбора в полях
+  // формы map__filters. для регистрации этих изменений использую событие change
   window.dom.mapFilters.addEventListener("change", function(changeEvt) {
     const elem = changeEvt.target;
     if (elem.closest("select") || elem.closest("input")) {
       console.log("----");
-      updateUsersNotices();
+      // updateUsersNotices();
+      // }
+      // вместо обычного вызова функции для устранения "дребезга"
+      // вызову специальную функцию debounce(fun)
+      // window.debounce(updateUsersNotices);
+      // не работает. при этом создается timeout, но не запускается.
+      // потому ниже запускаю эту функцию
+      window.debounce(updateUsersNotices)();
     }
-    // window.setTimeout(updateUsersNotices, 500);
   });
 
 })();

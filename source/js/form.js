@@ -10,7 +10,6 @@
   const timeout = document.querySelector("#timeout");
   const roomNumber = document.querySelector("#room_number");
   const capacity = document.querySelector("#capacity");
-  // const TIME_SHOW_MESSAGE = 3000;
 
   function enebleForm(formName) {
     const formElements = Array.from(formName.elements);
@@ -38,6 +37,7 @@
   //   }
   // });
 
+  // упрощаю предыдущую функцию и использую перечисление:
   type.addEventListener("change", function() {
     const value = this.value;
     getMinForFieldPrice(value);
@@ -165,6 +165,7 @@
     const collection = elem.options;
     return Array.from(collection);
   }
+
   // FormData - встроенное API, которое превращает данные формы в объект,
   // пригодный для отправки на сервер
   // создается при помощи конструктора объектов
