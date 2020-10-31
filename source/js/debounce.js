@@ -4,13 +4,12 @@
 // функция для устранения "дребезга"
 (function() {
 
-  const DEBOUNCE_INTERVAL = 500; // ms
-
-  window.debounce = function(fun) {
+  function debounce(fun) {
+    const DEBOUNCE_INTERVAL = 5000; // ms
     let lastTimeout = null;
 
     return function() {
-      const args = arguments;
+      // const args = arguments;
       if (lastTimeout) {
         window.clearTimeout(lastTimeout);
       }
@@ -18,14 +17,15 @@
         // С помощью apply() вы можете написать метод один раз,
         // а затем наследовать его в других объектах
         // без необходимости переписывать метод для каждого нового объекта.
-        fun.apply(null, args);
+        // ?? не понимаю, зачем в моем случае этот метод,
+        // может просто вызвать fun - получится то же самое
+        // fun.apply(null, args);
+        fun.apply(fun, null);
       }, DEBOUNCE_INTERVAL);
+      // lastTimeout = window.setTimeout(fun, DEBOUNCE_INTERVAL);
     };
-  };
+  }
+
+  window.debounce = debounce;
 })();
 
-// пример использования функции debounce():
-window.wizard.onEyesChange = function(color) {
-  eyesColor = color;
-  window.debounce(updateWizards);
-};
