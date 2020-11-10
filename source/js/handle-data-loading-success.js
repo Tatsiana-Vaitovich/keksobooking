@@ -7,7 +7,8 @@
   const NUMBER_OF_USERS_NOTICES = 5;
 
   function onXhrDataLoadingSuccess(data) {
-    window.data.usersNotices = data;
+    window.data.usersNoticesOrigin = data;
+    window.data.usersNotice = window.data.usersNoticesOrigin.slice();
     window.usersNotice.showMapPins(window.data.usersNotice);
   }
 

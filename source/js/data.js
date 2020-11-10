@@ -4,7 +4,9 @@
 
 (function() {
 
+  let usersNoticesOrigin;
   let usersNotices;
+
   const titlesArr = [
     "Большая уютная квартира",
     "Маленькая неуютная квартира",
@@ -68,6 +70,7 @@
   const indent = 120;
 
   window.data = {
+    "usersNoticesOrigin": usersNoticesOrigin,
     "usersNotices": usersNotices,
     "titlesArr": titlesArr,
     "typesArr": typesArr,

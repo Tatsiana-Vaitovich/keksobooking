@@ -333,7 +333,8 @@
         }
       }
     ];
-    window.data.usersNotices = mock;
+    window.data.usersNoticesOrigin = mock;
+    window.data.usersNotices = window.data.usersNoticesOrigin.slice();
     window.usersNotice.showMapPins(window.data.usersNotices);
   }
 
@@ -355,13 +356,15 @@
     // Создаю массив, состоящий из 8 сгенерированных JS объектов, которые будут описывать похожие объявления неподалёку
     // перед тем как создать массив объектов, перемешаю массив заголовков
     window.util.shuffle(window.data.titlesArr);
-    window.data.usersNotices = window.usersNotice.createUsersNotices(window.handleDateLoadingSuccess.NUMBER_OF_USERS_NOTICES);
+    window.data.usersNoticesOrigin = window.usersNotice.createUsersNotices(window.handleDateLoadingSuccess.NUMBER_OF_USERS_NOTICES);
+    window.data.usersNotices = window.data.usersNoticesOrigin.slice();
     window.usersNotice.showMapPins(window.data.usersNotices);
   }
 
   const _jsonpCallBack = function(data) {
     // почему пришел в ответ объект js, а не json???
-    window.data.usersNotices = data;
+    window.data.usersNoticesOrigin = data;
+    window.data.usersNotices = window.data.usersNoticesOrigin.slice();
     window.usersNotice.showMapPins(window.data.usersNotices);
   };
 

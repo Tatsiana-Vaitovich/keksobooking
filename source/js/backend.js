@@ -10,6 +10,7 @@
   const URL_GET = "https://js.dump.academy/keksobooking/data";
   const MAX_WAITING_TIME_RESPONSE = 3000;
   // использую перечисление - объект для сохранения однородных данных (констант))
+
   const Code = {
     "SUCCESS": 200,
     "CACHED": 400,
