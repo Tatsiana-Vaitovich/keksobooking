@@ -111,7 +111,7 @@
       error = "Произошла ошибка соединения";
       onError(error);
       try {
-        window.backupMethodForLoadingData.useJSONP();
+        window.backupMethodForLoadingData.useMyMock();
       } catch (err) {
         console.log(err.message);
         window.backupMethodForLoadingData.useMock();

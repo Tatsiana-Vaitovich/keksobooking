@@ -18,5 +18,5 @@
     return newArr;
   }
 
-  window.getFeatures = getFeatures;
+  window.getMyMock.getFeatures = getFeatures;
 })();

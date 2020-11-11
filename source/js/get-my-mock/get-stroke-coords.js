@@ -6,5 +6,5 @@
     return (location.x + ", " + location.y);
   }
 
-  window.getStrokeCoords = getStrokeCoords;
+  window.getMyMock.getStrokeCoords = getStrokeCoords;
 })();

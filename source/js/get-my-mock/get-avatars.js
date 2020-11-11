@@ -11,5 +11,6 @@
     return arr;
   }
 
-  window.getAvatars = getAvatars;
+  window.getMyMock = {};
+  window.getMyMock.getAvatars = getAvatars;
 })();
