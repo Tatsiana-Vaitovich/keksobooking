@@ -12,7 +12,7 @@
     window.usersNotice.showMapPins(window.data.usersNotice);
   }
 
-  window.handleDateLoadingSuccess = {
+  window.backend.handleDateLoadingSuccess = {
     "handleDateLoadingSuccess": onXhrDataLoadingSuccess,
     "NUMBER_OF_USERS_NOTICES": NUMBER_OF_USERS_NOTICES,
   };

@@ -12,6 +12,6 @@
     setTimeout(window.form.hiddenMessage, TIME_SHOW_MESSAGE);
   }
 
-  window.handleFormUploadingSuccess = onXhrFormUploadingSuccess;
+  window.backend.handleFormUploadingSuccess = onXhrFormUploadingSuccess;
 })();
 

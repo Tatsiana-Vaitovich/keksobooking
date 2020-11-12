@@ -173,7 +173,7 @@
   window.dom.form.addEventListener("submit", function(submitEvt) {
     submitEvt.preventDefault();
     const formData = new FormData(window.dom.form);
-    window.backend.upload(formData, window.handleFormUploadingSuccess, window.handleFormUploadingErrors);
+    window.backend.backend.upload(formData, window.backend.handleFormUploadingSuccess, window.backend.handleFormUploadingErrors);
   });
 
   function hiddenMessage() {

@@ -24,5 +24,5 @@
     }
   }
 
-  window.handleDataLoadingErrors = onXhrDataLoadingErrors;
+  window.backend.handleDataLoadingErrors = onXhrDataLoadingErrors;
 })();

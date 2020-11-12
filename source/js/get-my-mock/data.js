@@ -1,6 +1,6 @@
 "use strict";
 
-// данные (объекты и const), которые используются в разных модулях
+// данные (объекты и const), которые используются в разных модулях get-my-mock
 
 (function() {
 
@@ -48,12 +48,6 @@
     "elevator",
     "conditioner",
   ];
-  // const minPriceArr = {
-  //   bungalo: 0,
-  //   flat: 1000,
-  //   house: 5000,
-  //   palace: 10000,
-  // };
 
   const minPrice = 1000;
   const maxPrice = 1000000;
@@ -62,8 +56,6 @@
   const minGuests = 1;
   const maxGuests = 15;
   const avatarsArr = window.getMyMock.getAvatars(1, 8);
-  // const mapPinWidth = 50;
-  // const mapPinHeight = 70;
 
   window.getMyMock.data = {
     "titlesArr": titlesArr,

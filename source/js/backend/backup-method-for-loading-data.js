@@ -19,7 +19,7 @@
 
     console.log("use JSONP");
 
-    const URL_GET = window.backend.URL_GET;
+    const URL_GET = window.backend.backend.URL_GET;
     const scriptJSONP = document.createElement("script");
     scriptJSONP.src = URL_GET + "?callback=_jsonpCallBack";
 
@@ -45,7 +45,8 @@
     window.usersNotice.showMapPins(window.data.usersNotices);
   };
 
-  window.backupMethodForLoadingData = {
+  window.backend = {};
+  window.backend.backupMethodForLoadingData = {
     "useMock": useMock,
     "useJSONP": useJSONP,
     "useMyMock": useMyMock,

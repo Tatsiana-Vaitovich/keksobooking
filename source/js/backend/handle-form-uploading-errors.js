@@ -14,5 +14,5 @@
     setTimeout(window.form.hiddenMessage, TIME_SHOW_MESSAGE);
   }
 
-  window.handleFormUploadingErrors = onXhrFormUploadingErrors;
+  window.backend.handleFormUploadingErrors = onXhrFormUploadingErrors;
 })();

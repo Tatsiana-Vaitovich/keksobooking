@@ -111,10 +111,10 @@
       error = "Произошла ошибка соединения";
       onError(error);
       try {
-        window.backupMethodForLoadingData.useMyMock();
+        window.backend.backupMethodForLoadingData.useJSONP();
       } catch (err) {
         console.log(err.message);
-        window.backupMethodForLoadingData.useMock();
+        window.backend.backupMethodForLoadingData.useMock();
       }
     });
 
@@ -142,10 +142,10 @@
           error = "Произошла ошибка соединения";
           onError(error);
           try {
-            window.backupMethodForLoadingData.useJSONP();
+            window.backend.backupMethodForLoadingData.useJSONP();
           } catch (err) {
             console.log(err.message);
-            window.backupMethodForLoadingData.useMock();
+            window.backend.backupMethodForLoadingData.useMock();
           }
         });
         xhr.addEventListener("timeout", function() {
@@ -168,7 +168,7 @@
     }
   }
 
-  window.backend = {
+  window.backend.backend = {
     "upload": upload,
     "load": load,
     "backend": backend,
