@@ -1,18 +1,18 @@
 "use strict";
 
 (function() {
-  function getPopup(number) {
+  function getPopup(number, arr) {
     const popup = window.createFragment.template.querySelector(".map__card").cloneNode(true);
-    const userNotice = window.data.usersNotices[number];
-    const capacity = getStrokeCapacity(number);
-    const time = getStrokeTime(number);
+    const userNotice = arr[number];
+    const capacity = getStrokeCapacity(number, arr);
+    const time = getStrokeTime(number, arr);
     const whereInsertFeatures = popup.querySelector(".popup__features");
     const whereInsertPhotos = popup.querySelector(".popup__photos");
     popup.querySelector(".popup__avatar").src = userNotice.author.avatar;
     popup.querySelector(".popup__title").textContent = userNotice.offer.title;
     popup.querySelector(".popup__text--address").textContent = userNotice.offer.address;
-    popup.querySelector(".popup__text--price").innerHTML = getStrokePrice(number);
-    popup.querySelector(".popup__type").textContent = getStrokeType(number);
+    popup.querySelector(".popup__text--price").innerHTML = getStrokePrice(number, arr);
+    popup.querySelector(".popup__type").textContent = getStrokeType(number, arr);
     popup.querySelector(".popup__text--capacity").textContent = capacity;
     popup.querySelector(".popup__text--time").textContent = time;
     popup.querySelector(".popup__description").textContent = userNotice.offer.description;
@@ -30,40 +30,59 @@
   }
 
   // функция для получения строки price
-  function getStrokePrice(number) {
-    const priceFromUserNotice = window.util.roundNumber(window.data.usersNotices[number].offer.price, 1000);
+  function getStrokePrice(number, arr) {
+    const priceFromUserNotice = arr[number].offer.price;
     const addStroke = "&#x20bd;<span>/ночь</span>";
     return (priceFromUserNotice + addStroke);
   }
 
   // функция для получения строки type
-  function getStrokeType(number) {
-    const typeFromUserNotice = window.data.usersNotices[number].offer.type;
-    switch (typeFromUserNotice) {
-      case "flat":
-        return "Квартира";
-      case "bungalo":
-        return "Бунгало";
-      case "house":
-        return "Дом";
-      case "palace":
-        return "Дворец";
-      default:
-        return "Квартира";
+  // function getStrokeType(number, arr) {
+  //   const typeFromUserNotice = arr[number].offer.type;
+  //   switch (typeFromUserNotice) {
+  //     case "flat":
+  //       return "Квартира";
+  //     case "bungalo":
+  //       return "Бунгало";
+  //     case "house":
+  //       return "Дом";
+  //     case "palace":
+  //       return "Дворец";
+  //     default:
+  //       return "Квартира";
+  //   }
+  // }
+
+  // для упрощения функции использую способ использования
+  // объектов - словарь
+
+  const valueToTypeOfHousing = {
+    "flat": "Квартира",
+    "bungalo": "Бунгало",
+    "house": "Дом",
+    "palace": "Дворец",
+  };
+
+  function getStrokeType(number, arr) {
+    const typeFromUserNotice = arr[number].offer.type;
+    if (valueToTypeOfHousing[typeFromUserNotice]) {
+      return (valueToTypeOfHousing[typeFromUserNotice]);
+    } else {
+      return "Квартира";
     }
   }
 
   // функция для получения строки capacity
-  function getStrokeCapacity(number) {
-    const roomsFromUserNotice = window.data.usersNotices[number].offer.rooms;
-    const guestsFromUserNotice = window.data.usersNotices[number].offer.guests;
+  function getStrokeCapacity(number, arr) {
+    const roomsFromUserNotice = arr[number].offer.rooms;
+    const guestsFromUserNotice = arr[number].offer.guests;
     const capacity = roomsFromUserNotice + " комнаты для " + guestsFromUserNotice + " гостей";
     return capacity;
   }
 
-  function getStrokeTime(number) {
-    const checkinFromUserNotice = window.data.usersNotices[number].offer.checkin;
-    const checkoutFromUserNotice = window.data.usersNotices[number].offer.checkout;
+  function getStrokeTime(number, arr) {
+    const checkinFromUserNotice = arr[number].offer.checkin;
+    const checkoutFromUserNotice = arr[number].offer.checkout;
     const time = "Заезд после " + checkinFromUserNotice + ", выезд до " + checkoutFromUserNotice;
     return time;
   }
@@ -100,7 +119,7 @@
         lastElementInFocus = elem.closest(".map__pin");
         window.util.addClass(lastElementInFocus, "map__pin--active");
         const index = getIndex(lastElementInFocus);
-        openPopup(index);
+        openPopup(index, window.data.usersNotices);
         document.querySelector(".popup__close").focus();
       } else {
         closePopup();
@@ -120,9 +139,9 @@
     return (index - 1);
   }
 
-  function openPopup(index) {
+  function openPopup(index, arr) {
     const mapFilters = document.querySelector(".map__filters-container");
-    window.createFragment.elem3.append(getPopup(index));
+    window.createFragment.elem3.append(getPopup(index, arr));
     window.util.insertChildrenBefore(window.createFragment.elem3, mapFilters);
 
     document.addEventListener("keydown", onPopupEnterOREscPress);
