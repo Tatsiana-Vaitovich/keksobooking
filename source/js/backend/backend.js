@@ -5,10 +5,6 @@
 (function() {
 
   // загрузка данных с сервера
-
-  const URL_POST = "https//js.dump.academy/keksobooking";
-  const URL_GET = "https://js.dump.academy/keksobooking/data";
-  const MAX_WAITING_TIME_RESPONSE = 3000;
   // использую перечисление - объект для сохранения однородных данных (констант))
 
   const Code = {
@@ -75,7 +71,7 @@
       onError(error);
     });
 
-    xhr.open("POST", URL_POST);
+    xhr.open("POST", window.constants.URL_POST);
     xhr.send(data);
   }
 
@@ -84,7 +80,7 @@
   function load(onLoad, onError) {
     const xhr = new XMLHttpRequest();
     xhr.responseType = "json";
-    xhr.timeout = MAX_WAITING_TIME_RESPONSE;
+    xhr.timeout = window.constants.MAX_WAITING_TIME_RESPONSE;
     let error;
 
     xhr.addEventListener("load", function() {
@@ -124,14 +120,14 @@
       onError(error);
     });
 
-    xhr.open("GET", URL_GET);
+    xhr.open("GET", window.constants.URL_GET);
     xhr.send();
   }
 
   function backend(onLoad, onError, metod) {
     const xhr = new XMLHttpRequest();
     xhr.responseType = "json";
-    xhr.timeout = MAX_WAITING_TIME_RESPONSE;
+    xhr.timeout = window.constants.MAX_WAITING_TIME_RESPONSE;
     let error;
     switch (metod) {
       case ("GET"):
@@ -152,7 +148,7 @@
           error = "Запрос не успел выполниться за " + xhr.timeout + "мс";
           onError(error);
         });
-        xhr.open("GET", URL_GET);
+        xhr.open("GET", window.constants.URL_GET);
         xhr.send();
         break;
       case ("POST"):
@@ -163,7 +159,7 @@
           error = "Не удалось загрузить форму.<br>Произошла ошибка соединения";
           onError(error);
         });
-        xhr.open("POST", URL_POST);
+        xhr.open("POST", window.constants.URL_POST);
         xhr.send(data);
     }
   }
@@ -172,7 +168,6 @@
     "upload": upload,
     "load": load,
     "backend": backend,
-    "URL_GET": URL_GET,
   };
 
 })();

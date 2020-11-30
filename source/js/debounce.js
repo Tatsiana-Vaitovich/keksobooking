@@ -5,7 +5,6 @@
 (function() {
 
   function debounce(fun) {
-    const DEBOUNCE_INTERVAL = 5000; // ms
     let lastTimeout = null;
 
     return function() {
@@ -21,8 +20,8 @@
         // может просто вызвать fun - получится то же самое
         // fun.apply(null, args);
         fun.apply(fun, null);
-      }, DEBOUNCE_INTERVAL);
-      // lastTimeout = window.setTimeout(fun, DEBOUNCE_INTERVAL);
+      }, window.constants.DEBOUNCE_INTERVAL);
+      // lastTimeout = window.setTimeout(fun, window.constants.DEBOUNCE_INTERVAL);
     };
   }
 

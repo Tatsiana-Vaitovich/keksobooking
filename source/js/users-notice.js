@@ -40,14 +40,13 @@
   }
 
   function showMapPins(data) {
-    getMapPins(data, window.createFragment.elem1, window.backend.handleDateLoadingSuccess.NUMBER_OF_USERS_NOTICES);
+    getMapPins(data, window.createFragment.elem1, window.constants.NUMBER_OF_USERS_NOTICES);
     window.util.insertChildrenAppend(window.createFragment.elem1, window.dom.mapPins);
   }
 
 
   window.usersNotice = {
     "getMapPins": getMapPins,
-    // "createUsersNotices": createUsersNotices,
     "showMapPins": showMapPins,
   };
 })();

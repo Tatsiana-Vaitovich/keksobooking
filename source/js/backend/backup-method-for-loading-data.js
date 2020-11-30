@@ -19,9 +19,8 @@
 
     console.log("use JSONP");
 
-    const URL_GET = window.backend.backend.URL_GET;
     const scriptJSONP = document.createElement("script");
-    scriptJSONP.src = URL_GET + "?callback=_jsonpCallBack";
+    scriptJSONP.src = window.constants.URL_GET + "?callback=_jsonpCallBack";
 
     document.body.append(scriptJSONP);
   }
