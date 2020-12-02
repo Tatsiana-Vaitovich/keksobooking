@@ -38,7 +38,6 @@
   }
 
   const _jsonpCallBack = function(data) {
-    // почему пришел в ответ объект js, а не json???
     window.data.usersNoticesOrigin = data;
     window.data.usersNotices = window.data.usersNoticesOrigin.slice();
     window.usersNotice.showMapPins(window.data.usersNotices);

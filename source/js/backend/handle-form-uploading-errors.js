@@ -4,14 +4,13 @@
 
   function onXhrFormUploadingErrors(message) {
 
-    const TIME_SHOW_MESSAGE = 2000;
     const elem = window.dom.success;
     const successMessage = elem.querySelector(".success__message");
 
     successMessage.innerHTML = message;
     window.util.removeClass(elem, "hidden");
     window.dom.form.reset();
-    setTimeout(window.form.hiddenMessage, TIME_SHOW_MESSAGE);
+    setTimeout(window.form.hiddenMessage, window.constants.TIME_SHOW_MESSAGE_ERROR_OR_SUCCESS);
   }
 
   window.backend.handleFormUploadingErrors = onXhrFormUploadingErrors;

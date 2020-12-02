@@ -7,7 +7,6 @@
   function onXhrDataLoadingErrors(message) {
 
     const errorMessage = window.createFragment.template.querySelector(".error-message").cloneNode(true);
-    const TIME_SHOW_MESSAGE = 3000;
     const whereInsertErrorMessage = window.dom.map;
 
     errorMessage.firstElementChild.textContent = message;
@@ -17,7 +16,7 @@
     whereInsertErrorMessage.appendChild(errorMessage);
 
     // удалим сообщение о ошибке через time_show_message
-    setTimeout(removeMessage, TIME_SHOW_MESSAGE);
+    setTimeout(removeMessage, window.constants.TIME_SHOW_MESSAGE_ERROR_OR_SUCCESS);
 
     function removeMessage() {
       window.util.removeElem(errorMessage);

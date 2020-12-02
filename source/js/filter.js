@@ -5,51 +5,87 @@
 
 (function() {
 
+  const housingType = window.dom.mapFilters.elements["housing-type"];
+  const housingPrice = window.dom.mapFilters.elements["housing-price"];
+  const housingRooms = window.dom.mapFilters.elements["housing-rooms"];
+  const housingGuests = window.dom.mapFilters.elements["housing-guests"];
+  // housing-features это fieldset, содержащий checkbox.
+  // получу массив элементов, содержащий эти checkbox
+  const housingFeatures = Array.from(window.dom.mapFilters.elements["housing-features"]
+  .elements);
+  const valueToHousingPrice = {
+    "min": 10000,
+    "max": 50000,
+  };
+
   // функция для подсчета рейтинга соответствия каждого объявления
   // запросу пользователя, указанному в фильтре
   function getRank(userNotice) {
     let rank = 0;
-    const housingType = window.dom.mapFilters.elements["housing-type"];
-    const housingPrice = window.dom.mapFilters.elements["housing-price"];
-    const housingRooms = window.dom.mapFilters.elements["housing-rooms"];
-    const housingGuests = window.dom.mapFilters.elements["housing-guests"];
-    // housing-features это fieldset, содержащий checkbox.
-    // получу массив элементов, содержащий эти checkbox
-    const housingFeatures = Array.from(window.dom.mapFilters.elements["housing-features"]
-    .elements);
-    const valueToHousingPrice = {
-      "min": 10000,
-      "max": 50000,
-    };
 
-    if (housingType.value === userNotice.offer.type) {
+    if (compareHousingType(userNotice)) {
       rank++;
     }
+    if (compareHousingPrice(userNotice)) {
+      rank++;
+    }
+    if (compareHousingRooms(userNotice)) {
+      rank++;
+    }
+    if (compareHousingGuests(userNotice)) {
+      rank++;
+    }
+    if (compareHousingFeatures(userNotice)) {
+      rank = rank + compareHousingFeatures(userNotice);
+    }
+    return rank;
+  }
+
+  function compareHousingType(arr) {
+    return (housingType.value === arr.offer.type);
+  }
+
+  function compareHousingPrice(arr) {
     if (housingPrice.value === "middle") {
-      if (valueToHousingPrice.min <= userNotice.offer.price && valueToHousingPrice.max > userNotice.offer.price) {
-        rank++;
+      if (valueToHousingPrice.min <= arr.offer.price && valueToHousingPrice.max > userNotice.offer.price) {
+        return true;
       }
     } else if (housingPrice.value === "high") {
-      if (valueToHousingPrice.max <= userNotice.offer.price) {
-        rank++;
+      if (valueToHousingPrice.max <= arr.offer.price) {
+        return true;
       }
     } else if (housingPrice.value === "low") {
-      if (valueToHousingPrice.min > userNotice.offer.price) {
-        rank++;
+      if (valueToHousingPrice.min > arr.offer.price) {
+        return true;
       }
     }
-    if (Number(housingRooms.value) === userNotice.offer.rooms) {
-      rank++;
+  }
+
+  function compareHousingRooms(arr) {
+    if (Number(housingRooms.value) === arr.offer.rooms) {
+      return true;
     }
-    if (Number(housingGuests.value) === userNotice.offer.guests) {
-      rank++;
+  }
+
+  function compareHousingGuests(arr) {
+    if (Number(housingGuests.value) === arr.offer.guests) {
+      return true;
     }
+  }
+
+  function compareHousingFeatures(arr) {
+    let counter = 0;
     housingFeatures.forEach(function(elem) {
       if (elem.checked) {
-        rank++;
+        // для того, чтобы проверить, содержится ли данное свойство
+        // в рассматриваемом массиве использую метод includes().
+        // возвращает boolean
+        if (arr.offer.features.includes(elem.value)) {
+          counter++;
+        }
       }
     });
-    return rank;
+    return counter;
   }
 
   // напишем функцию-callback для сортировки массива по значению rank
@@ -72,8 +108,6 @@
     // т.к метод sort() деструктивный,
     // результат сохраню в виде дубликата массива
     const newUsersNotices = window.data.usersNotices.sort(compareRankOfUsersNotices);
-    // ??почему-то один change срабатывает как два
-    // ??изменяется и исходный массив. может создать дубликат не по ссылке???
     console.log("new");
     newUsersNotices.forEach((elem) => console.log(elem.offer));
     // удаляем все mapPin кроме map__pin--main

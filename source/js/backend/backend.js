@@ -39,7 +39,7 @@
         onLoad();
         break;
       default:
-        error = ("Извините, произошла ошибка,<br>Ваше объявление не удалось опубликовать");
+        error = "Извините, произошла ошибка,<br>Ваше объявление не удалось опубликовать";
     }
     if (error) {
       onError(error);
@@ -58,7 +58,7 @@
           onLoad();
           break;
         default:
-          error = ("Извините, произошла ошибка,<br>Ваше объявление не удалось опубликовать");
+          error = "Извините, произошла ошибка,<br>Ваше объявление не удалось опубликовать";
       }
       if (error) {
         onError(error);
@@ -107,7 +107,7 @@
       error = "Произошла ошибка соединения";
       onError(error);
       try {
-        window.backend.backupMethodForLoadingData.useJSONP();
+        window.backend.backupMethodForLoadingData.useMock();
       } catch (err) {
         console.log(err.message);
         window.backend.backupMethodForLoadingData.useMock();
@@ -169,5 +169,4 @@
     "load": load,
     "backend": backend,
   };
-
 })();

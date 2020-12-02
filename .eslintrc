@@ -33,7 +33,8 @@
     "no-invalid-this": [0],
     "class-methods-use-this": [2],
     "no-console": [0],
-    "prefer-const": [2]
+    "prefer-const": [2],
+    "consistent-return": [0]
   }
 }
 
