@@ -1173,7 +1173,8 @@ fieldset {
 
 /* Оверлей */
 
-.success {
+.success,
+.error-message {
   position: fixed;
   top: 0;
   left: 0;
@@ -1194,7 +1195,8 @@ fieldset {
   background-color: rgba(0, 0, 0, 0.8);
 }
 
-.success__message {
+.success__message,
+.error-message__message {
   position: relative;
 
   color: #ffffff;
@@ -1202,7 +1204,8 @@ fieldset {
   font-weight: 700;
 }
 
-.success__message::before {
+.success__message::before,
+.error-message__message::before {
   content: "";
   position: absolute;
 

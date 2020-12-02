@@ -126,8 +126,6 @@
     const elem = changeEvt.target;
     if (elem.closest("select") || elem.closest("input")) {
       console.log("----");
-      // updateUsersNotices();
-      // }
       // вместо обычного вызова функции для устранения "дребезга"
       // вызову специальную функцию debounce(fun)
       // window.debounce(updateUsersNotices);
