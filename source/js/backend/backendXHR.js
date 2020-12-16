@@ -175,7 +175,7 @@
   const upload = backend.bind(backend);
   const load = backend.bind(backend);
 
-  window.backend.backend = {
+  window.backend.backendXHR = {
     "upload": upload,
     "load": load,
   };
