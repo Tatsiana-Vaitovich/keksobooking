@@ -10,7 +10,5 @@
     window.usersNotice.showMapPins(window.data.usersNotice);
   }
 
-  window.backend.handleDateLoadingSuccess = {
-    "handleDateLoadingSuccess": onXhrDataLoadingSuccess,
-  };
+  window.backend.handleDateLoadingSuccess = onXhrDataLoadingSuccess;
 })();

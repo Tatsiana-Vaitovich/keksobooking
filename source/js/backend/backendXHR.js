@@ -13,11 +13,12 @@
     "NOT_FOUND_ERROR": 404,
     "SERVER_ERROR": 500,
   };
+  let error;
 
-  function onXhrGetResponseForLoad(onLoad, onError) {
-    switch (this.status) {
+  function onXhrGetResponseForLoad(onLoad, onError, status, response, statusText) {
+    switch (status) {
       case (Code.SUCCESS):
-        onLoad(this.response);
+        onLoad(response);
         break;
       case (Code.CACHED):
         error = "неверный запрос";
@@ -26,7 +27,7 @@
         error = "ничего не найдено";
         break;
       default:
-        error("Статус ответа: " + xhr.status + " xhr.statusText");
+        error("Статус ответа: " + status + statusText);
     }
     if (error) {
       onError(error);
@@ -128,7 +129,6 @@
 
   function backend(onLoad, onError, data) {
     const xhr = new XMLHttpRequest();
-    let error;
     let url;
     let method;
     switch (arguments.length) {
@@ -138,7 +138,7 @@
         url = window.constants.URL_GET;
         method = "GET";
         xhr.addEventListener("load", function() {
-          onXhrGetResponseForLoad(onLoad);
+          onXhrGetResponseForLoad(onLoad, onError, this.status, this.response, this.statusText);
         });
         xhr.addEventListener("error", function() {
           error = "Произошла ошибка соединения";
@@ -172,11 +172,6 @@
     }
   }
 
-  const upload = backend.bind(backend);
-  const load = backend.bind(backend);
+  window.backend.backendXHR = backend;
 
-  window.backend.backendXHR = {
-    "upload": upload,
-    "load": load,
-  };
 })();
