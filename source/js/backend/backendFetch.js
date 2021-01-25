@@ -1,61 +1,18 @@
 "use strict";
 
-// работа с сетью, Fetch
+// работа с сетью, Promise and Fetch
 
 (function() {
 
   const Code = {
+    "CREATE": 201,
     "SUCCESS": 200,
     "CACHED": 400,
     "NOT_FOUND_ERROR": 404,
     "SERVER_ERROR": 500,
   };
 
-  let error;
-
-  function onGetResponseForLoadSuccess(onLoad, onError, respons) {
-    switch (response.status) {
-      case (Code.SUCCESS):
-        const json = respons.json();
-        onLoad(json);
-        break;
-      case (Code.CACHED):
-        error = "неверный запрос";
-        break;
-      case (Code.NOT_FOUND_ERROR):
-        error = "ничего не найдено";
-        break;
-      default:
-        error("not found");
-    }
-    if (error) {
-      onError(error);
-    }
-  }
-
-  function onGetResponseForLoadError(onError) {
-    error = "Произошла ошибка соединения";
-    onError(error);
-    try {
-      window.backend.backupMethodForLoadingData.useJSONP();
-    } catch (err) {
-      console.log(err.message);
-      window.backend.backupMethodForLoadingData.useMock();
-    }
-  }
-
-  function onXhrGetResponseForUpload(onLoad, onError) {
-    switch (this.status) {
-      case (Code.SUCCESS):
-        onLoad();
-        break;
-      default:
-        error = "Извините, произошла ошибка,<br>Ваше объявление не удалось опубликовать";
-    }
-    if (error) {
-      onError(error);
-    }
-  }
+  // --------promise-------
 
   function loadTest() {
     let a = 1;
@@ -80,46 +37,180 @@
     console.log(a);
   }
 
-  function loadPromise(onLoad, onError) {
-    const promise = new Promise(function(resolve, reject) {
+  function sentRequest(method, url, data, code, functionSuccess, onError) {
+    return new Promise(function(resolve, reject) {
       const xhr = new XMLHttpRequest();
-      xhr.responseType = "json";
-      xhr.timeout = window.constants.MAX_WAITING_TIME_RESPONSE;
-      const result = xhr.response;
-      xhr.open("GET", window.constants.URL_GET);
-      xhr.send();
-      if (xhr.response) {
-        resolve(result);
-      } else {
-        reject(new Error("error"));
-      }
-    });
-
-    promise.then(
-        function(result) {
-          onGetResponseForLoadSuccess(onLoad, onError, result);
-        },
-        function(error) {
-          console.log(error);
-          onGetResponseForLoadError(onError);
+      // xhr.timeout = window.constants.MAX_WAITING_TIME_RESPONSE;
+      xhr.addEventListener("load", function() {
+        console.log(this.status);
+        if (this.status === code) {
+          resolve(this.response);
+        } else {
+          functionSuccess(onError, this.status);
         }
-    );
+      });
+      xhr.addEventListener("error", function() {
+        reject(this.response);
+      });
+      xhr.open(method, url, data);
+      xhr.send();
+    });
   }
 
+  function onPromiseGetResponseForLoadSuccess(onError, status) {
+    let error;
+    switch (status) {
+      case (Code.CACHED):
+        error = "неверный запрос";
+        break;
+      case (Code.NOT_FOUND_ERROR):
+        error = "ничего не найдено";
+        break;
+      default:
+        error = "Not Found";
+    }
+    onError(error);
+  }
+
+  function onPromiseGetResponseForUploadSuccess(onError) {
+    const error = "Извините, произошла ошибка,<br>Ваше объявление не удалось опубликовать";
+    onError(error);
+  }
+
+  // возможно, удобнее использовать отдельные функции для GET and POST requests??
+  function loadPromise(onLoad, onError) {
+    sentRequest("GET", window.constants.URL_GET_TEST)
+    .then(function(response) {
+      onGetResponseForLoadSuccess(onLoad, onError, response);
+    }, function() {
+      onGetResponseForLoadError(onError);
+    });
+  }
+
+  function upLoadPromise(onLoad, onError, data) {
+    sentRequest("POST", window.constants.URL_POST, data)
+    .then(function(response) {
+      onFetchGetResponseForUploadSuccess(onLoad, onError, response);
+    }, function() {
+      onFetchGetResponseForUploadErrors(onError);
+    });
+  }
+
+  function backendPromise(onLoad, onError, data) {
+    let url;
+    let method;
+    let code;
+    let functionSuccess;
+    let functionErrors;
+    if (arguments.length === 2) {
+      url = window.constants.URL_GET;
+      method = "GET";
+      code = Code.SUCCESS;
+      functionSuccess = onPromiseGetResponseForLoadSuccess;
+      functionErrors = onFetchGetResponseForLoadError;
+    } else {
+      url = window.constants.URL_POST;
+      method = "POST";
+      code = Code.CREATE;
+      functionSuccess = onPromiseGetResponseForUploadSuccess;
+      functionErrors = onFetchGetResponseForUploadErrors;
+    }
+
+    sentRequest(method, url, data, code, functionSuccess, onError)
+    .then(function(response) {
+      onLoad(response);
+    }, function() {
+      functionErrors(onError);
+    });
+  }
+
+  // ------fetch---------
+
+  function onFetchGetResponseForLoadSuccess(onLoad, onError, respons) {
+    let error;
+    switch (respons.status) {
+      case (Code.SUCCESS):
+        const json = respons.json();
+        onLoad(json);
+        onLoad(respons);
+        break;
+      case (Code.CACHED):
+        error = "неверный запрос";
+        break;
+      case (Code.NOT_FOUND_ERROR):
+        error = "ничего не найдено";
+        break;
+      default:
+        error = "Not Found";
+    }
+    if (error) {
+      onError(error);
+    }
+  }
+
+  function onFetchGetResponseForLoadError(onError) {
+    const error = "Извините, произошла ошибка";
+    onError(error);
+    new Promise(function(resolve) {
+      resolve(window.backend.backupMethodForLoadingData.useJSONP());
+    }).catch(() => window.backend.backupMethodForLoadingData.useMyMock());
+    // если jsonp приходит с ошибкой - не получается обработать эту ошибку????
+  }
+
+  function onFetchGetResponseForUploadSuccess(onLoad, onError, respons) {
+    let error;
+    switch (respons.status) {
+      case (Code.CREATE):
+        onLoad();
+        break;
+      default:
+        error = "Извините, произошла ошибка,<br>Ваше объявление не удалось опубликовать";
+    }
+    if (error) {
+      onError(error);
+    }
+  }
+
+  function onFetchGetResponseForUploadErrors(onError) {
+    const error = "Не удалось загрузить форму.<br>Произошла ошибка соединения";
+    onError(error);
+  }
+
+  // возможно, удобнее использовать отдельные функции для GET and POST requests??
   function load(onLoad, onError) {
     const promise = fetch(window.constants.URL_GET);
-    promise.then(function(response) {
-      onGetResponseForLoadSuccess(onLoad, onError, response);
+    promise.then(function(respons) {
+      onFetchGetResponseForLoadSuccess(onLoad, onError, respons);
     },
     function() {
-      onGetResponseForLoadError(onError);
+      onFetchGetResponseForLoadError(onError);
+    });
+  }
+
+  function upload(onLoad, onError, data) {
+    // метод fetch возвращает промис
+    const promise = fetch(window.constants.URL_POST_TEST, {
+      method: "POST",
+      mode: "no-cors",
+      headers: {
+        "Content-Type": "application/json;charset=utf-8",
+      },
+      body: data,
+    });
+    promise.then(function(respons) {
+      onFetchGetResponseForUploadSuccess(onLoad, onError, respons);
+    },
+    function() {
+      onFetchGetResponseForUploadErrors(onError);
     });
   }
 
   window.backend.backendFetch = {
     "load": load,
-    "loadPromise": loadPromise,
+    "upload": upload,
     "loadTest": loadTest,
+    "loadPromise": loadPromise,
+    "upLoadPromise": upLoadPromise,
+    "backendPromise": backendPromise,
   };
 })();
-

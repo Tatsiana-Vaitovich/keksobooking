@@ -4,7 +4,7 @@
 
 (function() {
 
-  function onXhrDataLoadingErrors(message) {
+  function onRequestDataLoadingErrors(message) {
 
     const errorMessage = window.createFragment.template.querySelector(".error-message").cloneNode(true);
     const whereInsertErrorMessage = window.dom.map;
@@ -23,5 +23,5 @@
     }
   }
 
-  window.backend.handleDataLoadingErrors = onXhrDataLoadingErrors;
+  window.backend.handleDataLoadingErrors = onRequestDataLoadingErrors;
 })();

@@ -8,14 +8,15 @@
   // использую перечисление - объект для сохранения однородных данных (констант))
 
   const Code = {
+    "CREATE": 201,
     "SUCCESS": 200,
     "CACHED": 400,
     "NOT_FOUND_ERROR": 404,
     "SERVER_ERROR": 500,
   };
-  let error;
 
   function onXhrGetResponseForLoad(onLoad, onError, status, response, statusText) {
+    let error;
     switch (status) {
       case (Code.SUCCESS):
         onLoad(response);
@@ -34,9 +35,10 @@
     }
   }
 
-  function onXhrGetResponseForUpload(onLoad, onError) {
-    switch (this.status) {
-      case (Code.SUCCESS):
+  function onXhrGetResponseForUpload(onLoad, onError, status) {
+    let error;
+    switch (status) {
+      case (Code.CREATE):
         onLoad();
         break;
       default:
@@ -131,6 +133,7 @@
     const xhr = new XMLHttpRequest();
     let url;
     let method;
+    let error;
     switch (arguments.length) {
       case (2):
         xhr.responseType = "json";
@@ -161,7 +164,7 @@
         url = window.constants.URL_POST;
         method = "POST";
         xhr.addEventListener("load", function() {
-          onXhrGetResponseForUpload(onLoad);
+          onXhrGetResponseForUpload(onLoad, onError, this.status);
         });
         xhr.addEventListener("error", function() {
           error = "Не удалось загрузить форму.<br>Произошла ошибка соединения";

@@ -173,7 +173,8 @@
   window.dom.form.addEventListener("submit", function(submitEvt) {
     submitEvt.preventDefault();
     const formData = new FormData(window.dom.form);
-    window.backend.backendXHR.upload(formData, window.backend.handleFormUploadingSuccess, window.backend.handleFormUploadingErrors);
+    // window.backend.backendFetch.backendPromise(window.backend.handleFormUploadingSuccess, window.backend.handleFormUploadingErrors, formData);
+    window.backend.backendFetch.upload(window.backend.handleFormUploadingSuccess, window.backend.handleFormUploadingErrors, formData);
   });
 
   function hiddenMessage() {
