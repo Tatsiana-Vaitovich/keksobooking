@@ -175,6 +175,6 @@
     }
   }
 
-  window.backend.backendXHR = backend;
+  window.backend.backendXHRGeneral = backend;
 
 })();

@@ -158,15 +158,11 @@
   }
 
   function onFetchGetResponseForUploadSuccess(onLoad, onError, respons) {
-    let error;
-    switch (respons.status) {
-      case (Code.CREATE):
-        onLoad();
-        break;
-      default:
-        error = "Извините, произошла ошибка,<br>Ваше объявление не удалось опубликовать";
-    }
-    if (error) {
+    if (respons.status === Code.CREATE) {
+      // если использую URL_POST_TEST, no-cors: ответ type: "opaque"; status в любом случае 0;
+      onLoad();
+    } else {
+      const error = "Извините, произошла ошибка,<br>Ваше объявление не удалось опубликовать";
       onError(error);
     }
   }
@@ -205,12 +201,49 @@
     });
   }
 
+  function backendFetch(onLoad, onError, data) {
+    let url;
+    let method;
+    let functionSuccess;
+    let functionErrors;
+    let options;
+
+    if (arguments.length === 2) {
+      url = window.constants.URL_GET;
+      method = "GET";
+      functionSuccess = onFetchGetResponseForLoadSuccess;
+      functionErrors = onFetchGetResponseForLoadError;
+    } else {
+      url = window.constants.URL_POST;
+      method = "POST";
+      functionSuccess = onFetchGetResponseForUploadSuccess;
+      functionErrors = onFetchGetResponseForUploadErrors;
+      options = {
+        "method": method,
+        "mode": "no-cors",
+        "headers": {
+          "Content-Type": "application/json;charset=utf-8",
+        },
+        "body": data,
+      };
+    }
+
+    const promise = fetch(method, url, options);
+    promise.then(function(respons) {
+      functionSuccess(onLoad, onError, respons);
+    },
+    function() {
+      functionErrors(onError);
+    });
+  }
+
   window.backend.backendFetch = {
     "load": load,
     "upload": upload,
+    "backendFetchGeneral": backendFetch,
     "loadTest": loadTest,
     "loadPromise": loadPromise,
     "upLoadPromise": upLoadPromise,
-    "backendPromise": backendPromise,
+    "backendPromiseGeneral": backendPromise,
   };
 })();

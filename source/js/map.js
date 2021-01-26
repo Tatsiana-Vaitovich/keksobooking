@@ -17,9 +17,10 @@
   function onMainPinActivatePage() {
     // получу elem1 фрагмента из данных, полученных с сервера
     // для этого нужно запустить функцию backend()
-    // window.backend.backendXHR(window.backend.handleDateLoadingSuccess.onXhrDataLoadingSuccess, window.backend.handleDataLoadingErrors);
-    window.backend.backendFetch.load(window.backend.handleDateLoadingSuccess.onFethDataLoadingSuccess, window.backend.handleDataLoadingErrors);
-    // window.backend.backendFetch.backendPromise(window.backend.handleDateLoadingSuccess.onFethDataLoadingSuccess, window.backend.handleDataLoadingErrors);
+    // window.backend.backendXHRGeneral(window.backend.handleDateLoadingSuccess.onXhrDataLoadingSuccess, window.backend.handleDataLoadingErrors);
+    // window.backend.backendFetch.load(window.backend.handleDateLoadingSuccess.onFethDataLoadingSuccess, window.backend.handleDataLoadingErrors);
+    window.backend.backendFetch.backendFetchGeneral(window.backend.handleDateLoadingSuccess.onFethDataLoadingSuccess, window.backend.handleDataLoadingErrors);
+    // window.backend.backendFetch.backendPromiseGeneral(window.backend.handleDateLoadingSuccess.onFethDataLoadingSuccess, window.backend.handleDataLoadingErrors);
     // Вставляю все полученные элементы из elem1 за один прием в блок ".map__pins"
     // window.util.insertChildrenAppend(window.createFragment.elem1, window.dom.mapPins);
     // активирую карту
