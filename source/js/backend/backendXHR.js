@@ -146,12 +146,8 @@
         xhr.addEventListener("error", function() {
           error = "Произошла ошибка соединения";
           onError(error);
-          try {
-            window.backend.backupMethodForLoadingData.useJSONP();
-          } catch (err) {
-            console.log(err.message);
-            window.backend.backupMethodForLoadingData.useMock();
-          }
+          window.backend.backupMethodForLoadingData.useJSONP();
+          // если jsonp приходит с ошибкой не получается обработать ошибку
         });
         xhr.addEventListener("timeout", function() {
           error = "Запрос не успел выполниться за " + xhr.timeout + "мс";

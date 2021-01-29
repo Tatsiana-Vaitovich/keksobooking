@@ -141,7 +141,7 @@
         error = "ничего не найдено";
         break;
       default:
-        error = "Not Found";
+        error = "Статус ответа: " + respons.status;
     }
     if (error) {
       onError(error);
@@ -151,9 +151,10 @@
   function onFetchGetResponseForLoadError(onError) {
     const error = "Извините, произошла ошибка";
     onError(error);
-    new Promise(function(resolve) {
-      resolve(window.backend.backupMethodForLoadingData.useJSONP());
-    }).catch(() => window.backend.backupMethodForLoadingData.useMyMock());
+    window.backend.backupMethodForLoadingData.useJSONP();
+    // new Promise(function(resolve) {
+    //   resolve(window.backend.backupMethodForLoadingData.useJSONP());
+    // }).catch(() => window.backend.backupMethodForLoadingData.useMyMock());
     // если jsonp приходит с ошибкой - не получается обработать эту ошибку????
   }
 

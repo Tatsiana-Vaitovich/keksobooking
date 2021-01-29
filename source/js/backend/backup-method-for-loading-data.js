@@ -12,19 +12,45 @@
 
     const data = window.data.mock;
     drawReceivedData(data);
-    // window.data.usersNoticesOrigin = window.data.mock;
-    // window.data.usersNotices = window.data.usersNoticesOrigin.slice();
-    // window.usersNotice.showMapPins(window.data.usersNotices);
   }
 
   function useJSONP() {
 
     console.log("use JSONP");
 
+    // function sentRequestJSONP() {
+    //   return new Promise(function(resolve) {
+    //     const scriptJSONP = document.createElement("script");
+    //     scriptJSONP.src = window.constants.URL_GET + "?callback=_JSONPcallback";
+    //     document.body.append(scriptJSONP);
+    //     resolve(true);
+    //   });
+    // }
+
+    // try {
     const scriptJSONP = document.createElement("script");
     scriptJSONP.src = window.constants.URL_GET + "?callback=_JSONPcallback";
-
     document.body.append(scriptJSONP);
+    //   sentRequestJSONP()
+    //   .then(function(result) {
+    //     if (result) {
+    //       const pins = window.dom.mapPins.querySelectorAll("button");
+    //       console.log(pins);
+    //       const count = pins.length;
+    //       console.log(count);
+    //       if (count === 1) {
+    //         throw new SyntaxError("не удалось получить данные по JSONP");
+    //       }
+    //     }
+    //   },
+    //   function() {
+    //     throw new SyntaxError("ну удалось получить данные");
+    //   });
+    // если jsonp не срабатывает не получается споймать ошибку
+    // } catch (error) {
+    //   console.log(error.name + " " + error.message);
+    //   useMock();
+    // }
   }
 
   function useMyMock() {
@@ -36,9 +62,6 @@
     window.util.shuffle(window.getMyMock.data.titlesArr);
     const data = window.getMyMock.getUsersNotices.createUsersNotices(8);
     drawReceivedData(data);
-    // window.data.usersNoticesOrigin = window.getMyMock.getUsersNotices.createUsersNotices(8);
-    // window.data.usersNotices = window.data.usersNoticesOrigin.slice();
-    // window.usersNotice.showMapPins(window.data.usersNotices);
   }
 
   function drawReceivedData(data) {
