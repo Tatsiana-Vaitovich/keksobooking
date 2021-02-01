@@ -17,40 +17,53 @@
   function useJSONP() {
 
     console.log("use JSONP");
+    const CallbackRegistry = {}; // использую для того, чтобы была возможность отреагировать на ошибку jsonp
+    window.CallbackRegistry = CallbackRegistry;
 
-    // function sentRequestJSONP() {
-    //   return new Promise(function(resolve) {
-    //     const scriptJSONP = document.createElement("script");
-    //     scriptJSONP.src = window.constants.URL_GET + "?callback=_JSONPcallback";
-    //     document.body.append(scriptJSONP);
-    //     resolve(true);
-    //   });
-    // }
+    let url = window.constants.URL_GET;
+    let scriptOk = false; // флаг, что вызов прошел успешно
+    // генерируем имя json-функции для запроса
+    const callbackName = "_" + String(Math.random()).slice(-6);
+    // укажем это имя в URL запроса
+    url += ~url.indexOf("?") ? "&" : "?";
+    url += "callback=CallbackRegistry." + callbackName;
+    // console.log(window.CallbackRegistry);
+    // ...и создадим функцию в реестре
+    CallbackRegistry[callbackName] = function(data) {
+      scriptOk = true; // обработчик вызвался, указать что все ок
+      delete CallbackRegistry[callbackName]; // можно очистить реестр
+      _JSONPcallback(data); // вызвать onSuccess
+    };
 
-    // try {
+    // эта функция сработает при любом результате запроса
+    // важно: при успешном результате - всегда после jsonp - обработчика
+    function checkCallback() {
+      if (scriptOk) {
+        return; // сработал обработчик?
+      }
+      delete CallbackRegistry[callbackName];
+      useMock(); // нет - вызвать onError
+    }
+
     const scriptJSONP = document.createElement("script");
-    scriptJSONP.src = window.constants.URL_GET + "?callback=_JSONPcallback";
+    // в старых IE поддерживается только событие, а не onload/onerror
+    // в теории 'readyState=loaded' означает "скрипт загрузился",
+    // а 'readyState=complete' -- "скрипт выполнился", но иногда
+    // почему-то случается только одно из них, поэтому проверяем оба
+    scriptJSONP.onreadystatechange = function() {
+      if (this.readyState === "complete" || this.readyState === "loaded") {
+        this.onreadystatechange = null;
+        setTimeout(checkCallback, 0); // Вызвать checkCallback - после скрипта
+      }
+    };
+
+    // события script.onload/onerror срабатывают всегда после выполнения скрипта
+    scriptJSONP.onload = scriptJSONP.onerror = checkCallback;
+    scriptJSONP.src = url;
     document.body.append(scriptJSONP);
-    //   sentRequestJSONP()
-    //   .then(function(result) {
-    //     if (result) {
-    //       const pins = window.dom.mapPins.querySelectorAll("button");
-    //       console.log(pins);
-    //       const count = pins.length;
-    //       console.log(count);
-    //       if (count === 1) {
-    //         throw new SyntaxError("не удалось получить данные по JSONP");
-    //       }
-    //     }
-    //   },
-    //   function() {
-    //     throw new SyntaxError("ну удалось получить данные");
-    //   });
-    // если jsonp не срабатывает не получается споймать ошибку
-    // } catch (error) {
-    //   console.log(error.name + " " + error.message);
-    //   useMock();
-    // }
+    // const scriptJSONP = document.createElement("script");
+    // scriptJSONP.src = window.constants.URL_GET + "?callback=_JSONPcallback";
+    // document.body.append(scriptJSONP);
   }
 
   function useMyMock() {
@@ -70,9 +83,12 @@
     window.usersNotice.showMapPins(window.data.usersNotices);
   }
 
-  const _JSONPcallback = function(data) {
+  function _JSONPcallback(data) {
     drawReceivedData(data); // если выполняется с ошибкой - не могу ее обработать
-  };
+  }
+  // const _JSONPcallback = function(data) {
+  //   drawReceivedData(data);
+  // };
 
   window.backend = {};
   window.backend.backupMethodForLoadingData = {
