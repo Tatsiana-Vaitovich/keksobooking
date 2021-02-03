@@ -23,6 +23,7 @@ var webp = require("gulp-webp"); // для создания изображени
 // var include = require("posthtml-include"); // для вставки в html нужного контента
 var del = require("del"); // плагин для удаления
 var uglify = require('gulp-uglify-es').default; // плагин для минификации js, поддерживает es6
+// var axios = require('axios').default;
 
 gulp.task("css", function () {
   // return gulp.src("source/less/style.less")

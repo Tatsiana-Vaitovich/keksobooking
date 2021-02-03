@@ -175,8 +175,10 @@
     const formData = new FormData(window.dom.form);
     // window.backend.backendXHRGeneral(window.backend.handleFormUploadingSuccess, window.backend.handleFormUploadingErrors, formData);
     // window.backend.backendFetch.backendPromiseGeneral(window.backend.handleFormUploadingSuccess, window.backend.handleFormUploadingErrors, formData);
-    window.backend.backendFetch.backendFetchGeneral(window.backend.handleFormUploadingSuccess, window.backend.handleFormUploadingErrors, formData);
+    // window.backend.backendFetch.backendFetchGeneral(window.backend.handleFormUploadingSuccess, window.backend.handleFormUploadingErrors, formData);
     // window.backend.backendFetch.upload(window.backend.handleFormUploadingSuccess, window.backend.handleFormUploadingErrors, formData);
+    window.backend.backendAxios.backendAxiosGeneral(window.backend.handleFormUploadingSuccess, window.backend.handleFormUploadingErrors, formData);
+
   });
 
   function hiddenMessage() {

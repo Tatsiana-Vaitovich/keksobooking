@@ -132,7 +132,6 @@
       case (Code.SUCCESS):
         const json = respons.json();
         onLoad(json);
-        onLoad(respons);
         break;
       case (Code.CACHED):
         error = "неверный запрос";
@@ -152,10 +151,6 @@
     const error = "Извините, произошла ошибка";
     onError(error);
     window.backend.backupMethodForLoadingData.useJSONP();
-    // new Promise(function(resolve) {
-    //   resolve(window.backend.backupMethodForLoadingData.useJSONP());
-    // }).catch(() => window.backend.backupMethodForLoadingData.useMyMock());
-    // если jsonp приходит с ошибкой - не получается обработать эту ошибку????
   }
 
   function onFetchGetResponseForUploadSuccess(onLoad, onError, respons) {
@@ -186,7 +181,7 @@
 
   function upload(onLoad, onError, data) {
     // метод fetch возвращает промис
-    const promise = fetch(window.constants.URL_POST_TEST, {
+    const promise = fetch(window.constants.URL_POST, {
       method: "POST",
       mode: "no-cors",
       headers: {
@@ -229,7 +224,7 @@
       };
     }
 
-    const promise = fetch(method, url, options);
+    const promise = fetch(url, options);
     promise.then(function(respons) {
       functionSuccess(onLoad, onError, respons);
     },

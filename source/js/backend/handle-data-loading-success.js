@@ -12,14 +12,22 @@
 
   function onFethDataLoadingSuccess(data) {
     data.then(function(result) {
-      window.data.usersNoticesOrigin = result;
+      window.data.usersNoticesOrigin = result.data;
       window.data.usersNotice = window.data.usersNoticesOrigin.slice();
       window.usersNotice.showMapPins(window.data.usersNotice);
     });
   }
 
+  function onAxiosDataLoadingSuccess(data) {
+    window.data.usersNoticesOrigin = data.data;
+    window.data.usersNotice = window.data.usersNoticesOrigin.slice();
+    window.usersNotice.showMapPins(window.data.usersNotice);
+  }
+
+
   window.backend.handleDateLoadingSuccess = {
     "onXhrDataLoadingSuccess": onXhrDataLoadingSuccess,
     "onFethDataLoadingSuccess": onFethDataLoadingSuccess,
+    "onAxiosDataLoadingSuccess": onAxiosDataLoadingSuccess,
   };
 })();

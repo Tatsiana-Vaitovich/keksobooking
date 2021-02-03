@@ -14,13 +14,13 @@
     drawReceivedData(data);
   }
 
-  function useJSONP() {
+  function useJSONPGeneral(url, onSuccess, onError) {
 
     console.log("use JSONP");
     const CallbackRegistry = {}; // использую для того, чтобы была возможность отреагировать на ошибку jsonp
     window.CallbackRegistry = CallbackRegistry;
 
-    let url = window.constants.URL_GET;
+    // let url = window.constants.URL_GET;
     let scriptOk = false; // флаг, что вызов прошел успешно
     // генерируем имя json-функции для запроса
     const callbackName = "_" + String(Math.random()).slice(-6);
@@ -32,7 +32,7 @@
     CallbackRegistry[callbackName] = function(data) {
       scriptOk = true; // обработчик вызвался, указать что все ок
       delete CallbackRegistry[callbackName]; // можно очистить реестр
-      _JSONPcallback(data); // вызвать onSuccess
+      onSuccess(data); // вызвать onSuccess
     };
 
     // эта функция сработает при любом результате запроса
@@ -42,7 +42,7 @@
         return; // сработал обработчик?
       }
       delete CallbackRegistry[callbackName];
-      useMock(); // нет - вызвать onError
+      onError(); // нет - вызвать onError
     }
 
     const scriptJSONP = document.createElement("script");
@@ -65,6 +65,9 @@
     // scriptJSONP.src = window.constants.URL_GET + "?callback=_JSONPcallback";
     // document.body.append(scriptJSONP);
   }
+
+  // чтобы получить функцию с контекстом this и параметрами(если они известны) используем метод bind.
+  const useJSONP = useJSONPGeneral.bind(useJSONPGeneral, window.constants.URL_GET, _JSONPcallback, useMock);
 
   function useMyMock() {
 
