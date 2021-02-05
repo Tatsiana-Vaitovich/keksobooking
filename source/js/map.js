@@ -22,6 +22,7 @@
     // window.backend.backendFetch.backendFetchGeneral(window.backend.handleDateLoadingSuccess.onFethDataLoadingSuccess, window.backend.handleDataLoadingErrors);
     // window.backend.backendFetch.backendPromiseGeneral(window.backend.handleDateLoadingSuccess.onFethDataLoadingSuccess, window.backend.handleDataLoadingErrors);
     window.backend.backendAxios.backendAxiosGeneral(window.backend.handleDateLoadingSuccess.onAxiosDataLoadingSuccess, window.backend.handleDataLoadingErrors);
+
     // Вставляю все полученные элементы из elem1 за один прием в блок ".map__pins"
     // window.util.insertChildrenAppend(window.createFragment.elem1, window.dom.mapPins);
     // активирую карту
@@ -36,15 +37,36 @@
 
   mainPin.addEventListener("touchend", onMainPinActivatePage);
 
-  function getMainPinCoord(coordName) {
-    let coord;
-    if (coordName === "x") {
-      coord = mainPin.offsetLeft + (1 / 2 * mainPin.offsetWidth);
-    } else {
-      coord = mainPin.offsetTop + (1 / 2 * mainPin.offsetHeight);
-    }
+  const OFFSET_COORDS_X = [
+    "offsetLeft",
+    "offsetWidth",
+  ];
+
+  const OFFSET_COORDS_Y = [
+    "offsetTop",
+    "offsetHeight",
+  ];
+
+  function getElemCoord(elem) {
+    const coord = elem[this[0]] + 1 / 2 * elem[this[1]];
     return coord;
   }
+
+  function getMainPinCoord(coordName) {
+    const coords = "OFFSET_COORDS_" + coordName.toUpperCase();
+    const coord = getElemCoord.call(coords, mainPin);
+    return coord;
+  }
+
+  // function getMainPinCoord(coordName) {
+  //   let coord;
+  //   if (coordName === "x") {
+  //     coord = mainPin.offsetLeft + (1 / 2 * mainPin.offsetWidth);
+  //   } else {
+  //     coord = mainPin.offsetTop + (1 / 2 * mainPin.offsetHeight);
+  //   }
+  //   return coord;
+  // }
 
   function getMainPinCoordStroke() {
     return ((window.util.roundNumber(getMainPinCoord("x"), 10) + ", " + window.util.roundNumber(getMainPinCoord("y"), 10)));
@@ -85,6 +107,8 @@
 
     let captureX;
     let captureY;
+
+
 
     if (cursorStartEvt.type === "mousedown") {
       captureX = cursorStartEvt.clientX;
