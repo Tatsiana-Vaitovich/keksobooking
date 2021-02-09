@@ -8,6 +8,16 @@
   const bigMainPin = mainPin.querySelector("svg");
   const formAddress = document.querySelector("#address");
 
+  // отцентрируем mainPin для всех устройств:
+  function moveMainPinCenter() {
+    const mapBoundingClientRect = window.dom.map.getBoundingClientRect();
+    const mainPinWidth = mainPin.offsetWidth;
+    mainPin.style.left = (mapBoundingClientRect.width / 2 - mainPinWidth / 2) + "px";
+  }
+
+  moveMainPinCenter();
+
+
   let dragged = false;
 
   formAddress.value = getMainPinCoordStroke();
@@ -108,20 +118,56 @@
     let captureX;
     let captureY;
 
+    const mouseEvent = {
+      "eventType": "mousedown",
+      "eventStart": "mousemove",
+      "eventEnd": "mouseup",
+    };
 
+    const touchEvent = {
+      "eventType": "touchstart",
+      "eventStart": "touchmove",
+      "eventEnd": "touchend",
+    };
 
-    if (cursorStartEvt.type === "mousedown") {
-      captureX = cursorStartEvt.clientX;
-      captureY = cursorStartEvt.clientY;
-      window.dom.map.addEventListener("mousemove", onMapCursorMove);
-      window.dom.map.addEventListener("mouseup", onMapCursorEnd);
-    } else if (cursorStartEvt.type === "touchstart") {
-      captureX = cursorStartEvt.touches[0].clientX;
-      captureY = cursorStartEvt.touches[0].clientY;
-      window.dom.map.addEventListener("touchmove", onMapCursorMove);
-      window.dom.map.addEventListener("touchend", onMapCursorEnd);
+    function getCaptureCoord(typeEvt, coordName) {
+      let coord;
+      const clientName = "client" + coordName.toUpperCase();
+      if (typeEvt === "mousedown") {
+        coord = cursorStartEvt[clientName];
+      } else if (typeEvt === "touchstart") {
+        coord = cursorStartEvt.touches[0][clientName];
+      }
+      return coord;
     }
 
+    function listenEvent() {
+      let obj;
+      const typeEvt = cursorStartEvt.type;
+      if (typeEvt === "mousedown") {
+        obj = mouseEvent;
+      } else if (typeEvt === "touchstart") {
+        obj = touchEvent;
+      }
+      captureX = getCaptureCoord.call(obj, typeEvt, "x");
+      captureY = getCaptureCoord.call(obj, typeEvt, "y");
+      window.dom.map.addEventListener(obj.eventStart, onMapCursorMove);
+      window.dom.map.addEventListener(obj.eventEnd, onMapCursorEnd);
+    }
+
+    // if (cursorStartEvt.type === "mousedown") {
+    //   captureX = cursorStartEvt.clientX;
+    //   captureY = cursorStartEvt.clientY;
+    //   window.dom.map.addEventListener("mousemove", onMapCursorMove);
+    //   window.dom.map.addEventListener("mouseup", onMapCursorEnd);
+    // } else if (cursorStartEvt.type === "touchstart") {
+    //   captureX = cursorStartEvt.touches[0].clientX;
+    //   captureY = cursorStartEvt.touches[0].clientY;
+    //   window.dom.map.addEventListener("touchmove", onMapCursorMove);
+    //   window.dom.map.addEventListener("touchend", onMapCursorEnd);
+    // }
+
+    listenEvent();
     getCaptureCoords(captureX, captureY);
   }
 

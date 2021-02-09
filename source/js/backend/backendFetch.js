@@ -42,7 +42,6 @@
       const xhr = new XMLHttpRequest();
       // xhr.timeout = window.constants.MAX_WAITING_TIME_RESPONSE;
       xhr.addEventListener("load", function() {
-        console.log(this.status);
         if (this.status === code) {
           resolve(this.response);
         } else {

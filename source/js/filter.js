@@ -108,7 +108,6 @@
     // т.к метод sort() деструктивный,
     // результат сохраню в виде дубликата массива
     const newUsersNotices = window.data.usersNotices.sort(compareRankOfUsersNotices);
-    console.log("new");
     newUsersNotices.forEach((elem) => console.log(elem.offer));
     // удаляем все mapPin кроме map__pin--main
     const arrMapPin = Array.from(window.dom.mapPins.children);
