@@ -5,91 +5,11 @@
   // переменные и функции, используемые при работе с картой
   const mapFilter = document.querySelector(".map__filters");
   const mainPin = document.querySelector(".map__pin--main");
+  const map = window.dom.map;
+  const form = window.dom.form;
+  const filters = window.dom.mapFilters;
   const bigMainPin = mainPin.querySelector("svg");
   const formAddress = document.querySelector("#address");
-
-  // отцентрируем mainPin для всех устройств:
-  function moveMainPinCenter() {
-    const mapBoundingClientRect = window.dom.map.getBoundingClientRect();
-    const mainPinWidth = mainPin.offsetWidth;
-    mainPin.style.left = (mapBoundingClientRect.width / 2 - mainPinWidth / 2) + "px";
-  }
-
-  moveMainPinCenter();
-
-
-  let dragged = false;
-
-  formAddress.value = getMainPinCoordStroke();
-
-  mainPin.addEventListener("mouseup", onMainPinActivatePage);
-
-  function onMainPinActivatePage() {
-    // получу elem1 фрагмента из данных, полученных с сервера
-    // для этого нужно запустить функцию backend()
-    // window.backend.backendXHRGeneral(window.backend.handleDateLoadingSuccess.onXhrDataLoadingSuccess, window.backend.handleDataLoadingErrors);
-    // window.backend.backendFetch.load(window.backend.handleDateLoadingSuccess.onFethDataLoadingSuccess, window.backend.handleDataLoadingErrors);
-    // window.backend.backendFetch.backendFetchGeneral(window.backend.handleDateLoadingSuccess.onFethDataLoadingSuccess, window.backend.handleDataLoadingErrors);
-    // window.backend.backendFetch.backendPromiseGeneral(window.backend.handleDateLoadingSuccess.onFethDataLoadingSuccess, window.backend.handleDataLoadingErrors);
-    window.backend.backendAxios.backendAxiosGeneral(window.backend.handleDateLoadingSuccess.onAxiosDataLoadingSuccess, window.backend.handleDataLoadingErrors);
-
-    // Вставляю все полученные элементы из elem1 за один прием в блок ".map__pins"
-    // window.util.insertChildrenAppend(window.createFragment.elem1, window.dom.mapPins);
-    // активирую карту
-    window.util.removeClass(window.dom.map, "map--faded");
-    window.util.removeClass(window.dom.form, "ad-form--disabled");
-    window.util.addClass(window.dom.form, "ad-form--enebled");
-    window.form.enebleForm(window.dom.form);
-    window.form.enebleForm(window.dom.mapFilters);
-
-    mainPin.style.zIndex = "100";
-  }
-
-  mainPin.addEventListener("touchend", onMainPinActivatePage);
-
-  const OFFSET_COORDS_X = [
-    "offsetLeft",
-    "offsetWidth",
-  ];
-
-  const OFFSET_COORDS_Y = [
-    "offsetTop",
-    "offsetHeight",
-  ];
-
-  function getElemCoord(elem) {
-    const coord = elem[this[0]] + 1 / 2 * elem[this[1]];
-    return coord;
-  }
-
-  function getMainPinCoord(coordName) {
-    const coords = "OFFSET_COORDS_" + coordName.toUpperCase();
-    const coord = getElemCoord.call(coords, mainPin);
-    return coord;
-  }
-
-  // function getMainPinCoord(coordName) {
-  //   let coord;
-  //   if (coordName === "x") {
-  //     coord = mainPin.offsetLeft + (1 / 2 * mainPin.offsetWidth);
-  //   } else {
-  //     coord = mainPin.offsetTop + (1 / 2 * mainPin.offsetHeight);
-  //   }
-  //   return coord;
-  // }
-
-  function getMainPinCoordStroke() {
-    return ((window.util.roundNumber(getMainPinCoord("x"), 10) + ", " + window.util.roundNumber(getMainPinCoord("y"), 10)));
-  }
-
-  window.dom.mapPins.addEventListener("mousedown", function(mouseDownevt) {
-    mouseDownevt.preventDefault();
-  });
-
-  // чтобы не сработало браузерное событие drag_and_drop
-  mainPin.addEventListener("dragstart", function() {
-    return false;
-  });
 
   const pageScrollX = window.pageXOffset;
   const pageScrollY = window.pageYOffset;
@@ -103,93 +23,171 @@
   const mapFilterHeight = mapFilter.offsetHeight;
   const mainPinBorder = (bigMainPinWidth - mainPinWidth) * 1 / 2;
 
+  // fild = map
+  // elem = mainPin
+
+  // отцентрируем mainPin для всех устройств:
+  function moveElemCenter(elem, fild) {
+    const fildBoundingClientRect = fild.getBoundingClientRect();
+    const elemWidth = elem.offsetWidth;
+    elem.style.left = (fildBoundingClientRect.width / 2 - elemWidth / 2) + "px";
+  }
+
+  moveElemCenter(mainPin, map);
+
+  let dragged = false;
+
+  const OFFSET_COORDS_X = [
+    "offsetLeft",
+    "offsetWidth",
+  ];
+
+  const OFFSET_COORDS_Y = [
+    "offsetTop",
+    "offsetHeight",
+  ];
+
+  formAddress.value = getElemCoordStroke(mainPin);
+
+  mainPin.addEventListener("mouseup", onElemActivatePage);
+
+  function onElemActivatePage() {
+    // получу elem1 фрагмента из данных, полученных с сервера
+    // для этого нужно запустить функцию backend()
+    // window.backend.backendXHRGeneral(window.backend.handleDateLoadingSuccess.onXhrDataLoadingSuccess, window.backend.handleDataLoadingErrors);
+    // window.backend.backendFetch.load(window.backend.handleDateLoadingSuccess.onFethDataLoadingSuccess, window.backend.handleDataLoadingErrors);
+    // window.backend.backendFetch.backendFetchGeneral(window.backend.handleDateLoadingSuccess.onFethDataLoadingSuccess, window.backend.handleDataLoadingErrors);
+    // window.backend.backendFetch.backendPromiseGeneral(window.backend.handleDateLoadingSuccess.onFethDataLoadingSuccess, window.backend.handleDataLoadingErrors);
+    window.backend.backendAxios.backendAxiosGeneral(window.backend.handleDateLoadingSuccess.onAxiosDataLoadingSuccess, window.backend.handleDataLoadingErrors);
+
+    // Вставляю все полученные элементы из elem1 за один прием в блок ".map__pins"
+    // window.util.insertChildrenAppend(window.createFragment.elem1, window.dom.mapPins);
+    // активирую карту
+    window.util.removeClass(map, "map--faded");
+    window.util.removeClass(form, "ad-form--disabled");
+    window.util.addClass(form, "ad-form--enebled");
+    window.form.enebleForm(form);
+    window.form.enebleForm(filters);
+
+    mainPin.style.zIndex = "100";
+  }
+
+  mainPin.addEventListener("touchend", onElemActivatePage);
+
+  function getElemCoord(elem) {
+    const coord = elem[this[0]] + 1 / 2 * elem[this[1]];
+    return coord;
+  }
+
+  function getElemCoordGeneral(coordName, elem) {
+    const coords = (coordName === "x") ? OFFSET_COORDS_X : OFFSET_COORDS_Y;
+    const coord = getElemCoord.call(coords, elem);
+    return coord;
+  }
+
+  function getElemCoordStroke(elem) {
+    return ((window.util.roundNumber(getElemCoordGeneral("x", elem), 10) + ", " + window.util.roundNumber(getElemCoordGeneral("y", elem), 10)));
+  }
+
+  window.dom.mapPins.addEventListener("mousedown", function(mouseDownevt) {
+    mouseDownevt.preventDefault();
+  });
+
+  // чтобы не сработало браузерное событие drag_and_drop
+  mainPin.addEventListener("dragstart", function() {
+    return false;
+  });
+
   // чтобы изначальный сдвиг курсора на элементе сохранялся запоминаем этот сдвиг:
-  const mainPinCoordCapture = {};
+  const elemCoordCapture = {};
   // также запомню координаты, где "остановились"
-  const mainPinCoordDrop = {};
+  const elemCoordDrop = {};
 
   // mainPin.addEventListener("mousedown", onMainPinMouseDown);
-  mainPin.addEventListener("mousedown", onMainPinCursorStart);
-  mainPin.addEventListener("touchstart", onMainPinCursorStart);
+  mainPin.addEventListener("mousedown", onElemCursorStart);
+  mainPin.addEventListener("touchstart", onElemCursorStart);
 
-  function onMainPinCursorStart(cursorStartEvt) {
+  // координаты "захвата" minPin
+  let captureX;
+  let captureY;
+
+  function getCaptureCoord(objEvt, coordName) {
+    const typeEvt = objEvt.type;
+    let coord;
+    const clientName = "client" + coordName.toUpperCase();
+    if (typeEvt === "mousedown") {
+      coord = objEvt[clientName];
+    } else if (typeEvt === "touchstart") {
+      coord = objEvt.touches[0][clientName];
+    }
+    return coord;
+  }
+
+  const mouseEvent = {
+    "eventType": "mousedown",
+    "eventStart": "mousemove",
+    "eventEnd": "mouseup",
+  };
+
+  const touchEvent = {
+    "eventType": "touchstart",
+    "eventStart": "touchmove",
+    "eventEnd": "touchend",
+  };
+
+  function listenEvent(objEvt) {
+    let obj;
+    const typeEvt = objEvt.type;
+    if (typeEvt === "mousedown") {
+      obj = mouseEvent;
+    } else if (typeEvt === "touchstart") {
+      obj = touchEvent;
+    }
+    captureX = getCaptureCoord.call(obj, objEvt, "x");
+    captureY = getCaptureCoord.call(obj, objEvt, "y");
+    window.dom.map.addEventListener(obj.eventStart, onMapCursorMove);
+    window.dom.map.addEventListener(obj.eventEnd, onMapCursorEnd);
+  }
+
+  // if (cursorStartEvt.type === "mousedown") {
+  //   captureX = cursorStartEvt.clientX;
+  //   captureY = cursorStartEvt.clientY;
+  //   window.dom.map.addEventListener("mousemove", onMapCursorMove);
+  //   window.dom.map.addEventListener("mouseup", onMapCursorEnd);
+  // } else if (cursorStartEvt.type === "touchstart") {
+  //   captureX = cursorStartEvt.touches[0].clientX;
+  //   captureY = cursorStartEvt.touches[0].clientY;
+  //   window.dom.map.addEventListener("touchmove", onMapCursorMove);
+  //   window.dom.map.addEventListener("touchend", onMapCursorEnd);
+  // }
+
+
+  function onElemCursorStart(cursorStartEvt) {
     cursorStartEvt.preventDefault();
 
-    let captureX;
-    let captureY;
-
-    const mouseEvent = {
-      "eventType": "mousedown",
-      "eventStart": "mousemove",
-      "eventEnd": "mouseup",
-    };
-
-    const touchEvent = {
-      "eventType": "touchstart",
-      "eventStart": "touchmove",
-      "eventEnd": "touchend",
-    };
-
-    function getCaptureCoord(typeEvt, coordName) {
-      let coord;
-      const clientName = "client" + coordName.toUpperCase();
-      if (typeEvt === "mousedown") {
-        coord = cursorStartEvt[clientName];
-      } else if (typeEvt === "touchstart") {
-        coord = cursorStartEvt.touches[0][clientName];
-      }
-      return coord;
-    }
-
-    function listenEvent() {
-      let obj;
-      const typeEvt = cursorStartEvt.type;
-      if (typeEvt === "mousedown") {
-        obj = mouseEvent;
-      } else if (typeEvt === "touchstart") {
-        obj = touchEvent;
-      }
-      captureX = getCaptureCoord.call(obj, typeEvt, "x");
-      captureY = getCaptureCoord.call(obj, typeEvt, "y");
-      window.dom.map.addEventListener(obj.eventStart, onMapCursorMove);
-      window.dom.map.addEventListener(obj.eventEnd, onMapCursorEnd);
-    }
-
-    // if (cursorStartEvt.type === "mousedown") {
-    //   captureX = cursorStartEvt.clientX;
-    //   captureY = cursorStartEvt.clientY;
-    //   window.dom.map.addEventListener("mousemove", onMapCursorMove);
-    //   window.dom.map.addEventListener("mouseup", onMapCursorEnd);
-    // } else if (cursorStartEvt.type === "touchstart") {
-    //   captureX = cursorStartEvt.touches[0].clientX;
-    //   captureY = cursorStartEvt.touches[0].clientY;
-    //   window.dom.map.addEventListener("touchmove", onMapCursorMove);
-    //   window.dom.map.addEventListener("touchend", onMapCursorEnd);
-    // }
-
-    listenEvent();
+    listenEvent(cursorStartEvt);
     getCaptureCoords(captureX, captureY);
   }
 
   // если mainPin не перетаскивался - в поле адреса будут записаны начальные
   // координаты, если перетаскивался - новые координаты:
   if (dragged) {
-    mainPin.removeEventListener("click", onMainPinClick);
+    mainPin.removeEventListener("click", onElemClick);
   } else {
-    mainPin.addEventListener("click", onMainPinClick);
+    mainPin.addEventListener("click", onElemClick);
   }
 
-  function onMainPinClick() {
-    formAddress.value = getMainPinCoordStroke();
+  function onElemClick() {
+    formAddress.value = getElemCoordStroke(mainPin);
   }
 
   function getCaptureCoords(captureX, captureY) {
-    const mainPinBoundingClientRect = mainPin.getBoundingClientRect();
-    const mainPinLeft = mainPinBoundingClientRect.left;
-    const mainPinTop = mainPinBoundingClientRect.top;
+    const elemBoundingClientRect = mainPin.getBoundingClientRect();
+    const elemLeft = elemBoundingClientRect.left;
+    const elemTop = elemBoundingClientRect.top;
 
-    mainPinCoordCapture.x = captureX - mainPinLeft;
-    mainPinCoordCapture.y = captureY - mainPinTop;
+    elemCoordCapture.x = captureX - elemLeft;
+    elemCoordCapture.y = captureY - elemTop;
   }
 
   function onMapCursorMove(cursorMoveEvt) {
@@ -212,8 +210,8 @@
     const pageScrollX = window.pageXOffset;
     const pageScrollY = window.pageYOffset;
 
-    let newLeft = newX + pageScrollX - mapLeft - mainPinCoordCapture.x;
-    let newTop = newY + pageScrollY - mapTop - mainPinCoordCapture.y;
+    let newLeft = newX + pageScrollX - mapLeft - elemCoordCapture.x;
+    let newTop = newY + pageScrollY - mapTop - elemCoordCapture.y;
 
     const minLeft = mainPinBorder + pageScrollX;
     const maxLeft = mapWidth - window.data.mapPinWidth - mainPinBorder + pageScrollX;
@@ -232,30 +230,30 @@
     }
     mainPin.style.top = newTop + "px";
     mainPin.style.left = newLeft + "px";
-    mainPinCoordDrop.x = newLeft;
-    mainPinCoordDrop.y = newTop;
+    elemCoordDrop.x = newLeft;
+    elemCoordDrop.y = newTop;
   }
 
   function onMapCursorEnd(cursorEndEvt) {
     let newLeft;
     let newTop;
     if (cursorEndEvt.type === "mouseup") {
-      newLeft = mainPinCoordDrop.x;
-      newTop = mainPinCoordDrop.y;
+      newLeft = elemCoordDrop.x;
+      newTop = elemCoordDrop.y;
       mainPin.style.top = newTop + "px";
       mainPin.style.left = newLeft + "px";
 
       window.dom.map.removeEventListener("mousemove", onMapCursorMove);
       window.dom.map.removeEventListener("mouseup", onMapCursorEnd);
     } else if (cursorEndEvt.type === "touchend") {
-      const mainPinBoundingClientRect = mainPin.getBoundingClientRect();
-      const mainPinLeft = mainPinBoundingClientRect.left;
-      const mainPinTop = mainPinBoundingClientRect.top;
+      const elemBoundingClientRect = mainPin.getBoundingClientRect();
+      const elemLeft = elemBoundingClientRect.left;
+      const elemTop = elemBoundingClientRect.top;
       const mapBoundingClientRect = window.dom.map.getBoundingClientRect();
       const mapLeft = mapBoundingClientRect.left;
       const mapTop = mapBoundingClientRect.top;
-      newLeft = mainPinLeft - mapLeft;
-      newTop = mainPinTop - mapTop;
+      newLeft = elemLeft - mapLeft;
+      newTop = elemTop - mapTop;
 
       window.dom.map.removeEventListener("touchend", onMapCursorEnd);
       window.dom.map.removeEventListener("touchmove", onMapCursorMove);
