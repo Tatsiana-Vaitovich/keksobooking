@@ -1,7 +1,6 @@
 "use strict";
 
-(function() {
-
+(function () {
   let dragged = false;
   // чтобы изначальный сдвиг курсора на элементе сохранялся запоминаем этот сдвиг:
   const elemCoordCapture = {};
@@ -12,7 +11,6 @@
   let captureY;
 
   function slider(elem, fild, callback) {
-
     // elem.addEventListener("mousedown", onMainPinMouseDown);
     elem.addEventListener("mousedown", onElemCursorStart);
     elem.addEventListener("touchstart", onElemCursorStart);
@@ -32,15 +30,15 @@
 
     function listenEvent(objEvt) {
       const mouseEvent = {
-        "eventType": "mousedown",
-        "eventStart": "mousemove",
-        "eventEnd": "mouseup",
+        eventType: "mousedown",
+        eventStart: "mousemove",
+        eventEnd: "mouseup",
       };
 
       const touchEvent = {
-        "eventType": "touchstart",
-        "eventStart": "touchmove",
-        "eventEnd": "touchend",
+        eventType: "touchstart",
+        eventStart: "touchmove",
+        eventEnd: "touchend",
       };
 
       let obj;
@@ -121,12 +119,11 @@
       const bigElem = elem.querySelector("svg");
       const elemWidth = elem.offsetWidth;
       const bigElemWidth = bigElem.width.baseVal.value;
-      const elemBorder = (bigElemWidth - elemWidth) * 1 / 2;
-      return (elemBorder);
+      const elemBorder = ((bigElemWidth - elemWidth) * 1) / 2;
+      return elemBorder;
     }
 
     function getMinMaxElemSizes(elem) {
-
       const mapFilter = document.querySelector(".map__filters");
 
       const pageScrollX = window.pageXOffset;
@@ -145,8 +142,9 @@
       minMaxSizes.minLeft = elemBorder + pageScrollX;
       minMaxSizes.maxLeft = fildWidth - elemWidth - elemBorder + pageScrollX;
       minMaxSizes.minTop = elemBorder + pageScrollY;
-      minMaxSizes.maxTop = fildHeight - elemHeight - elemBorder - fildFilterHeight;
-      return (minMaxSizes);
+      minMaxSizes.maxTop =
+        fildHeight - elemHeight - elemBorder - fildFilterHeight;
+      return minMaxSizes;
     }
 
     // -------------onFildCursorEnd

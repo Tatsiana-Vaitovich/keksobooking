@@ -47,7 +47,7 @@
 
   function compareHousingPrice(arr) {
     if (housingPrice.value === "middle") {
-      if (valueToHousingPrice.min <= arr.offer.price && valueToHousingPrice.max > userNotice.offer.price) {
+      if (valueToHousingPrice.min <= arr.offer.price && valueToHousingPrice.max > arr.offer.price) {
         return true;
       }
     } else if (housingPrice.value === "high") {
